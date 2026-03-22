@@ -89,9 +89,9 @@ The frontend will be available at `http://localhost:4200`
 
 ## Team Members
 
-1. Nurgali Nursultan - Team Lead
-2. Zhenisova Aruzhan - Frontend
-3. Toktarova Amina - Backend
+1. [Nurgali Nursultan](https://github.com/aablty) - Team Lead 
+2. [Zhenisova Aruzhan](https://github.com/suhpaek) - Frontend
+3. [Toktarova Amina](https://github.com/llifwx) - Backend
 
 ## License
 
