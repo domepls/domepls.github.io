@@ -14,6 +14,7 @@ env/
 /client/dist/
 /client/.angular/
 /server/build/
+/server/staticfiles/
 
 # IDE
 .vscode/
