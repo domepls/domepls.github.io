@@ -12,6 +12,7 @@ type Theme = 'light' | 'dark';
 export class Navbar {
   protected readonly isAuthenticated = signal(Boolean(localStorage.getItem('accessToken')));
   protected readonly theme = signal<Theme>(this.getInitialTheme());
+  protected readonly menuOpen = signal(false);
 
   constructor() {
     this.applyTheme(this.theme());
@@ -23,6 +24,14 @@ export class Navbar {
     this.theme.set(nextTheme);
     this.applyTheme(nextTheme);
     localStorage.setItem('theme', nextTheme);
+  }
+
+  protected toggleMenu(): void {
+    this.menuOpen.update((isOpen) => !isOpen);
+  }
+
+  protected closeMenu(): void {
+    this.menuOpen.set(false);
   }
 
   private getInitialTheme(): Theme {

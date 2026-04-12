@@ -86,6 +86,7 @@ h1 strong {
 .primary-action,
 .secondary-action {
   display: inline-flex;
+  flex: 0 0 auto;
   min-height: 56px;
   align-items: center;
   justify-content: center;
@@ -106,8 +107,8 @@ h1 strong {
 
 .secondary-action {
   min-width: 152px;
-  background: rgba(255, 255, 255, 0.76);
-  color: var(--brand);
+  background: var(--secondary-action-bg);
+  color: var(--secondary-action-text);
   box-shadow: 0 18px 32px var(--brand-shadow);
 }
 
@@ -124,7 +125,9 @@ h1 strong {
 }
 
 .quick-stats article {
+  flex: 1 1 132px;
   min-width: 132px;
+  max-width: 168px;
   padding: 18px;
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.7);
@@ -291,10 +294,27 @@ h1 strong {
 @media (max-width: 1000px) {
   .home-hero {
     grid-template-columns: 1fr;
+    justify-items: center;
     padding: 38px 28px 42px;
   }
 
+  .copy {
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .description {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .actions,
+  .quick-stats {
+    justify-content: center;
+  }
+
   .visual {
+    width: min(100%, 560px);
     min-height: 430px;
   }
 }
@@ -304,8 +324,18 @@ h1 strong {
     border-radius: 24px;
   }
 
+  .actions {
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .primary-action,
+  .secondary-action {
+    width: min(100%, 280px);
+  }
+
   .quick-stats article {
-    flex: 1 1 100%;
+    flex: 0 0 min(100%, 220px);
   }
 
   .visual {
