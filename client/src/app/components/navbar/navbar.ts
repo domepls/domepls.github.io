@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+
+type Theme = 'light' | 'dark';
 
 @Component({
   selector: 'app-navbar',
@@ -7,4 +9,29 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
-export class Navbar {}
+export class Navbar {
+  protected readonly isAuthenticated = signal(Boolean(localStorage.getItem('accessToken')));
+  protected readonly theme = signal<Theme>(this.getInitialTheme());
+
+  constructor() {
+    this.applyTheme(this.theme());
+  }
+
+  protected toggleTheme(): void {
+    const nextTheme = this.theme() === 'dark' ? 'light' : 'dark';
+
+    this.theme.set(nextTheme);
+    this.applyTheme(nextTheme);
+    localStorage.setItem('theme', nextTheme);
+  }
+
+  private getInitialTheme(): Theme {
+    const savedTheme = localStorage.getItem('theme');
+
+    return savedTheme === 'dark' ? 'dark' : 'light';
+  }
+
+  private applyTheme(theme: Theme): void {
+    document.documentElement.dataset['theme'] = theme;
+  }
+}

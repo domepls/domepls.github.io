@@ -1,16 +1,38 @@
 <nav class="navbar">
-  <a class="brand" routerLink="/">DoMePls</a>
+  <a class="brand" routerLink="/" aria-label="Go to DoMePls home page">
+    <span class="logo-frame">
+      <img src="/IMG_3618.PNG" alt="DoMePls logo" />
+    </span>
+    <span>DoMePls</span>
+  </a>
 
   <div class="nav-links">
-    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
     <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
     <a routerLink="/projects" routerLinkActive="active">Projects</a>
     <a routerLink="/tasks" routerLinkActive="active">Tasks</a>
-    <a routerLink="/profile" routerLinkActive="active">Profile</a>
   </div>
 
   <div class="auth-links">
-    <a routerLink="/login" routerLinkActive="active">Login</a>
-    <a class="register-link" routerLink="/register" routerLinkActive="active">Register</a>
+    <button
+      class="theme-toggle"
+      type="button"
+      [class.dark]="theme() === 'dark'"
+      [attr.aria-label]="theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+      (click)="toggleTheme()"
+    >
+      <span class="toggle-track">
+        <span class="toggle-orb">
+          <span class="sun">☀</span>
+          <span class="moon">●</span>
+        </span>
+      </span>
+    </button>
+
+    @if (isAuthenticated()) {
+      <a class="profile-link" routerLink="/profile" routerLinkActive="active">My Profile</a>
+    } @else {
+      <a routerLink="/login" routerLinkActive="active">Sign in</a>
+      <a class="register-link" routerLink="/register" routerLinkActive="active">Sign up</a>
+    }
   </div>
 </nav>
