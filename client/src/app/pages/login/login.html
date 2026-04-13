@@ -1,1 +1,55 @@
-<p>login works!</p>
+<section class="auth-page">
+  <div class="auth-card">
+    <p class="eyebrow">Welcome back</p>
+    <h1>Sign in<span>.</span></h1>
+    <p class="description">Continue your streak, check your projects, and do at least one tiny thing today.</p>
+
+    <form class="auth-form" (ngSubmit)="submit()">
+      <label>
+        <span>Username</span>
+        <input
+          type="text"
+          name="username"
+          autocomplete="username"
+          required
+          [(ngModel)]="username"
+          placeholder="your username"
+        />
+      </label>
+
+      <label>
+        <span>Password</span>
+        <input
+          type="password"
+          name="password"
+          autocomplete="current-password"
+          required
+          [(ngModel)]="password"
+          placeholder="••••••••"
+        />
+      </label>
+
+      @if (error) {
+        <p class="form-error">{{ error }}</p>
+      }
+
+      <button class="primary-action" type="submit" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Signing in...' : 'Sign in' }}
+      </button>
+    </form>
+
+    <p class="switch-copy">
+      No account yet?
+      <a routerLink="/register">Sign up</a>
+    </p>
+  </div>
+
+  <aside class="auth-side">
+    <div class="glow"></div>
+    <article>
+      <strong>+25 points</strong>
+      <span>for coming back</span>
+    </article>
+    <p>pls do one task 👉👈</p>
+  </aside>
+</section>

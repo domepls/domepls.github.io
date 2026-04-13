@@ -1,1 +1,81 @@
-<p>register works!</p>
+<section class="auth-page">
+  <div class="auth-card">
+    <p class="eyebrow">Join the tiny wins club</p>
+    <h1>Sign up<span>.</span></h1>
+    <p class="description">Create your DoMePls account and start collecting tasks, streaks, and points for trying.</p>
+
+    <form class="auth-form" (ngSubmit)="submit()">
+      <label>
+        <span>Email</span>
+        <input
+          type="email"
+          name="email"
+          autocomplete="email"
+          required
+          [(ngModel)]="email"
+          placeholder="you@example.com"
+        />
+      </label>
+
+      <label>
+        <span>Username</span>
+        <input
+          type="text"
+          name="username"
+          autocomplete="username"
+          required
+          [(ngModel)]="username"
+          placeholder="pick a username"
+        />
+      </label>
+
+      <div class="password-grid">
+        <label>
+          <span>Password</span>
+          <input
+            type="password"
+            name="password"
+            autocomplete="new-password"
+            required
+            [(ngModel)]="password"
+            placeholder="••••••••"
+          />
+        </label>
+
+        <label>
+          <span>Confirm password</span>
+          <input
+            type="password"
+            name="passwordConfirm"
+            autocomplete="new-password"
+            required
+            [(ngModel)]="passwordConfirm"
+            placeholder="••••••••"
+          />
+        </label>
+      </div>
+
+      @if (error) {
+        <p class="form-error">{{ error }}</p>
+      }
+
+      <button class="primary-action" type="submit" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Creating account...' : 'Create account' }}
+      </button>
+    </form>
+
+    <p class="switch-copy">
+      Already have an account?
+      <a routerLink="/login">Sign in</a>
+    </p>
+  </div>
+
+  <aside class="auth-side">
+    <div class="glow"></div>
+    <article>
+      <strong>first streak</strong>
+      <span>starts here</span>
+    </article>
+    <p>pls register 👉👈</p>
+  </aside>
+</section>

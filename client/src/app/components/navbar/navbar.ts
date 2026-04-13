@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 type Theme = 'light' | 'dark';
 
@@ -10,7 +11,9 @@ type Theme = 'light' | 'dark';
   styleUrl: './navbar.css',
 })
 export class Navbar {
-  protected readonly isAuthenticated = signal(Boolean(localStorage.getItem('accessToken')));
+  private readonly authService = inject(AuthService);
+
+  protected readonly isAuthenticated = this.authService.isAuthenticated;
   protected readonly theme = signal<Theme>(this.getInitialTheme());
   protected readonly menuOpen = signal(false);
 
