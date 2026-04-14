@@ -1,10 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { ThemeService } from './features/theme/services/theme.service';
 
 @Component({
-  selector: 'app-root',
+  selector: 'root',
   imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
-export class App {}
+export class App implements OnInit {
+  constructor(private readonly theme: ThemeService) {}
+
+  ngOnInit() {
+    this.theme.init();
+  }
+}
