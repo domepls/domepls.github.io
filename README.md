@@ -21,8 +21,8 @@ domepls.github.io/
 - **Database**: SQLite (development), PostgreSQL (production ready)
 - **Authentication**: Token-based JWT
 - **Deployment**:
-  - Frontend: GitHub Pages (via GitHub Actions)
-  - Backend: Render.com (via Docker)
+  - Frontend: Render.com
+  - Backend: Render.com
 
 ## Prerequisites
 
