@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import serializers
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import Profile
 
@@ -56,8 +58,12 @@ class AuthUserSerializer(serializers.ModelSerializer):
         )
 
     def get_telegram_connected(self, instance):
-        profile = getattr(instance, "profile", None)
-        return bool(profile and profile.telegram_id)
+        try:
+            profile = instance.profile
+        except ObjectDoesNotExist:
+            return False
+
+        return bool(profile.telegram_id)
 
 
 class TelegramAuthSerializer(serializers.Serializer):

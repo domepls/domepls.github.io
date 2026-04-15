@@ -16,6 +16,7 @@ from .serializers import (
     TelegramAuthSerializer,
     RegisterSerializer,
 )
+from .models import Profile
 from config.jwt import (
     clear_refresh_cookie,
     generate_telegram_state,
@@ -67,6 +68,8 @@ class LoginAPIView(APIView):
                 {"detail": "Invalid username or password."},
                 status=status.HTTP_401_UNAUTHORIZED,
             )
+
+        Profile.objects.get_or_create(user=user)
 
         refresh = RefreshToken.for_user(user)
 
@@ -171,7 +174,7 @@ class TelegramAuthAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        profile = request.user.profile
+        profile, _ = Profile.objects.get_or_create(user=request.user)
         telegram_id = cast(int, validated_data["id"])
 
         if profile.telegram_id and profile.telegram_id != telegram_id:
@@ -206,12 +209,12 @@ class MeAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        profile = request.user.profile
+        profile, _ = Profile.objects.get_or_create(user=request.user)
         serializer = ProfileSerializer(profile)
         return Response(serializer.data)
 
     def patch(self, request):
-        profile = request.user.profile
+        profile, _ = Profile.objects.get_or_create(user=request.user)
         serializer = ProfileUpdateSerializer(
             profile,
             data=request.data,
