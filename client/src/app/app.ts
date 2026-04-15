@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { AuthService } from './features/auth/services/auth.service';
 import { ThemeService } from './features/theme/services/theme.service';
 
 @Component({
@@ -8,9 +9,13 @@ import { ThemeService } from './features/theme/services/theme.service';
   template: '<router-outlet />',
 })
 export class App implements OnInit {
-  constructor(private readonly theme: ThemeService) {}
+  constructor(
+    private readonly theme: ThemeService,
+    private readonly auth: AuthService,
+  ) {}
 
   ngOnInit() {
     this.theme.init();
+    this.auth.restoreSession().subscribe();
   }
 }

@@ -5,11 +5,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.tasks.serializer import CommentCreateSerializer, CommentSerializer, TaskCreateSerializer, TaskDetailSerializer, TaskListSerializer, TaskUpdateSerializer
+from apps.common.permissions import IsTelegramLinked
 
 from .models import Task, Comment
 
+
 class TaskListCreateAPIView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsTelegramLinked]
 
     def get_queryset(self):
         return (
@@ -31,9 +33,10 @@ class TaskListCreateAPIView(generics.ListCreateAPIView):
 
     def get_serializer_context(self):
         return {"request": self.request}
-    
+
+
 class TaskDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsTelegramLinked]
     lookup_url_kwarg = "task_id"
 
     def get_queryset(self):
@@ -62,10 +65,12 @@ class TaskDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
 
         if request.user not in [task.created_by, task.project.owner] and \
            not task.project.members.filter(id=request.user.id).exists():
-            raise PermissionDenied("You do not have permission to update this task.")
+            raise PermissionDenied(
+                "You do not have permission to update this task.")
 
         partial = kwargs.pop("partial", False)
-        serializer = self.get_serializer(task, data=request.data, partial=partial)
+        serializer = self.get_serializer(
+            task, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
@@ -78,17 +83,20 @@ class TaskDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
         task = self.get_object()
 
         if request.user != task.created_by and request.user != task.project.owner:
-            raise PermissionDenied("Only creator or project owner can delete this task.")
+            raise PermissionDenied(
+                "Only creator or project owner can delete this task.")
 
         task.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
+
 class TaskCommentsAPIView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsTelegramLinked]
 
     def get_task(self, request, task_id):
         try:
-            task = Task.objects.select_related("project", "created_by", "assigned_to").get(id=task_id)
+            task = Task.objects.select_related(
+                "project", "created_by", "assigned_to").get(id=task_id)
         except Task.DoesNotExist:
             return None
 
@@ -112,7 +120,8 @@ class TaskCommentsAPIView(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        comments = task.comments.select_related("author").order_by("created_at")
+        comments = task.comments.select_related(
+            "author").order_by("created_at")
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
 
@@ -135,4 +144,3 @@ class TaskCommentsAPIView(APIView):
             CommentSerializer(comment).data,
             status=status.HTTP_201_CREATED,
         )
-    

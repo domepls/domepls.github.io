@@ -1,0 +1,40 @@
+<auth-page-shell>
+  <div authIntro>
+    <p class="auth-kicker">Welcome back</p>
+    <p class="auth-copy">
+      Access is granted only after your Telegram account is connected. If you already have an
+      account, sign in here and finish the Telegram step next.
+    </p>
+  </div>
+
+  <div authPanel>
+    <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()">
+      <label>
+        <span>Username</span>
+        <input type="text" formControlName="username" autocomplete="username" />
+      </label>
+
+      <label>
+        <span>Password</span>
+        <input type="password" formControlName="password" autocomplete="current-password" />
+      </label>
+
+      @if (errorMessage) {
+        <p class="auth-error">{{ errorMessage }}</p>
+      }
+
+      @if (successMessage) {
+        <p class="auth-success">{{ successMessage }}</p>
+      }
+
+      <button class="auth-submit" type="submit" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Signing in...' : 'Log In' }}
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <span>Need an account?</span>
+      <a routerLink="/register">Create one</a>
+    </div>
+  </div>
+</auth-page-shell>

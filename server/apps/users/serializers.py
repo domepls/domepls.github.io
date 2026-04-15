@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import Profile
 
@@ -12,24 +11,13 @@ class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=6)
     password_confirm = serializers.CharField(write_only=True)
 
-    first_name = serializers.CharField(required=False, allow_blank=True)
-    last_name = serializers.CharField(required=False, allow_blank=True)
-
     class Meta:
         model = User
         fields = (
             "username",
-            "email",
-            "first_name",
-            "last_name",
             "password",
             "password_confirm",
         )
-
-    def validate_email(self, value):
-        if value and User.objects.filter(email=value).exists():
-            raise serializers.ValidationError("User with this email already exists.")
-        return value
 
     def validate(self, attrs):
         if attrs["password"] != attrs["password_confirm"]:
@@ -56,17 +44,48 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
 
 
+class AuthUserSerializer(serializers.ModelSerializer):
+    telegram_connected = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "username",
+            "telegram_connected",
+        )
+
+    def get_telegram_connected(self, instance):
+        profile = getattr(instance, "profile", None)
+        return bool(profile and profile.telegram_id)
+
+
+class TelegramAuthSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    first_name = serializers.CharField(
+        required=False, allow_blank=True, allow_null=True)
+    last_name = serializers.CharField(
+        required=False, allow_blank=True, allow_null=True)
+    username = serializers.CharField(
+        required=False, allow_blank=True, allow_null=True)
+    photo_url = serializers.URLField(
+        required=False, allow_blank=True, allow_null=True)
+    auth_date = serializers.IntegerField()
+    hash = serializers.CharField()
+    state = serializers.CharField(
+        required=False, allow_blank=True, allow_null=True)
+
+
 class ProfileSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source="user.username", read_only=True)
-    email = serializers.EmailField(source="user.email", read_only=True)
-    first_name = serializers.CharField(source="user.first_name", read_only=True)
+    first_name = serializers.CharField(
+        source="user.first_name", read_only=True)
     last_name = serializers.CharField(source="user.last_name", read_only=True)
 
     class Meta:
         model = Profile
         fields = (
             "username",
-            "email",
             "first_name",
             "last_name",
             "avatar",
@@ -78,13 +97,15 @@ class ProfileSerializer(serializers.ModelSerializer):
             "points",
             "streak",
             "last_seen",
+            "telegram_id",
         )
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
-    first_name = serializers.CharField(source="user.first_name", required=False, allow_blank=True)
-    last_name = serializers.CharField(source="user.last_name", required=False, allow_blank=True)
-    email = serializers.EmailField(source="user.email", required=False, allow_blank=True)
+    first_name = serializers.CharField(
+        source="user.first_name", required=False, allow_blank=True)
+    last_name = serializers.CharField(
+        source="user.last_name", required=False, allow_blank=True)
 
     class Meta:
         model = Profile
@@ -97,7 +118,6 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
             "status",
             "first_name",
             "last_name",
-            "email",
         )
 
     def update(self, instance, validated_data):
@@ -119,6 +139,6 @@ class LogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField()
 
     def save(self, **kwargs):
-        refresh_token = self.validated_data["refresh"]
+        refresh_token = self.validated_data["refresh"]  # type: ignore
         token = RefreshToken(refresh_token)
         token.blacklist()

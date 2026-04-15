@@ -5,7 +5,7 @@ import { PublicFooter } from './components/public-footer/public-footer';
 
 @Component({
   selector: 'public-layout',
-  standalone: true,
+
   imports: [RouterOutlet, PublicHeader, PublicFooter],
   templateUrl: './public-layout.html',
   styleUrl: './public-layout.scss',

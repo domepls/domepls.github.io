@@ -1,0 +1,102 @@
+:host {
+  display: block;
+}
+
+.telegram-shell {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 2rem 1.25rem 3rem;
+  background:
+    radial-gradient(
+      circle at 18% 20%,
+      color-mix(in srgb, var(--surface-lilac) 68%, white),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 82% 18%,
+      color-mix(in srgb, var(--surface-pink) 68%, white),
+      transparent 30%
+    ),
+    linear-gradient(180deg, color-mix(in srgb, var(--background) 82%, white), var(--background));
+}
+
+.telegram-card {
+  width: min(620px, 100%);
+  padding: clamp(1.4rem, 4vw, 2.6rem);
+  border-radius: 30px;
+  border: 1px solid color-mix(in srgb, var(--border-default) 68%, transparent);
+  background: color-mix(in srgb, var(--surface) 88%, white);
+  box-shadow: var(--shadow-xl);
+}
+
+.telegram-kicker {
+  margin: 0 0 0.7rem;
+  color: var(--text-on-pink);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.telegram-card h1 {
+  margin: 0;
+  font-family: 'Rubik', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 0.98;
+}
+
+.telegram-copy {
+  margin: 1rem 0 0;
+  color: var(--text-secondary);
+  line-height: 1.58;
+}
+
+.telegram-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.telegram-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.85rem 1.15rem;
+  text-decoration: none;
+  font-weight: 800;
+  color: #271c35;
+  background: linear-gradient(135deg, #ffd8e8, #d9c7ff);
+  border: 1px solid color-mix(in srgb, #ffffff 45%, #d6c5ff);
+}
+
+.telegram-button--ghost {
+  background: color-mix(in srgb, var(--surface) 84%, white);
+  color: var(--text-primary);
+}
+
+:host-context([data-theme='dark']) {
+  .telegram-shell {
+    background:
+      radial-gradient(circle at 18% 20%, rgba(108, 85, 158, 0.18), transparent 28%),
+      radial-gradient(circle at 82% 18%, rgba(147, 100, 130, 0.14), transparent 30%),
+      linear-gradient(180deg, #18111f, #130d18);
+  }
+
+  .telegram-card {
+    border-color: rgba(210, 194, 255, 0.12);
+    background: rgba(26, 19, 35, 0.94);
+  }
+
+  .telegram-button {
+    color: #f6efff;
+    background: linear-gradient(135deg, #6d568f, #8b6bbd);
+    border-color: rgba(232, 222, 255, 0.16);
+  }
+
+  .telegram-button--ghost {
+    background: rgba(48, 37, 66, 0.84);
+    color: #f2eaff;
+  }
+}

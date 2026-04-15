@@ -20,5 +20,8 @@ class Profile(models.Model):
     streak = models.IntegerField(default=0)
     last_seen = models.DateTimeField(auto_now=True)
 
+    telegram_id = models.BigIntegerField(blank=True, null=True, unique=True)
+    
+
     def __str__(self):
         return f"Profile of {self.user.username}"

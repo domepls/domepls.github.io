@@ -1,0 +1,15 @@
+<section class="auth-shell">
+  @if (auth.currentUser() && auth.needsTelegramLink()) {
+    <auth-telegram-link-card />
+  } @else {
+    <div class="auth-card">
+      <div class="auth-card__intro">
+        <ng-content select="[authIntro]"></ng-content>
+      </div>
+
+      <div class="auth-card__panel">
+        <ng-content select="[authPanel]"></ng-content>
+      </div>
+    </div>
+  }
+</section>

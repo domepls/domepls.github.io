@@ -3,7 +3,7 @@ import { CtaSection, FeaturesSection, HeroSection, TinyWinsSection } from './sec
 
 @Component({
   selector: 'landing-page',
-  standalone: true,
+
   imports: [HeroSection, FeaturesSection, TinyWinsSection, CtaSection],
   templateUrl: './landing.html',
   styleUrl: './landing.scss',

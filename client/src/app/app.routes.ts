@@ -10,6 +10,18 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/landing/landing'),
       },
       {
+        path: 'login',
+        loadComponent: () => import('./features/auth/pages/login/login'),
+      },
+      {
+        path: 'register',
+        loadComponent: () => import('./features/auth/pages/register/register'),
+      },
+      {
+        path: 'auth/telegram',
+        loadComponent: () => import('./features/auth/pages/auth-telegram/auth-telegram'),
+      },
+      {
         path: '**',
         loadComponent: () => import('./pages/not-found/not-found'),
       },

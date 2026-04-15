@@ -1,0 +1,45 @@
+<auth-page-shell>
+  <div authIntro>
+    <p class="auth-kicker">Create account</p>
+    <p class="auth-copy">
+      The account is created immediately, but full access stays locked until Telegram is linked.
+      That gives you a fast onboarding step without opening the app too early.
+    </p>
+  </div>
+
+  <div authPanel>
+    <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()">
+      <label>
+        <span>Username</span>
+        <input type="text" formControlName="username" autocomplete="username" />
+      </label>
+
+      <label>
+        <span>Password</span>
+        <input type="password" formControlName="password" autocomplete="new-password" />
+      </label>
+
+      <label>
+        <span>Confirm password</span>
+        <input type="password" formControlName="passwordConfirm" autocomplete="new-password" />
+      </label>
+
+      @if (errorMessage) {
+        <p class="auth-error">{{ errorMessage }}</p>
+      }
+
+      @if (successMessage) {
+        <p class="auth-success">{{ successMessage }}</p>
+      }
+
+      <button class="auth-submit" type="submit" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Creating account...' : 'Create account' }}
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <span>Already have an account?</span>
+      <a routerLink="/login">Log in</a>
+    </div>
+  </div>
+</auth-page-shell>

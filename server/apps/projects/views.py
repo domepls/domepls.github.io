@@ -7,12 +7,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.projects.serializer import ProjectCreateSerializer, ProjectDetailSerializer, ProjectInviteSerializer, ProjectListSerializer
+from apps.common.permissions import IsTelegramLinked
 
 from .models import Project
 
 
 class ProjectListCreateAPIView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsTelegramLinked]
 
     def get_queryset(self):
         return (
@@ -37,7 +38,7 @@ class ProjectListCreateAPIView(generics.ListCreateAPIView):
 
 class ProjectDetailAPIView(generics.RetrieveAPIView):
     serializer_class = ProjectDetailSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsTelegramLinked]
     lookup_url_kwarg = "project_id"
 
     def get_queryset(self):
@@ -52,7 +53,7 @@ class ProjectDetailAPIView(generics.RetrieveAPIView):
 
 
 class ProjectInviteAPIView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsTelegramLinked]
 
     def post(self, request, project_id):
         try:
@@ -64,7 +65,8 @@ class ProjectInviteAPIView(APIView):
             )
 
         if project.owner != request.user:
-            raise PermissionDenied("Only the project owner can invite members.")
+            raise PermissionDenied(
+                "Only the project owner can invite members.")
 
         serializer = ProjectInviteSerializer(
             data=request.data,
@@ -74,6 +76,7 @@ class ProjectInviteAPIView(APIView):
         serializer.save()
 
         return Response(
-            ProjectDetailSerializer(project, context={"request": request}).data,
+            ProjectDetailSerializer(
+                project, context={"request": request}).data,
             status=status.HTTP_200_OK,
         )

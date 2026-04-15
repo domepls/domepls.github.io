@@ -3,7 +3,7 @@ import { ThemeSwitcher } from '../../../../features/theme/components/theme-switc
 
 @Component({
   selector: 'public-footer',
-  standalone: true,
+
   imports: [ThemeSwitcher],
   templateUrl: './public-footer.html',
   styleUrl: './public-footer.scss',
