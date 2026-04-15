@@ -1,0 +1,133 @@
+:host {
+  display: block;
+}
+
+.tiny-wins {
+  display: grid;
+  gap: 1.3rem;
+  padding: 1.4rem;
+  border: 1px solid var(--border-light);
+  border-radius: 28px;
+  background: linear-gradient(
+    155deg,
+    color-mix(in srgb, var(--surface) 74%, white),
+    color-mix(in srgb, var(--surface-pink) 24%, white)
+  );
+  box-shadow: var(--shadow-md);
+}
+
+:host-context([data-theme='dark']) .tiny-wins {
+  border-color: rgba(210, 194, 255, 0.12);
+  background: linear-gradient(155deg, rgba(37, 28, 49, 0.96), rgba(22, 18, 31, 0.96));
+}
+
+.tiny-wins__intro p {
+  color: var(--text-on-pink);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+  font-size: 0.78rem;
+}
+
+:host-context([data-theme='dark']) .tiny-wins__intro p {
+  color: #f0b9d6;
+}
+
+.tiny-wins__intro h2 {
+  margin-top: 0.45rem;
+  font-family: 'Rubik', sans-serif;
+  font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+}
+
+.tiny-wins__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.tiny-wins__grid article {
+  border-radius: 20px;
+  border: 1px solid var(--border-light);
+  background: color-mix(in srgb, var(--surface) 78%, white);
+  padding: 0.85rem;
+}
+
+:host-context([data-theme='dark']) .tiny-wins__grid article {
+  border-color: rgba(210, 194, 255, 0.12);
+  background: rgba(41, 31, 57, 0.9);
+}
+
+.tiny-wins__media {
+  border-radius: 16px;
+  min-height: 140px;
+  display: grid;
+  place-items: center;
+  border: 1px dashed var(--border-lilac);
+  background: color-mix(in srgb, var(--surface-lilac) 46%, white);
+}
+
+:host-context([data-theme='dark']) .tiny-wins__media {
+  border-color: rgba(184, 163, 255, 0.2);
+  background: rgba(50, 39, 72, 0.78);
+}
+
+.tiny-wins__media--alt {
+  background: color-mix(in srgb, var(--surface-pink) 46%, white);
+  border-color: var(--border-pink);
+}
+
+:host-context([data-theme='dark']) .tiny-wins__media--alt {
+  background: rgba(64, 37, 54, 0.82);
+  border-color: rgba(255, 179, 214, 0.2);
+}
+
+.tiny-wins__media--soft {
+  background: color-mix(in srgb, var(--surface) 70%, white);
+}
+
+:host-context([data-theme='dark']) .tiny-wins__media--soft {
+  background: rgba(34, 31, 44, 0.82);
+}
+
+.tiny-wins__media img {
+  width: min(120px, 70%);
+  object-fit: contain;
+}
+
+.tiny-wins__grid h3 {
+  margin-top: 0.7rem;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.tiny-wins__grid p {
+  margin-top: 0.45rem;
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+:host-context([data-theme='dark']) .tiny-wins__grid h3 {
+  color: #f6efff;
+}
+
+:host-context([data-theme='dark']) .tiny-wins__grid p,
+:host-context([data-theme='dark']) .tiny-wins__grid ul {
+  color: #c9b9de;
+}
+
+.tiny-wins__grid ul {
+  margin-top: 0.55rem;
+  padding-left: 1rem;
+  display: grid;
+  gap: 0.3rem;
+  list-style: disc;
+  color: var(--text-secondary);
+  line-height: 1.35;
+  font-size: 0.92rem;
+}
+
+@media (max-width: 900px) {
+  .tiny-wins__grid {
+    grid-template-columns: 1fr;
+  }
+}

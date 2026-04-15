@@ -1,0 +1,41 @@
+<div class="theme-switcher" role="radiogroup" aria-label="Theme switcher">
+  <input
+    type="radio"
+    id="light-theme"
+    name="themes"
+    aria-label="Light theme"
+    [checked]="isTheme('light')"
+    (change)="setTheme('light')"
+  />
+  <label for="light-theme">
+    <span><span class="material-symbols-rounded" aria-hidden="true">light_mode</span></span>
+  </label>
+
+  <input
+    type="radio"
+    id="dark-theme"
+    name="themes"
+    aria-label="Dark theme"
+    [checked]="isTheme('dark')"
+    (change)="setTheme('dark')"
+  />
+  <label for="dark-theme">
+    <span><span class="material-symbols-rounded" aria-hidden="true">dark_mode</span></span>
+  </label>
+
+  <input
+    type="radio"
+    id="system-theme"
+    name="themes"
+    aria-label="System theme"
+    [checked]="isTheme('system')"
+    (change)="setTheme('system')"
+  />
+  <label for="system-theme">
+    <span
+      ><span class="material-symbols-rounded" aria-hidden="true">desktop_windows</span></span
+    >
+  </label>
+
+  <span class="slider"></span>
+</div>

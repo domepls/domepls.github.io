@@ -1,0 +1,19 @@
+<footer class="lp-footer">
+  <div class="lp-footer__inner">
+    <div>
+      <strong>DoMePls</strong>
+      <p>Task manager with a playful heartbeat.</p>
+    </div>
+    <div class="lp-footer__actions">
+      <theme-switcher />
+      <div class="lp-footer__badge">
+        <img
+          src="/mascots/footer-badge.png"
+          alt="Footer mascot badge"
+          loading="lazy"
+          (error)="onMascotError($event)"
+        />
+      </div>
+    </div>
+  </div>
+</footer>

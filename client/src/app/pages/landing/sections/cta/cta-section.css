@@ -1,0 +1,108 @@
+:host {
+  display: block;
+}
+
+.cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  border-radius: 28px;
+  border: 1px solid color-mix(in srgb, var(--border-default) 78%, transparent);
+  padding: clamp(1.15rem, 2.4vw, 1.8rem);
+  background:
+    radial-gradient(
+      circle at 12% 16%,
+      color-mix(in srgb, #ffe2ee 55%, transparent),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 88% 78%,
+      color-mix(in srgb, #ddcbff 46%, transparent),
+      transparent 45%
+    ),
+    color-mix(in srgb, var(--surface) 74%, white);
+}
+
+:host-context([data-theme='dark']) .cta {
+  border-color: rgba(210, 194, 255, 0.12);
+  background:
+    radial-gradient(circle at 12% 16%, rgba(135, 93, 173, 0.16), transparent 42%),
+    radial-gradient(circle at 88% 78%, rgba(76, 56, 112, 0.16), transparent 45%),
+    rgba(33, 25, 45, 0.94);
+}
+
+.cta p {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--text-on-pink);
+}
+
+:host-context([data-theme='dark']) .cta p {
+  color: #f0b9d6;
+}
+
+.cta h2 {
+  margin-top: 0.55rem;
+  font-family: 'Rubik', sans-serif;
+  font-size: clamp(1.5rem, 3.1vw, 2.3rem);
+  max-width: 20ch;
+}
+
+.cta span {
+  margin-top: 0.65rem;
+  display: block;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.cta__actions {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.cta__primary,
+.cta__secondary {
+  text-decoration: none;
+  text-align: center;
+  border-radius: 999px;
+  padding: 0.72rem 1rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.cta__primary {
+  background: linear-gradient(135deg, #ffcade, #cdb6ff);
+  color: #2f2045;
+  box-shadow: 0 8px 22px color-mix(in srgb, #d3bfff 30%, transparent);
+}
+
+:host-context([data-theme='dark']) .cta__primary {
+  color: #f7f1ff;
+  background: linear-gradient(135deg, #6d568f, #8c72c2);
+}
+
+.cta__secondary {
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--surface) 80%, white);
+}
+
+:host-context([data-theme='dark']) .cta__secondary {
+  color: #f4ebff;
+  border-color: rgba(210, 194, 255, 0.16);
+  background: rgba(49, 37, 67, 0.78);
+}
+
+@media (max-width: 900px) {
+  .cta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cta h2 {
+    max-width: none;
+  }
+}

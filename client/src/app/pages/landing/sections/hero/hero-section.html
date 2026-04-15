@@ -1,0 +1,62 @@
+<section class="hero" id="hero">
+  <div class="hero__copy">
+    <p class="hero__kicker">Playful productivity for real humans</p>
+    <h1>
+      One place for tasks,
+      <span>projects, and tiny wins.</span>
+    </h1>
+    <p>
+      DoMePls keeps your workflow light: quick planning, visible progress, and a mascot that
+      silently judges procrastination.
+    </p>
+
+    <div class="hero__actions">
+      <a class="hero__primary" href="#cta">Create workspace</a>
+      <a class="hero__secondary" href="#features">Explore features</a>
+    </div>
+
+    <ul class="hero__trust">
+      <li>Fast setup</li>
+      <li>Simple team flow</li>
+      <li>Cute pressure</li>
+    </ul>
+  </div>
+
+  <div class="hero__visual" aria-label="DoMePls mascot preview">
+    <div class="hero__orb hero__orb--one"></div>
+    <div class="hero__orb hero__orb--two"></div>
+
+    <article class="hero__card">
+      <img
+        src="/mascots/hero-main.png"
+        alt="Main mascot"
+        loading="eager"
+        (error)="onMascotError($event)"
+      />
+      <div>
+        <strong>PickMe Mission</strong>
+        <p>Finish one useful thing before noon.</p>
+      </div>
+    </article>
+
+    <article class="hero__chip hero__chip--top">
+      <img
+        src="/mascots/hero-mini-1.png"
+        alt="Mini mascot"
+        loading="lazy"
+        (error)="onMascotError($event)"
+      />
+      <span>+25 focus points</span>
+    </article>
+
+    <article class="hero__chip hero__chip--bottom">
+      <img
+        src="/mascots/hero-mini-2.png"
+        alt="Mini mascot"
+        loading="lazy"
+        (error)="onMascotError($event)"
+      />
+      <span>Streak alive x7</span>
+    </article>
+  </div>
+</section>
