@@ -1,1 +1,33 @@
-<p>not-found works!</p>
+<section class="nf-page">
+  <div class="nf-noise" aria-hidden="true"></div>
+
+  <article class="nf-card">
+    <div class="nf-content">
+      <h1>
+        Page not found. <br />
+        <span>Like motivation on Monday morning.</span>
+      </h1>
+
+      <p class="nf-description">
+        The link is broken or the page has moved somewhere mysterious. Let&apos;s get you back to a
+        useful place.
+      </p>
+
+      <div class="nf-actions">
+        <a routerLink="/" class="nf-primary">
+          <span class="material-symbols-rounded">arrow_left_alt</span>
+          Back to Home</a
+        >
+        <a routerLink="/" fragment="features" class="nf-secondary">See features</a>
+      </div>
+    </div>
+    <div class="nf-mascot" aria-hidden="true">
+      <img
+        src="/mascots/not-found.png"
+        alt="Main mascot"
+        loading="eager"
+        (error)="onMascotError($event)"
+      />
+    </div>
+  </article>
+</section>

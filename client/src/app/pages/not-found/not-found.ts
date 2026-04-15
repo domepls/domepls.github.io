@@ -1,9 +1,15 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-not-found',
-  imports: [],
+  selector: 'not-found',
+  imports: [RouterLink],
   templateUrl: './not-found.html',
   styleUrl: './not-found.scss',
 })
-export class NotFound {}
+export default class NotFound {
+  protected onMascotError(event: Event): void {
+    const image = event.target as HTMLImageElement;
+    image.style.display = 'none';
+  }
+}
