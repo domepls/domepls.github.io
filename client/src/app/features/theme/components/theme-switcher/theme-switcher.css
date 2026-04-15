@@ -50,22 +50,15 @@
   cursor: pointer;
 }
 
-.theme-switcher label span:not(.material-symbols-rounded) {
+.theme-switcher label span {
   padding: 8px 10px;
   border-radius: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.35rem;
-  font-weight: 700;
-  font-size: 0.84rem;
-  letter-spacing: 0.01em;
-  transition: color 0.2s ease;
-}
-
-.theme-switcher .material-symbols-rounded {
   font-size: 1rem;
   line-height: 1;
+  transition: color 0.2s ease;
 }
 
 .theme-switcher input:checked + label span {

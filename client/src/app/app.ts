@@ -4,7 +4,6 @@ import { ThemeService } from './features/theme/services/theme.service';
 
 @Component({
   selector: 'root',
-  standalone: true,
   imports: [RouterOutlet],
   template: '<router-outlet />',
 })
