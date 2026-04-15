@@ -1,23 +1,10 @@
 import { Component } from '@angular/core';
-import {
-  CtaSection,
-  FeaturesSection,
-  HeroSection,
-  LandingFooterSection,
-  LandingHeaderSection,
-  TinyWinsSection,
-} from './sections';
+import { CtaSection, FeaturesSection, HeroSection, TinyWinsSection } from './sections';
 
 @Component({
   selector: 'landing-page',
-  imports: [
-    LandingHeaderSection,
-    HeroSection,
-    FeaturesSection,
-    TinyWinsSection,
-    CtaSection,
-    LandingFooterSection,
-  ],
+  standalone: true,
+  imports: [HeroSection, FeaturesSection, TinyWinsSection, CtaSection],
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
 })

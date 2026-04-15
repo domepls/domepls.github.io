@@ -3,10 +3,16 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./pages/landing/landing'),
-  },
-  {
-    path: '**',
-    loadComponent: () => import('./pages/not-found/not-found'),
+    loadComponent: () => import('./layouts/public-layout/public-layout'),
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./pages/landing/landing'),
+      },
+      {
+        path: '**',
+        loadComponent: () => import('./pages/not-found/not-found'),
+      },
+    ],
   },
 ];

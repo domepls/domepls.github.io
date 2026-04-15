@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { ThemeSwitcher } from '../../../../features/theme/components/theme-switcher/theme-switcher';
 
 @Component({
-  selector: 'landing-footer-section',
+  selector: 'public-footer',
+  standalone: true,
   imports: [ThemeSwitcher],
-  templateUrl: './landing-footer-section.html',
-  styleUrl: './landing-footer-section.scss',
+  templateUrl: './public-footer.html',
+  styleUrl: './public-footer.scss',
 })
-export class LandingFooterSection {
+export class PublicFooter {
   protected onMascotError(event: Event): void {
     const image = event.target as HTMLImageElement;
     image.style.display = 'none';
