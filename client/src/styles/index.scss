@@ -1,4 +1,42 @@
-@import url('./reset.css');
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: light;
+
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+  height: 100%;
+}
+@import url('./reset.scss');
 @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
 :root {
@@ -186,39 +224,39 @@ button {
   padding: 0.5rem 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-}
 
-button[type='primary'] {
-  background-color: var(--btn-primary-bg);
-  color: var(--btn-primary-text);
-}
+  &[type='primary'] {
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
 
-button[type='primary']:hover {
-  background-color: var(--btn-primary-hover);
-}
+    &:hover {
+      background-color: var(--btn-primary-hover);
+    }
+  }
 
-button[type='secondary'] {
-  background-color: var(--btn-secondary-bg);
-  color: var(--btn-secondary-text);
-}
+  &[type='secondary'] {
+    background-color: var(--btn-secondary-bg);
+    color: var(--btn-secondary-text);
 
-button[type='secondary']:hover {
-  background-color: var(--btn-secondary-hover);
-}
+    &:hover {
+      background-color: var(--btn-secondary-hover);
+    }
+  }
 
-button[type='ghost'] {
-  border: 2px solid var(--border-lilac);
-  background-color: var(--btn-ghost-bg);
-  color: var(--btn-ghost-text);
-}
+  &[type='ghost'] {
+    border: 2px solid var(--border-lilac);
+    background-color: var(--btn-ghost-bg);
+    color: var(--btn-ghost-text);
 
-button[type='ghost']:hover {
-  border-color: var(--border-strong);
-}
+    &:hover {
+      border-color: var(--border-strong);
+    }
+  }
 
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 input {
@@ -227,76 +265,76 @@ input {
   padding: 0.5rem 1rem;
   border-radius: var(--radius-md);
   transition: border-color 0.3s ease;
-}
 
-input:focus {
-  border-color: var(--input-border-focus);
-  box-shadow: var(--shadow-lilac);
-  outline: none;
-}
+  &:focus {
+    border-color: var(--input-border-focus);
+    box-shadow: var(--shadow-lilac);
+    outline: none;
+  }
 
-input::placeholder {
-  color: var(--text-muted);
-}
+  &::placeholder {
+    color: var(--text-muted);
+  }
 
-input:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 .box {
   padding: 1rem;
   border-radius: var(--radius-md);
   transition: all 0.3s ease;
-}
 
-.box.white {
-  color: var(--text-primary);
-  background-color: var(--box-bg-primary);
-  border: 1px solid var(--border-light);
-  box-shadow: var(--shadow-md);
-}
+  &.white {
+    color: var(--text-primary);
+    background-color: var(--box-bg-primary);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-md);
+  }
 
-.box.pink {
-  color: var(--text-on-pink);
-  background-color: var(--box-bg-pink);
-  border: 1px solid var(--border-pink);
-  box-shadow: var(--shadow-pink);
-}
+  &.pink {
+    color: var(--text-on-pink);
+    background-color: var(--box-bg-pink);
+    border: 1px solid var(--border-pink);
+    box-shadow: var(--shadow-pink);
+  }
 
-.box.lilac {
-  color: var(--text-on-lilac);
-  background-color: var(--box-bg-lilac);
-  border: 1px solid var(--border-lilac);
-  box-shadow: var(--shadow-lilac);
+  &.lilac {
+    color: var(--text-on-lilac);
+    background-color: var(--box-bg-lilac);
+    border: 1px solid var(--border-lilac);
+    box-shadow: var(--shadow-lilac);
+  }
 }
 
 .status {
   display: inline-block;
   padding: 0.25rem 0.75rem;
   border-radius: var(--radius-md);
-}
 
-.status.active {
-  background-color: var(--status-active-bg);
-  border: 1px solid var(--status-active-border);
-  color: var(--status-active-text);
-}
+  &.active {
+    background-color: var(--status-active-bg);
+    border: 1px solid var(--status-active-border);
+    color: var(--status-active-text);
+  }
 
-.status.pending {
-  background-color: var(--status-pending-bg);
-  border: 1px solid var(--status-pending-border);
-  color: var(--status-pending-text);
-}
+  &.pending {
+    background-color: var(--status-pending-bg);
+    border: 1px solid var(--status-pending-border);
+    color: var(--status-pending-text);
+  }
 
-.status.disabled {
-  background-color: var(--status-disabled-bg);
-  border: 1px solid var(--status-disabled-border);
-  color: var(--status-disabled-text);
-}
+  &.disabled {
+    background-color: var(--status-disabled-bg);
+    border: 1px solid var(--status-disabled-border);
+    color: var(--status-disabled-text);
+  }
 
-.status.archived {
-  background-color: var(--status-archived-bg);
-  border: 1px solid var(--status-archived-border);
-  color: var(--status-archived-text);
+  &.archived {
+    background-color: var(--status-archived-bg);
+    border: 1px solid var(--status-archived-border);
+    color: var(--status-archived-text);
+  }
 }

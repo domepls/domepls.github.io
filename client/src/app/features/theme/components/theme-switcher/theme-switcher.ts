@@ -7,7 +7,7 @@ type Theme = 'light' | 'dark' | 'system';
   selector: 'theme-switcher',
   imports: [],
   templateUrl: './theme-switcher.html',
-  styleUrl: './theme-switcher.css',
+  styleUrl: './theme-switcher.scss',
 })
 export class ThemeSwitcher {
   constructor(private readonly theme: ThemeService) {}

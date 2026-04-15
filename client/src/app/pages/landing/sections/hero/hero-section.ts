@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
 
   imports: [],
   templateUrl: './hero-section.html',
-  styleUrl: './hero-section.css',
+  styleUrl: './hero-section.scss',
 })
 export class HeroSection {
   protected onMascotError(event: Event): void {

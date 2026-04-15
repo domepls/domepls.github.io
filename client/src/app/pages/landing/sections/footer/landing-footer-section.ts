@@ -5,7 +5,7 @@ import { ThemeSwitcher } from '../../../../features/theme/components/theme-switc
   selector: 'landing-footer-section',
   imports: [ThemeSwitcher],
   templateUrl: './landing-footer-section.html',
-  styleUrl: './landing-footer-section.css',
+  styleUrl: './landing-footer-section.scss',
 })
 export class LandingFooterSection {
   protected onMascotError(event: Event): void {

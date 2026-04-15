@@ -5,6 +5,6 @@ import { Component } from '@angular/core';
 
   imports: [],
   templateUrl: './landing-header-section.html',
-  styleUrl: './landing-header-section.css',
+  styleUrl: './landing-header-section.scss',
 })
 export class LandingHeaderSection {}

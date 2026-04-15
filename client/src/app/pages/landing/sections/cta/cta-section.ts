@@ -5,6 +5,6 @@ import { Component } from '@angular/core';
 
   imports: [],
   templateUrl: './cta-section.html',
-  styleUrl: './cta-section.css',
+  styleUrl: './cta-section.scss',
 })
 export class CtaSection {}

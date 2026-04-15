@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
 
   imports: [],
   templateUrl: './tiny-wins-section.html',
-  styleUrl: './tiny-wins-section.css',
+  styleUrl: './tiny-wins-section.scss',
 })
 export class TinyWinsSection {
   protected onMascotError(event: Event): void {

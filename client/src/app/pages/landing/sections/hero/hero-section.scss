@@ -1,0 +1,298 @@
+:host {
+  display: block;
+}
+
+.hero {
+  position: relative;
+  display: grid;
+  gap: 2rem;
+  align-items: center;
+  grid-template-columns: 1.15fr 1fr;
+
+  &__copy h1 {
+    margin-top: 0.7rem;
+    font-family: 'Rubik', sans-serif;
+    font-size: clamp(2.2rem, 5.3vw, 4rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+
+    span {
+      color: color-mix(in srgb, var(--text-on-lilac) 80%, #7a67ce);
+    }
+  }
+
+  &__kicker {
+    color: var(--text-on-pink);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.78rem;
+    font-weight: 800;
+  }
+
+  &__copy p {
+    margin-top: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    max-width: 54ch;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 1.35rem;
+  }
+
+  &__primary,
+  &__secondary {
+    text-decoration: none;
+    border-radius: 999px;
+    padding: 0.72rem 1.15rem;
+    font-weight: 800;
+    transition:
+      transform 0.22s ease,
+      box-shadow 0.22s ease;
+  }
+
+  &__primary {
+    color: #2f2045;
+    background: linear-gradient(140deg, #ffcedf, #cab0ff);
+    box-shadow: 0 10px 24px color-mix(in srgb, #c4aff9 34%, transparent);
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  &__secondary {
+    color: var(--text-primary);
+    background: color-mix(in srgb, var(--surface) 70%, white);
+    border: 1px solid var(--border-default);
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  &__trust {
+    margin-top: 1.2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+
+    li {
+      border-radius: 999px;
+      border: 1px solid var(--border-light);
+      background: color-mix(in srgb, var(--surface-lilac) 78%, white);
+      color: var(--text-on-lilac);
+      padding: 0.44rem 0.75rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+  }
+
+  &__visual {
+    position: relative;
+    min-height: 420px;
+    display: grid;
+    place-items: center;
+  }
+
+  &__orb {
+    position: absolute;
+    border-radius: 999px;
+    filter: blur(1px);
+
+    &--one {
+      width: 250px;
+      height: 250px;
+      background: color-mix(in srgb, var(--surface-pink) 72%, transparent);
+      top: 26px;
+      right: 34px;
+    }
+
+    &--two {
+      width: 170px;
+      height: 170px;
+      background: color-mix(in srgb, var(--surface-lilac) 72%, transparent);
+      bottom: 22px;
+      left: 26px;
+    }
+  }
+
+  &__card {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 350px);
+    display: grid;
+    gap: 1rem;
+    justify-items: center;
+    text-align: center;
+    border: 1px solid var(--border-default);
+    border-radius: 28px;
+    padding: 1.25rem 1rem;
+    background: color-mix(in srgb, var(--surface) 72%, white);
+    box-shadow: 0 20px 42px color-mix(in srgb, #ba8cc7 22%, transparent);
+
+    img {
+      width: min(230px, 86%);
+      aspect-ratio: 1;
+      object-fit: contain;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      width: 50%;
+      height: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      border-radius: 28px;
+      background: linear-gradient(135deg, #ffcade, #cdb6ff);
+      filter: blur(18px);
+    }
+
+    strong {
+      font-size: 1.1rem;
+      font-family: 'Rubik', sans-serif;
+    }
+
+    p {
+      margin-top: 0.35rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+  }
+
+  &__chip {
+    position: absolute;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-light);
+    background: color-mix(in srgb, var(--surface) 70%, white);
+    padding: 0.45rem 0.7rem;
+    font-size: 0.83rem;
+    color: var(--text-secondary);
+    box-shadow: var(--shadow-md);
+
+    &::after {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      width: 28px;
+      height: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      border-radius: 14px;
+      background: linear-gradient(135deg, #ffcade, #faffb6);
+      filter: blur(10px);
+    }
+
+    img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      border-radius: 999px;
+    }
+
+    &--top {
+      top: 14%;
+      left: 2%;
+    }
+
+    &--bottom {
+      right: 2%;
+      bottom: 20%;
+    }
+  }
+}
+
+// Dark mode overrides
+:host-context([data-theme='dark']) {
+  .hero {
+    &__copy h1 span {
+      color: #d7c4ff;
+    }
+
+    &__primary {
+      color: #f6efff;
+      background: linear-gradient(140deg, #6f558b, #8d73c0);
+      box-shadow: 0 10px 24px rgba(10, 7, 18, 0.4);
+    }
+
+    &__secondary {
+      color: #f2eaff;
+      background: rgba(53, 39, 74, 0.72);
+      border-color: rgba(210, 194, 255, 0.14);
+    }
+
+    &__trust li {
+      border-color: rgba(210, 194, 255, 0.12);
+      background: rgba(50, 39, 70, 0.72);
+      color: #d8ccee;
+    }
+
+    &__orb--one {
+      background: radial-gradient(circle, rgba(129, 89, 171, 0.18), transparent 68%);
+    }
+
+    &__orb--two {
+      background: radial-gradient(circle, rgba(79, 58, 117, 0.26), transparent 68%);
+    }
+
+    &__card {
+      border-color: rgba(210, 194, 255, 0.12);
+      background: rgba(38, 29, 52, 0.86);
+      box-shadow: 0 20px 42px rgba(5, 4, 12, 0.45);
+
+      &::after {
+        background: linear-gradient(135deg, rgba(112, 86, 156, 0.45), rgba(78, 57, 116, 0.1));
+      }
+    }
+
+    &__chip {
+      border-color: rgba(210, 194, 255, 0.12);
+      background: rgba(44, 33, 61, 0.8);
+      color: #d1c4e3;
+
+      &::after {
+        background: linear-gradient(135deg, rgba(114, 88, 161, 0.3), rgba(76, 56, 112, 0.05));
+      }
+    }
+  }
+}
+
+@media (max-width: 920px) {
+  .hero {
+    grid-template-columns: 1fr;
+
+    &__visual {
+      min-height: 380px;
+    }
+
+    &__chip--top {
+      left: 10%;
+    }
+
+    &__chip--bottom {
+      right: 8%;
+    }
+  }
+}
+
+@media (max-width: 500px) {
+  .hero {
+    &__visual {
+      min-height: 340px;
+    }
+
+    &__chip {
+      font-size: 0.76rem;
+    }
+  }
+}

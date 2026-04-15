@@ -10,7 +10,6 @@ import {
 
 @Component({
   selector: 'landing-page',
-
   imports: [
     LandingHeaderSection,
     HeroSection,
@@ -20,6 +19,6 @@ import {
     LandingFooterSection,
   ],
   templateUrl: './landing.html',
-  styleUrl: './landing.css',
+  styleUrl: './landing.scss',
 })
 export default class Landing {}
