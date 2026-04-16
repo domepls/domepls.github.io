@@ -19,7 +19,6 @@ from .serializers import (
 from .models import Profile
 from config.jwt import (
     clear_refresh_cookie,
-    generate_telegram_state,
     get_refresh_token_from_request,
     set_refresh_cookie,
     validate_telegram_auth_payload,
@@ -146,25 +145,13 @@ class TelegramAuthAPIView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-        state = generate_telegram_state()
-        request.session["telegram_auth_state"] = state
-        request.session.save()
-
-        return Response({"state": state, "bot_id": bot_id}, status=status.HTTP_200_OK)
+        return Response({"bot_id": bot_id}, status=status.HTTP_200_OK)
 
     def post(self, request):
         serializer = TelegramAuthSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         validated_data = cast(
             dict[str, object], serializer.validated_data or {})
-
-        state = validated_data.get("state")
-        session_state = request.session.get("telegram_auth_state")
-        if not session_state or state != session_state:
-            return Response(
-                {"detail": "Invalid Telegram state."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
 
         try:
             validate_telegram_auth_payload(validated_data)
@@ -192,8 +179,6 @@ class TelegramAuthAPIView(APIView):
                 {"detail": "This Telegram account is already linked elsewhere."},
                 status=status.HTTP_409_CONFLICT,
             )
-
-        request.session.pop("telegram_auth_state", None)
 
         return Response(
             {

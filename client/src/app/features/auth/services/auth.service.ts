@@ -16,7 +16,6 @@ interface TokenResponse {
 }
 
 interface TelegramInitResponse {
-  state: string;
   bot_id: string;
 }
 
@@ -103,14 +102,9 @@ export class AuthService {
     return this.http
       .get<TelegramInitResponse>(`${this.apiUrl}/auth/telegram/`, { withCredentials: true })
       .pipe(
-        switchMap(({ state, bot_id }) =>
+        switchMap(({ bot_id }) =>
           this.openTelegramPopup(bot_id).pipe(
-            switchMap((payload) =>
-              this.completeTelegramAuth({
-                ...payload,
-                state,
-              }),
-            ),
+            switchMap((payload) => this.completeTelegramAuth(payload)),
           ),
         ),
       );
