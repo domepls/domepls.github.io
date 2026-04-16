@@ -66,6 +66,38 @@ class AuthUserSerializer(serializers.ModelSerializer):
         return bool(profile.telegram_id)
 
 
+class AuthProfileSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source="user.id", read_only=True)
+    username = serializers.CharField(source="user.username", read_only=True)
+    first_name = serializers.CharField(
+        source="user.first_name", read_only=True)
+    last_name = serializers.CharField(source="user.last_name", read_only=True)
+    telegram_connected = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Profile
+        fields = (
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "avatar",
+            "bio",
+            "birth_date",
+            "location",
+            "website",
+            "status",
+            "points",
+            "streak",
+            "last_seen",
+            "telegram_id",
+            "telegram_connected",
+        )
+
+    def get_telegram_connected(self, instance):
+        return bool(instance.telegram_id)
+
+
 class TelegramAuthSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     first_name = serializers.CharField(

@@ -14,7 +14,7 @@ from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .serializers import (
-    AuthUserSerializer,
+    AuthProfileSerializer,
     LoginSerializer,
     ProfileSerializer,
     ProfileUpdateSerializer,
@@ -82,13 +82,14 @@ class RegisterAPIView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+        profile, _ = Profile.objects.get_or_create(user=user)
 
         refresh = RefreshToken.for_user(user)
 
         response = Response(
             {
                 "message": "User registered successfully.",
-                "user": AuthUserSerializer(user).data,
+                "user": AuthProfileSerializer(profile).data,
                 "tokens": {
                     "access": str(refresh.access_token),
                 },
@@ -117,14 +118,14 @@ class LoginAPIView(APIView):
                 status=status.HTTP_401_UNAUTHORIZED,
             )
 
-        Profile.objects.get_or_create(user=user)
+        profile, _ = Profile.objects.get_or_create(user=user)
 
         refresh = RefreshToken.for_user(user)
 
         response = Response(
             {
                 "message": "Login successful.",
-                "user": AuthUserSerializer(user).data,
+                "user": AuthProfileSerializer(profile).data,
                 "tokens": {
                     "access": str(refresh.access_token),
                 },
@@ -259,7 +260,7 @@ class TelegramAuthAPIView(APIView):
         return Response(
             {
                 "message": "Telegram account connected successfully.",
-                "user": AuthUserSerializer(request.user).data,
+                "user": AuthProfileSerializer(profile).data,
                 "profile": ProfileSerializer(profile).data,
             },
             status=status.HTTP_200_OK,

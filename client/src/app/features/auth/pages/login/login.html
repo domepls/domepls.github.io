@@ -19,12 +19,23 @@
         <input type="password" formControlName="password" autocomplete="current-password" />
       </label>
 
+      @if (successMessage()) {
+        <p class="auth-success">{{ successMessage() }}</p>
+      }
+
       @if (errorMessage()) {
         <p class="auth-error">{{ errorMessage() }}</p>
       }
 
-      @if (successMessage()) {
-        <p class="auth-success">{{ successMessage() }}</p>
+      @if (auth.needsTelegramLink() && successMessage()) {
+        <button
+          class="auth-submit"
+          type="button"
+          (click)="connectTelegram()"
+          [disabled]="isConnectingTelegram()"
+        >
+          {{ isConnectingTelegram() ? 'Connecting Telegram...' : 'Connect Telegram' }}
+        </button>
       }
 
       <button class="auth-submit" type="submit" [disabled]="isSubmitting()">

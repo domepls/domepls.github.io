@@ -86,6 +86,9 @@ export class PublicHeader {
       .beginTelegramAuth()
       .pipe(finalize(() => this.isConnecting.set(false)))
       .subscribe({
+        next: () => {
+          this.router.navigateByUrl('/app');
+        },
         error: (error) => {
           this.errorMessage.set(
             error?.error?.detail ?? error?.message ?? 'Unable to connect Telegram.',
