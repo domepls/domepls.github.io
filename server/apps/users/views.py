@@ -173,7 +173,13 @@ class TelegramAuthAPIView(APIView):
         try:
             with transaction.atomic():
                 profile.telegram_id = telegram_id
-                profile.save(update_fields=["telegram_id"])
+                photo_url = validated_data.get("photo_url")
+
+                if isinstance(photo_url, str) and photo_url:
+                    profile.avatar = photo_url
+                    profile.save(update_fields=["telegram_id", "avatar"])
+                else:
+                    profile.save(update_fields=["telegram_id"])
         except IntegrityError:
             return Response(
                 {"detail": "This Telegram account is already linked elsewhere."},

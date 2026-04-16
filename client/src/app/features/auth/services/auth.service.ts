@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, signal } from '@angular/core';
-import { Observable, catchError, of, switchMap, tap, throwError } from 'rxjs';
+import { Observable, catchError, map, of, switchMap, tap, throwError } from 'rxjs';
 import { environment } from '../../../../environments';
 import {
   AuthResponse,
@@ -13,6 +13,16 @@ interface TokenResponse {
   tokens: {
     access: string;
   };
+}
+
+interface MeResponse {
+  username: string;
+  telegram_id?: number | null;
+}
+
+interface JwtPayload {
+  user_id?: number;
+  sub?: string;
 }
 
 interface TelegramInitResponse {
@@ -88,6 +98,23 @@ export class AuthService {
       .post<TokenResponse>(`${this.apiUrl}/auth/refresh/`, {}, { withCredentials: true })
       .pipe(
         tap((response) => this.saveAccessToken(response.tokens.access)),
+        switchMap(() => this.http.get<MeResponse>(`${this.apiUrl}/users/me/`)),
+        tap((profile) => {
+          const user = this.currentUser();
+          const userId = user?.id ?? this.getUserIdFromAccessToken() ?? 0;
+
+          const hydratedUser: AuthUser = {
+            id: userId,
+            username: profile.username,
+            telegram_connected: Boolean(profile.telegram_id),
+          };
+
+          this.currentUser.set(hydratedUser);
+          localStorage.setItem(this.userKey, JSON.stringify(hydratedUser));
+          localStorage.setItem(this.needsTelegramKey, String(!hydratedUser.telegram_connected));
+          this.needsTelegramLink.set(!hydratedUser.telegram_connected);
+        }),
+        map(() => null),
         catchError(() => of(null)),
       );
   }
@@ -239,5 +266,35 @@ export class AuthService {
 
       document.head.appendChild(script);
     });
+  }
+
+  private getUserIdFromAccessToken(): number | null {
+    const token = this.accessToken();
+    if (!token) {
+      return null;
+    }
+
+    const parts = token.split('.');
+    if (parts.length < 2) {
+      return null;
+    }
+
+    try {
+      const payloadSegment = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+      const padded = payloadSegment + '='.repeat((4 - (payloadSegment.length % 4)) % 4);
+      const payload = JSON.parse(window.atob(padded)) as JwtPayload;
+
+      if (typeof payload.user_id === 'number') {
+        return payload.user_id;
+      }
+
+      if (typeof payload.sub === 'string' && /^\d+$/.test(payload.sub)) {
+        return Number(payload.sub);
+      }
+
+      return null;
+    } catch {
+      return null;
+    }
   }
 }
