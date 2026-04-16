@@ -1,7 +1,12 @@
 from django.conf import settings
 from django.contrib.auth import authenticate
+from django.core.files.base import ContentFile
 from django.db import IntegrityError, transaction
+import logging
+import os
 from typing import cast
+from urllib.parse import urlparse
+from urllib.request import Request, urlopen
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -23,6 +28,50 @@ from config.jwt import (
     set_refresh_cookie,
     validate_telegram_auth_payload,
 )
+
+
+logger = logging.getLogger(__name__)
+
+
+def _infer_image_extension(photo_url: str, content_type: str) -> str:
+    ext = os.path.splitext(urlparse(photo_url).path)[1].lower()
+    allowed = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
+    if ext in allowed:
+        return ext
+
+    mapping = {
+        "image/jpeg": ".jpg",
+        "image/png": ".png",
+        "image/webp": ".webp",
+        "image/gif": ".gif",
+    }
+    return mapping.get(content_type.lower(), ".jpg")
+
+
+def _save_avatar_from_url(profile: Profile, photo_url: str) -> bool:
+    try:
+        request = Request(photo_url, headers={"User-Agent": "DoMePls/1.0"})
+        with urlopen(request, timeout=10) as response:
+            content_type = response.headers.get("Content-Type", "")
+            if not content_type.startswith("image/"):
+                return False
+
+            content_length = response.headers.get("Content-Length")
+            if content_length and int(content_length) > 5 * 1024 * 1024:
+                return False
+
+            image_data = response.read()
+            if not image_data:
+                return False
+
+        extension = _infer_image_extension(photo_url, content_type)
+        filename = f"telegram_avatar_{profile.user.id}{extension}"
+        profile.avatar.save(filename, ContentFile(image_data), save=False)
+        return True
+    except Exception as error:
+        logger.warning(
+            "Unable to fetch Telegram avatar for user_id=%s: %s", profile.user.id, error)
+        return False
 
 
 class RegisterAPIView(generics.CreateAPIView):
@@ -173,13 +222,34 @@ class TelegramAuthAPIView(APIView):
         try:
             with transaction.atomic():
                 profile.telegram_id = telegram_id
+                user = request.user
+                user_update_fields: list[str] = []
+
+                first_name = validated_data.get("first_name")
+                if isinstance(first_name, str):
+                    cleaned_first_name = first_name.strip()[:150]
+                    if user.first_name != cleaned_first_name:
+                        user.first_name = cleaned_first_name
+                        user_update_fields.append("first_name")
+
+                last_name = validated_data.get("last_name")
+                if isinstance(last_name, str):
+                    cleaned_last_name = last_name.strip()[:150]
+                    if user.last_name != cleaned_last_name:
+                        user.last_name = cleaned_last_name
+                        user_update_fields.append("last_name")
+
+                if user_update_fields:
+                    user.save(update_fields=user_update_fields)
+
                 photo_url = validated_data.get("photo_url")
+                profile_update_fields = ["telegram_id"]
 
                 if isinstance(photo_url, str) and photo_url:
-                    profile.avatar = photo_url
-                    profile.save(update_fields=["telegram_id", "avatar"])
-                else:
-                    profile.save(update_fields=["telegram_id"])
+                    if _save_avatar_from_url(profile, photo_url):
+                        profile_update_fields.append("avatar")
+
+                profile.save(update_fields=profile_update_fields)
         except IntegrityError:
             return Response(
                 {"detail": "This Telegram account is already linked elsewhere."},
