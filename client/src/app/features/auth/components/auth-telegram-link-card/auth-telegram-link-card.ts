@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { finalize } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -22,14 +23,14 @@ export class AuthTelegramLinkCard {
     this.isSubmitting = true;
     this.errorMessage = '';
 
-    this.auth.beginTelegramAuth().subscribe({
-      next: () => {
-        this.isSubmitting = false;
-      },
-      error: (error) => {
-        this.isSubmitting = false;
-        this.errorMessage = error?.error?.detail ?? error?.message ?? 'Unable to connect Telegram.';
-      },
-    });
+    this.auth
+      .beginTelegramAuth()
+      .pipe(finalize(() => (this.isSubmitting = false)))
+      .subscribe({
+        error: (error) => {
+          this.errorMessage =
+            error?.error?.detail ?? error?.message ?? 'Unable to connect Telegram.';
+        },
+      });
   }
 }

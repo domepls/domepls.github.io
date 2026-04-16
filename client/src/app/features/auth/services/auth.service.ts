@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, signal } from '@angular/core';
-import { Observable, catchError, map, of, switchMap, tap, throwError } from 'rxjs';
+import { Observable, catchError, map, of, switchMap, tap, throwError, timeout } from 'rxjs';
 import { environment } from '../../../../environments';
 import {
   AuthResponse,
@@ -194,32 +194,36 @@ export class AuthService {
     }
 
     return this.loadTelegramWidget().pipe(
-      switchMap(
-        () =>
-          new Observable<TelegramLoginAuthPayload>((observer) => {
-            const telegramLogin = window.Telegram?.Login;
+      switchMap(() =>
+        new Observable<TelegramLoginAuthPayload>((observer) => {
+          const telegramLogin = window.Telegram?.Login;
 
-            if (!telegramLogin) {
-              observer.error(new Error('Telegram widget is unavailable.'));
-              return;
-            }
+          if (!telegramLogin) {
+            observer.error(new Error('Telegram widget is unavailable.'));
+            return;
+          }
 
-            telegramLogin.auth(
-              {
-                bot_id: resolvedBotId,
-                request_access: 'write',
-              },
-              (payload) => {
-                if (!payload) {
-                  observer.error(new Error('Telegram authorization was canceled.'));
-                  return;
-                }
+          telegramLogin.auth(
+            {
+              bot_id: resolvedBotId,
+              request_access: 'write',
+            },
+            (payload) => {
+              if (!payload) {
+                observer.error(new Error('Telegram authorization was canceled.'));
+                return;
+              }
 
-                observer.next(payload);
-                observer.complete();
-              },
-            );
+              observer.next(payload);
+              observer.complete();
+            },
+          );
+        }).pipe(
+          timeout({
+            first: 90_000,
+            with: () => throwError(() => new Error('Telegram authorization timed out.')),
           }),
+        ),
       ),
     );
   }
@@ -234,14 +238,42 @@ export class AuthService {
         'script[data-telegram-widget="login"]',
       );
 
+      const completeIfReady = () => {
+        if (window.Telegram?.Login) {
+          observer.next(void 0);
+          observer.complete();
+          return true;
+        }
+        return false;
+      };
+
       if (existingScript) {
-        existingScript.addEventListener('load', () => observer.next(void 0), { once: true });
-        existingScript.addEventListener(
-          'error',
-          () => observer.error(new Error('Failed to load Telegram widget.')),
-          { once: true },
-        );
-        return;
+        if (completeIfReady()) {
+          return;
+        }
+
+        const onLoad = () => {
+          if (completeIfReady()) {
+            return;
+          }
+          observer.error(new Error('Telegram widget loaded but API is unavailable.'));
+        };
+        const onError = () => observer.error(new Error('Failed to load Telegram widget.'));
+
+        existingScript.addEventListener('load', onLoad, { once: true });
+        existingScript.addEventListener('error', onError, { once: true });
+
+        const fallbackTimer = window.setTimeout(() => {
+          if (!completeIfReady()) {
+            observer.error(new Error('Telegram widget initialization timed out.'));
+          }
+        }, 10_000);
+
+        return () => {
+          window.clearTimeout(fallbackTimer);
+          existingScript.removeEventListener('load', onLoad);
+          existingScript.removeEventListener('error', onError);
+        };
       }
 
       const script = document.createElement('script');
@@ -249,22 +281,30 @@ export class AuthService {
       script.async = true;
       script.dataset['telegramWidget'] = 'login';
 
-      script.addEventListener(
-        'load',
-        () => {
-          observer.next(void 0);
-          observer.complete();
-        },
-        { once: true },
-      );
+      const onLoad = () => {
+        if (completeIfReady()) {
+          return;
+        }
+        observer.error(new Error('Telegram widget loaded but API is unavailable.'));
+      };
+      const onError = () => observer.error(new Error('Failed to load Telegram widget.'));
 
-      script.addEventListener(
-        'error',
-        () => observer.error(new Error('Failed to load Telegram widget.')),
-        { once: true },
-      );
+      script.addEventListener('load', onLoad, { once: true });
+      script.addEventListener('error', onError, { once: true });
+
+      const fallbackTimer = window.setTimeout(() => {
+        if (!completeIfReady()) {
+          observer.error(new Error('Telegram widget initialization timed out.'));
+        }
+      }, 10_000);
 
       document.head.appendChild(script);
+
+      return () => {
+        window.clearTimeout(fallbackTimer);
+        script.removeEventListener('load', onLoad);
+        script.removeEventListener('error', onError);
+      };
     });
   }
 
