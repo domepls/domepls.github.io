@@ -24,16 +24,16 @@
         <input type="password" formControlName="passwordConfirm" autocomplete="new-password" />
       </label>
 
-      @if (errorMessage) {
-        <p class="auth-error">{{ errorMessage }}</p>
+      @if (errorMessage()) {
+        <p class="auth-error">{{ errorMessage() }}</p>
       }
 
-      @if (successMessage) {
-        <p class="auth-success">{{ successMessage }}</p>
+      @if (successMessage()) {
+        <p class="auth-success">{{ successMessage() }}</p>
       }
 
-      <button class="auth-submit" type="submit" [disabled]="isSubmitting">
-        {{ isSubmitting ? 'Creating account...' : 'Create account' }}
+      <button class="auth-submit" type="submit" [disabled]="isSubmitting()">
+        {{ isSubmitting() ? 'Creating account...' : 'Create account' }}
       </button>
     </form>
 

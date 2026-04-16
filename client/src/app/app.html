@@ -1,0 +1,7 @@
+@if (isInitializing()) {
+  <section class="app-loader" aria-live="polite" aria-label="App is loading">
+    <div class="app-loader__spinner" aria-hidden="true"></div>
+  </section>
+} @else {
+  <router-outlet />
+}

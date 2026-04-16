@@ -12,9 +12,120 @@
       <a routerLink="/" fragment="cta">Start</a>
     </nav>
 
-    <div class="lp-header__actions">
-      <a class="lp-link" routerLink="/login">Log In</a>
-      <a class="lp-button" routerLink="/register">Try free</a>
-    </div>
+    @if (auth.isAuthenticated() && auth.currentUser(); as user) {
+      <div class="lp-user-menu">
+        <button
+          class="lp-user-menu__trigger"
+          type="button"
+          aria-label="Open user menu"
+          [attr.aria-expanded]="isMenuOpen"
+          (click)="toggleMenu()"
+        >
+          @if (user.avatar) {
+            <img
+              class="lp-user-menu__avatar"
+              [src]="user.avatar"
+              alt="User avatar"
+              loading="lazy"
+              (error)="onAvatarError($event)"
+            />
+          } @else {
+            <span
+              class="material-symbols-rounded lp-user-menu__avatar-placeholder"
+              aria-hidden="true"
+            >
+              account_circle
+            </span>
+          }
+        </button>
+
+        @if (isMenuOpen) {
+          <div class="lp-user-menu__panel" role="menu" aria-label="User menu">
+            <div class="lp-user-menu__card">
+              <div class="lp-user-menu__info">
+                @if (user.avatar) {
+                  <img
+                    class="lp-user-menu__card-avatar"
+                    [src]="user.avatar"
+                    alt="User avatar"
+                    loading="lazy"
+                    (error)="onAvatarError($event)"
+                  />
+                } @else {
+                  <span
+                    class="material-symbols-rounded lp-user-menu__card-avatar-placeholder"
+                    aria-hidden="true"
+                  >
+                    account_circle
+                  </span>
+                }
+
+                <div class="lp-user-menu__meta">
+                  <p class="lp-user-menu__name">{{ getUserDisplayName() }}</p>
+                  <p class="lp-user-menu__username">@{{ user.username }}</p>
+                  <p class="lp-user-menu__status">{{ user.status }}</p>
+                </div>
+              </div>
+
+              @if (auth.currentUser() && auth.needsTelegramLink()) {
+                <div class="lp-user-menu__warning">
+                  <span class="material-symbols-rounded">warning</span>
+                  Telegram not linked
+                  <button
+                    class="lp-user-menu__warning-btn"
+                    type="button"
+                    (click)="onTgConnect()"
+                    [disabled]="isConnecting()"
+                  >
+                    {{ isConnecting() ? 'Connecting...' : 'Connect' }}
+                  </button>
+                </div>
+                @if (errorMessage()) {
+                  <p class="auth-telegram__error">{{ errorMessage() }}</p>
+                }
+              }
+
+              <div class="lp-user-menu__divider"></div>
+
+              <div class="lp-user-menu__actions">
+                <a
+                  class="lp-user-menu__action"
+                  routerLink="/app/profile"
+                  role="menuitem"
+                  (click)="onActionClick()"
+                >
+                  <span class="material-symbols-rounded">account_circle</span>Edit profile
+                </a>
+                <a
+                  class="lp-user-menu__action"
+                  href="https://t.me/meowlaim"
+                  role="menuitem"
+                  target="_blank"
+                  rel="noopener"
+                  (click)="onActionClick()"
+                >
+                  <span class="material-symbols-rounded">help</span>Help & Support</a
+                >
+                <button
+                  class="lp-user-menu__action"
+                  type="button"
+                  role="menuitem"
+                  (click)="onLogout()"
+                  [disabled]="isLoggingOut()"
+                >
+                  <span class="material-symbols-rounded">logout</span
+                  >{{ isLoggingOut() ? 'Logging out...' : 'Log out' }}
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="lp-header__actions">
+        <a class="lp-link" routerLink="/login">Log In</a>
+        <a class="lp-button" routerLink="/register">Try free</a>
+      </div>
+    }
   </div>
 </header>

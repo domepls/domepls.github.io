@@ -2,6 +2,18 @@ export interface AuthUser {
   id: number;
   username: string;
   telegram_connected: boolean;
+  first_name?: string | null;
+  last_name?: string | null;
+  avatar?: string | null;
+  bio?: string | null;
+  birth_date?: string | null;
+  location?: string | null;
+  website?: string | null;
+  status?: string | null;
+  points?: number;
+  streak?: number;
+  last_seen?: string | null;
+  telegram_id?: number | null;
 }
 
 export interface AuthResponse {

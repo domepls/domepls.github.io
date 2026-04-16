@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthPageShell } from '../../components/auth-page-shell/auth-page-shell';
@@ -12,9 +12,10 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './login.scss',
 })
 export default class LoginPage {
-  protected isSubmitting = false;
-  protected errorMessage = '';
-  protected successMessage = '';
+  protected isSubmitting = signal(false);
+  protected errorMessage = signal('');
+  protected successMessage = signal('');
+
   readonly form;
 
   constructor(
@@ -28,25 +29,25 @@ export default class LoginPage {
   }
 
   submit(): void {
-    if (this.form.invalid || this.isSubmitting) {
+    if (this.form.invalid || this.isSubmitting()) {
       this.form.markAllAsTouched();
       return;
     }
 
-    this.isSubmitting = true;
-    this.errorMessage = '';
-    this.successMessage = '';
+    this.isSubmitting.set(true);
+    this.errorMessage.set('');
+    this.successMessage.set('');
 
     const { username, password } = this.form.getRawValue();
 
     this.auth.login(username, password).subscribe({
       next: () => {
-        this.successMessage = 'Logged in successfully.';
-        this.isSubmitting = false;
+        this.successMessage.set('Logged in successfully.');
+        this.isSubmitting.set(false);
       },
       error: (error) => {
-        this.errorMessage = error?.error?.detail ?? 'Unable to log in.';
-        this.isSubmitting = false;
+        this.errorMessage.set(error?.error?.detail ?? 'Unable to log in.');
+        this.isSubmitting.set(false);
       },
     });
   }

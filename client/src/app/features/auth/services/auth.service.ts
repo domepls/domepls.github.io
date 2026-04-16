@@ -17,6 +17,17 @@ interface TokenResponse {
 
 interface MeResponse {
   username: string;
+  first_name?: string | null;
+  last_name?: string | null;
+  avatar?: string | null;
+  bio?: string | null;
+  birth_date?: string | null;
+  location?: string | null;
+  website?: string | null;
+  status?: string | null;
+  points?: number;
+  streak?: number;
+  last_seen?: string | null;
   telegram_id?: number | null;
 }
 
@@ -93,30 +104,53 @@ export class AuthService {
       .pipe(tap((response) => this.saveSession(response)));
   }
 
-  restoreSession() {
+  restoreSession(): Observable<boolean> {
     return this.http
       .post<TokenResponse>(`${this.apiUrl}/auth/refresh/`, {}, { withCredentials: true })
       .pipe(
         tap((response) => this.saveAccessToken(response.tokens.access)),
-        switchMap(() => this.http.get<MeResponse>(`${this.apiUrl}/users/me/`)),
-        tap((profile) => {
-          const user = this.currentUser();
-          const userId = user?.id ?? this.getUserIdFromAccessToken() ?? 0;
-
-          const hydratedUser: AuthUser = {
-            id: userId,
-            username: profile.username,
-            telegram_connected: Boolean(profile.telegram_id),
-          };
-
-          this.currentUser.set(hydratedUser);
-          localStorage.setItem(this.userKey, JSON.stringify(hydratedUser));
-          localStorage.setItem(this.needsTelegramKey, String(!hydratedUser.telegram_connected));
-          this.needsTelegramLink.set(!hydratedUser.telegram_connected);
+        map(() => true),
+        catchError(() => {
+          this.clearSession();
+          return of(false);
         }),
-        map(() => null),
-        catchError(() => of(null)),
       );
+  }
+
+  fetchCurrentUser(): Observable<MeResponse> {
+    return this.http.get<MeResponse>(`${this.apiUrl}/users/me/`).pipe(
+      tap((profile) => {
+        this.updateCurrentUser(profile);
+      }),
+    );
+  }
+
+  private updateCurrentUser(profile: MeResponse): void {
+    const user = this.currentUser();
+    const userId = user?.id ?? this.getUserIdFromAccessToken() ?? 0;
+
+    const hydratedUser: AuthUser = {
+      id: userId,
+      username: profile.username,
+      first_name: profile.first_name ?? null,
+      last_name: profile.last_name ?? null,
+      avatar: profile.avatar ?? null,
+      bio: profile.bio ?? null,
+      birth_date: profile.birth_date ?? null,
+      location: profile.location ?? null,
+      website: profile.website ?? null,
+      status: profile.status ?? null,
+      points: profile.points ?? 0,
+      streak: profile.streak ?? 0,
+      last_seen: profile.last_seen ?? null,
+      telegram_id: profile.telegram_id ?? null,
+      telegram_connected: Boolean(profile.telegram_id),
+    };
+
+    this.currentUser.set(hydratedUser);
+    localStorage.setItem(this.userKey, JSON.stringify(hydratedUser));
+    localStorage.setItem(this.needsTelegramKey, String(!hydratedUser.telegram_connected));
+    this.needsTelegramLink.set(!hydratedUser.telegram_connected);
   }
 
   logout() {
@@ -129,6 +163,7 @@ export class AuthService {
     return this.http
       .get<TelegramInitResponse>(`${this.apiUrl}/auth/telegram/`, { withCredentials: true })
       .pipe(
+        timeout(10_000),
         switchMap(({ bot_id }) =>
           this.openTelegramPopup(bot_id).pipe(
             switchMap((payload) => this.completeTelegramAuth(payload)),
@@ -143,6 +178,7 @@ export class AuthService {
         withCredentials: true,
       })
       .pipe(
+        timeout(15_000),
         tap((response) => {
           this.currentUser.set(response.user);
           this.needsTelegramLink.set(false);

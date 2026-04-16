@@ -15,7 +15,7 @@ class Profile(models.Model):
     location = models.CharField(max_length=100, blank=True)
     website = models.URLField(blank=True)
 
-    status = models.CharField(max_length=255, blank=True, default="pls do me 👉👈")
+    status = models.CharField(max_length=255, blank=True, default="Hey there! I'm using DoMePls.")
     points = models.IntegerField(default=0)
     streak = models.IntegerField(default=0)
     last_seen = models.DateTimeField(auto_now=True)

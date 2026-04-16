@@ -19,6 +19,16 @@ interface RefreshResponse {
 
 let refreshRequest$: Observable<string> | null = null;
 
+function forceLogout(): void {
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('authUser');
+  localStorage.removeItem('needsTelegramLink');
+
+  if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
+    window.location.href = '/login';
+  }
+}
+
 function shouldSkipRefresh(request: HttpRequest<unknown>): boolean {
   const url = request.url;
   return (
@@ -80,9 +90,7 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (
           return next(retriedRequest);
         }),
         catchError((refreshError) => {
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('authUser');
-          localStorage.removeItem('needsTelegramLink');
+          forceLogout();
           return throwError(() => refreshError);
         }),
       );
