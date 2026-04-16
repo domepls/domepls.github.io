@@ -1,6 +1,15 @@
 <div class="auth-telegram">
   <p>You are signed in, but Telegram is still disconnected.</p>
-  <button class="auth-telegram__button" type="button" (click)="beginTelegramAuth()">
-    Connect Telegram
+  <button
+    class="auth-telegram__button"
+    type="button"
+    (click)="beginTelegramAuth()"
+    [disabled]="isSubmitting"
+  >
+    {{ isSubmitting ? 'Connecting...' : 'Connect Telegram' }}
   </button>
+
+  @if (errorMessage) {
+    <p class="auth-telegram__error">{{ errorMessage }}</p>
+  }
 </div>

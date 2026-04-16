@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, signal } from '@angular/core';
-import { catchError, map, of, tap } from 'rxjs';
+import { Observable, catchError, of, switchMap, tap, throwError } from 'rxjs';
 import { environment } from '../../../../environments';
 import {
   AuthResponse,
@@ -18,6 +18,30 @@ interface TokenResponse {
 interface TelegramInitResponse {
   state: string;
   bot_id: string;
+}
+
+type TelegramLoginAuthPayload = Omit<TelegramAuthPayload, 'state'>;
+
+interface TelegramLoginOptions {
+  bot_id: string;
+  request_access?: 'write' | 'read';
+}
+
+interface TelegramLoginApi {
+  auth(
+    options: TelegramLoginOptions,
+    callback: (payload: TelegramLoginAuthPayload | false) => void,
+  ): void;
+}
+
+interface TelegramWindow {
+  Login?: TelegramLoginApi;
+}
+
+declare global {
+  interface Window {
+    Telegram?: TelegramWindow;
+  }
 }
 
 @Injectable({
@@ -78,7 +102,18 @@ export class AuthService {
   beginTelegramAuth() {
     return this.http
       .get<TelegramInitResponse>(`${this.apiUrl}/auth/telegram/`, { withCredentials: true })
-      .pipe(map(({ state, bot_id }) => this.buildTelegramAuthUrl(state, bot_id)));
+      .pipe(
+        switchMap(({ state, bot_id }) =>
+          this.openTelegramPopup(bot_id).pipe(
+            switchMap((payload) =>
+              this.completeTelegramAuth({
+                ...payload,
+                state,
+              }),
+            ),
+          ),
+        ),
+      );
   }
 
   completeTelegramAuth(payload: TelegramAuthPayload) {
@@ -131,22 +166,84 @@ export class AuthService {
     }
   }
 
-  private buildTelegramAuthUrl(state: string, botId: string): string {
+  private openTelegramPopup(botId: string): Observable<TelegramLoginAuthPayload> {
     const resolvedBotId = botId.trim();
-
     if (!resolvedBotId) {
-      throw new Error('Telegram bot id is not configured.');
+      return throwError(() => new Error('Telegram bot id is not configured.'));
     }
 
-    const callbackUrl = new URL(`${window.location.origin}/auth/telegram`);
-    callbackUrl.searchParams.set('state', state);
+    return this.loadTelegramWidget().pipe(
+      switchMap(
+        () =>
+          new Observable<TelegramLoginAuthPayload>((observer) => {
+            const telegramLogin = window.Telegram?.Login;
 
-    const authUrl = new URL('https://oauth.telegram.org/auth');
-    authUrl.searchParams.set('bot_id', resolvedBotId);
-    authUrl.searchParams.set('origin', window.location.origin);
-    authUrl.searchParams.set('return_to', callbackUrl.toString());
-    authUrl.searchParams.set('request_access', '0');
+            if (!telegramLogin) {
+              observer.error(new Error('Telegram widget is unavailable.'));
+              return;
+            }
 
-    return authUrl.toString();
+            telegramLogin.auth(
+              {
+                bot_id: resolvedBotId,
+                request_access: 'write',
+              },
+              (payload) => {
+                if (!payload) {
+                  observer.error(new Error('Telegram authorization was canceled.'));
+                  return;
+                }
+
+                observer.next(payload);
+                observer.complete();
+              },
+            );
+          }),
+      ),
+    );
+  }
+
+  private loadTelegramWidget(): Observable<void> {
+    if (window.Telegram?.Login) {
+      return of(void 0);
+    }
+
+    return new Observable<void>((observer) => {
+      const existingScript = document.querySelector<HTMLScriptElement>(
+        'script[data-telegram-widget="login"]',
+      );
+
+      if (existingScript) {
+        existingScript.addEventListener('load', () => observer.next(void 0), { once: true });
+        existingScript.addEventListener(
+          'error',
+          () => observer.error(new Error('Failed to load Telegram widget.')),
+          { once: true },
+        );
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = 'https://telegram.org/js/telegram-widget.js?22';
+      script.async = true;
+      script.dataset['telegramWidget'] = 'login';
+
+      script.addEventListener(
+        'load',
+        () => {
+          observer.next(void 0);
+          observer.complete();
+        },
+        { once: true },
+      );
+
+      script.addEventListener(
+        'error',
+        () => observer.error(new Error('Failed to load Telegram widget.')),
+        { once: true },
+      );
+
+      document.head.appendChild(script);
+    });
   }
 }

@@ -25,6 +25,17 @@
   color: #2d1f42;
   background: linear-gradient(135deg, #ffd8e8, #d9c7ff);
   box-shadow: 0 14px 28px color-mix(in srgb, #d4c2ff 32%, transparent);
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.auth-telegram__error {
+  margin: 0;
+  color: #b3261e;
+  font-size: 0.92rem;
 }
 
 :host-context([data-theme='dark']) {
@@ -37,5 +48,9 @@
     color: #f6efff;
     background: linear-gradient(135deg, #6d568f, #8b6bbd);
     box-shadow: 0 14px 28px rgba(8, 6, 16, 0.38);
+  }
+
+  .auth-telegram__error {
+    color: #ffb4ab;
   }
 }

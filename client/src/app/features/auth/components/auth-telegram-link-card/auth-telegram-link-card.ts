@@ -9,12 +9,26 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './auth-telegram-link-card.scss',
 })
 export class AuthTelegramLinkCard {
+  protected isSubmitting = false;
+  protected errorMessage = '';
+
   constructor(protected readonly auth: AuthService) {}
 
   protected beginTelegramAuth(): void {
+    if (this.isSubmitting) {
+      return;
+    }
+
+    this.isSubmitting = true;
+    this.errorMessage = '';
+
     this.auth.beginTelegramAuth().subscribe({
-      next: (authUrl) => {
-        window.location.href = authUrl;
+      next: () => {
+        this.isSubmitting = false;
+      },
+      error: (error) => {
+        this.isSubmitting = false;
+        this.errorMessage = error?.error?.detail ?? error?.message ?? 'Unable to connect Telegram.';
       },
     });
   }
