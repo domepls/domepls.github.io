@@ -181,6 +181,10 @@ body {
   font-family: 'Nunito', sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 button {
   border-radius: var(--radius-md);
   padding: 0.5rem 1rem;

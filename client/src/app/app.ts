@@ -1,4 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { ViewportScroller } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from './features/auth/services/auth.service';
@@ -16,9 +17,22 @@ export class App implements OnInit {
   constructor(
     private readonly theme: ThemeService,
     private readonly auth: AuthService,
+    private readonly viewportScroller: ViewportScroller,
   ) {}
 
   async ngOnInit() {
+    this.viewportScroller.setOffset(() => {
+      if (typeof document === 'undefined') {
+        return [0, 0];
+      }
+
+      const header = document.querySelector('public-header');
+      const headerHeight =
+        header instanceof HTMLElement ? header.getBoundingClientRect().height : 0;
+
+      return [0, Math.ceil(headerHeight) + 8];
+    });
+
     this.theme.init();
 
     let isAuthenticated = false;

@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { AuthService } from '../../../../features/auth/services/auth.service';
 
@@ -19,6 +19,7 @@ export class PublicHeader {
   constructor(
     public readonly auth: AuthService,
     private readonly host: ElementRef<HTMLElement>,
+    private readonly router: Router,
   ) {}
 
   protected toggleMenu() {
@@ -60,8 +61,10 @@ export class PublicHeader {
     this.isLoggingOut.set(true);
     this.auth.logout().subscribe({
       next: () => {
+        this.auth.clearSession();
         this.isLoggingOut.set(false);
         this.onActionClick();
+        this.router.navigateByUrl('/');
       },
       error: () => {
         this.auth.clearSession();

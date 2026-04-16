@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'hero-section',
 
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './hero-section.html',
   styleUrl: './hero-section.scss',
 })

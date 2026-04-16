@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { AuthPageShell } from '../../components/auth-page-shell/auth-page-shell';
 import { AuthService } from '../../services/auth.service';
 
@@ -21,6 +21,7 @@ export default class LoginPage {
   constructor(
     private readonly formBuilder: FormBuilder,
     protected readonly auth: AuthService,
+    private readonly router: Router,
   ) {
     this.form = this.formBuilder.nonNullable.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
@@ -44,6 +45,7 @@ export default class LoginPage {
       next: () => {
         this.successMessage.set('Logged in successfully.');
         this.isSubmitting.set(false);
+        this.router.navigateByUrl('/app');
       },
       error: (error) => {
         this.errorMessage.set(error?.error?.detail ?? 'Unable to log in.');
