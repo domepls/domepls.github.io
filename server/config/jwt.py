@@ -7,7 +7,7 @@ from django.conf import settings
 
 REFRESH_COOKIE_NAME = "refresh_token"
 REFRESH_COOKIE_PATH = "/api/"
-REFRESH_COOKIE_SAMESITE = "Lax"
+REFRESH_COOKIE_SAMESITE = "Lax" if settings.DEBUG else "None"
 REFRESH_COOKIE_SECURE = not settings.DEBUG
 
 
