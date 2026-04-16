@@ -78,8 +78,6 @@ class TelegramAuthSerializer(serializers.Serializer):
         required=False, allow_blank=True, allow_null=True)
     auth_date = serializers.IntegerField()
     hash = serializers.CharField()
-    state = serializers.CharField(
-        required=False, allow_blank=True, allow_null=True)
 
 
 class ProfileSerializer(serializers.ModelSerializer):
