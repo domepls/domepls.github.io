@@ -163,7 +163,10 @@
   }
 
   &__meta {
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: start;
     gap: 0.1rem;
     min-width: 0;
   }
