@@ -32,7 +32,6 @@ env/
 # Database
 *.sqlite3
 *.sqlite
-migrations/
 
 # OS
 .DS_Store
