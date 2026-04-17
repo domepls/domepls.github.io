@@ -15,6 +15,16 @@ interface TokenResponse {
   };
 }
 
+interface LoginResponse {
+  message?: string;
+  detail?: string;
+  user?: AuthUser;
+  tokens?: {
+    access: string;
+  };
+  requires_2fa_code?: boolean;
+}
+
 interface MeResponse {
   username: string;
   first_name?: string | null;
@@ -29,6 +39,7 @@ interface MeResponse {
   streak?: number;
   last_seen?: string | null;
   telegram_id?: number | null;
+  two_factor_enabled?: boolean;
 }
 
 interface JwtPayload {
@@ -80,14 +91,21 @@ export class AuthService {
 
   constructor(private readonly http: HttpClient) {}
 
-  login(username: string, password: string) {
+  login(username: string, password: string, otpCode?: string) {
+    const body: Record<string, string> = { username, password };
+    if (otpCode) {
+      body['otp_code'] = otpCode;
+    }
+
     return this.http
-      .post<AuthResponse>(
-        `${this.apiUrl}/auth/login/`,
-        { username, password },
-        { withCredentials: true },
-      )
-      .pipe(tap((response) => this.saveSession(response)));
+      .post<LoginResponse>(`${this.apiUrl}/auth/login/`, body, { withCredentials: true })
+      .pipe(
+        tap((response) => {
+          if (response.tokens?.access && response.user) {
+            this.saveSession(response as AuthResponse);
+          }
+        }),
+      );
   }
 
   register(username: string, password: string, passwordConfirm: string) {
@@ -144,6 +162,7 @@ export class AuthService {
       streak: profile.streak ?? 0,
       last_seen: profile.last_seen ?? null,
       telegram_id: profile.telegram_id ?? null,
+      two_factor_enabled: profile.two_factor_enabled ?? false,
       telegram_connected: Boolean(profile.telegram_id),
     };
 

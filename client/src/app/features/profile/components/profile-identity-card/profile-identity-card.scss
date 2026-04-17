@@ -1,0 +1,70 @@
+:host {
+  display: block;
+}
+
+.profile-achievements {
+  width: 100%;
+  display: grid;
+  gap: 0.55rem;
+  padding-top: 0.15rem;
+}
+
+.profile-achievements__header {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  .material-symbols-rounded {
+    font-size: 1rem;
+    line-height: 1;
+  }
+}
+
+.profile-achievements__scroller {
+  display: flex;
+  gap: 0.7rem;
+  overflow-x: auto;
+  padding-bottom: 0.1rem;
+  direction: ltr;
+}
+
+.profile-achievements__item {
+  flex: 0 0 9.25rem;
+  border-radius: 1rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 68%, transparent);
+  background: color-mix(in srgb, var(--surface) 74%, var(--background));
+  padding: 0.8rem;
+  display: grid;
+  gap: 0.3rem;
+  align-content: start;
+  scroll-snap-align: start;
+  direction: ltr;
+
+  .material-symbols-rounded {
+    font-size: 1.15rem;
+    line-height: 1;
+    color: color-mix(in srgb, var(--text-secondary) 82%, var(--text-primary));
+  }
+
+  strong {
+    color: var(--text-primary);
+    font-size: 0.88rem;
+  }
+
+  span {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+}
+
+.profile-achievements__item--placeholder {
+  opacity: 0.45;
+  border-style: dashed;
+}

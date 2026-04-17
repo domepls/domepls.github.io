@@ -44,6 +44,8 @@ class RegisterSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
+    otp_code = serializers.CharField(
+        write_only=True, required=False, allow_blank=False)
 
 
 class AuthUserSerializer(serializers.ModelSerializer):
@@ -90,6 +92,7 @@ class AuthProfileSerializer(serializers.ModelSerializer):
             "points",
             "streak",
             "last_seen",
+            "two_factor_enabled",
             "telegram_id",
             "telegram_connected",
         )
@@ -117,6 +120,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(
         source="user.first_name", read_only=True)
     last_name = serializers.CharField(source="user.last_name", read_only=True)
+    telegram_connected = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
@@ -133,15 +137,34 @@ class ProfileSerializer(serializers.ModelSerializer):
             "points",
             "streak",
             "last_seen",
+            "two_factor_enabled",
             "telegram_id",
+            "telegram_connected",
         )
+
+    def get_telegram_connected(self, instance):
+        return bool(instance.telegram_id)
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(
+        source="user.username",
+        required=False,
+        allow_blank=False,
+        max_length=150,
+    )
     first_name = serializers.CharField(
         source="user.first_name", required=False, allow_blank=True)
     last_name = serializers.CharField(
         source="user.last_name", required=False, allow_blank=True)
+    current_password = serializers.CharField(
+        write_only=True, required=False, allow_blank=False, trim_whitespace=False)
+    password = serializers.CharField(
+        write_only=True, required=False, allow_blank=False, trim_whitespace=False)
+    password_confirm = serializers.CharField(
+        write_only=True, required=False, allow_blank=False, trim_whitespace=False)
+    two_factor_code = serializers.CharField(
+        write_only=True, required=False, allow_blank=False, trim_whitespace=False)
 
     class Meta:
         model = Profile
@@ -152,21 +175,80 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
             "location",
             "website",
             "status",
+            "username",
             "first_name",
             "last_name",
+            "two_factor_enabled",
+            "current_password",
+            "password",
+            "password_confirm",
+            "two_factor_code",
         )
+
+    def validate(self, attrs):
+        user_data = attrs.get("user", {})
+        new_password = attrs.get("password")
+        password_confirm = attrs.get("password_confirm")
+        current_password = attrs.get("current_password")
+
+        if user_data:
+            username = user_data.get("username")
+            if isinstance(username, str):
+                cleaned_username = username.strip()
+                if not cleaned_username:
+                    raise serializers.ValidationError(
+                        {"username": "Username cannot be empty."})
+
+                user = self.instance.user if self.instance else None
+                if user and user.__class__.objects.filter(username=cleaned_username).exclude(pk=user.pk).exists():
+                    raise serializers.ValidationError(
+                        {"username": "This username is already taken."})
+                user_data["username"] = cleaned_username
+
+        if new_password or password_confirm or current_password:
+            if not current_password:
+                raise serializers.ValidationError(
+                    {"current_password": "Current password is required."})
+
+            if not self.instance.user.check_password(current_password):
+                raise serializers.ValidationError(
+                    {"current_password": "Current password is incorrect."})
+
+            if not new_password:
+                raise serializers.ValidationError(
+                    {"password": "New password is required."})
+
+            if new_password != password_confirm:
+                raise serializers.ValidationError(
+                    {"password_confirm": "Passwords do not match."})
+
+            validate_password(new_password, user=self.instance.user)
+
+        return attrs
 
     def update(self, instance, validated_data):
         user_data = validated_data.pop("user", {})
+        current_password = validated_data.pop("current_password", None)
+        new_password = validated_data.pop("password", None)
+        validated_data.pop("password_confirm", None)
+        validated_data.pop("two_factor_code", None)
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
 
         user = instance.user
+        user_update_fields: list[str] = []
         for attr, value in user_data.items():
             setattr(user, attr, value)
-        user.save()
+            user_update_fields.append(attr)
+
+        if new_password:
+            user.set_password(new_password)
+            user_update_fields.append("password")
+
+        if user_update_fields:
+            user.save(update_fields=user_update_fields)
 
         return instance
 

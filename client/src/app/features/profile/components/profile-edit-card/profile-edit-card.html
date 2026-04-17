@@ -1,0 +1,51 @@
+<article class="profile-card-shell profile-card-shell--edit">
+  <p class="profile-card__eyebrow">Edit profile</p>
+
+  <section class="profile-card profile-card--edit">
+    <div class="profile-form-grid" [formGroup]="profileForm">
+      <label>
+        <span>First name</span>
+        <input type="text" formControlName="first_name" placeholder="First name" />
+      </label>
+
+      <label>
+        <span>Last name</span>
+        <input type="text" formControlName="last_name" placeholder="Last name" />
+      </label>
+
+      <label>
+        <span>Username</span>
+        <input type="text" formControlName="username" placeholder="Username" />
+      </label>
+
+      <label>
+        <span>Location</span>
+        <input type="text" formControlName="location" placeholder="City / timezone" />
+      </label>
+
+      <label>
+        <span>Website</span>
+        <input type="url" formControlName="website" placeholder="https://example.com" />
+      </label>
+
+      <label>
+        <span>Birth date</span>
+        <input type="date" formControlName="birth_date" />
+      </label>
+
+      <label class="profile-form-grid__full">
+        <span>Status</span>
+        <input type="text" formControlName="status" placeholder="Drop your current struggle..." />
+      </label>
+
+      <label class="profile-form-grid__full">
+        <span>Bio</span>
+        <textarea
+          formControlName="bio"
+          rows="4"
+          placeholder="Trying to be productive, but in a cute way."
+        ></textarea>
+      </label>
+    </div>
+  </section>
+</article>

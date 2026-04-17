@@ -1,0 +1,93 @@
+<article class="profile-card-shell profile-card-shell--identity">
+  <p class="profile-card__eyebrow">My profile</p>
+
+  <section class="profile-card profile-card--identity">
+    <input
+      #avatarInput
+      class="profile-avatar__input"
+      type="file"
+      accept="image/*"
+      (change)="avatarChange.emit($event)"
+    />
+
+    <button
+      type="button"
+      class="profile-avatar profile-avatar--interactive"
+      (click)="avatarInput.click()"
+      aria-label="Edit avatar"
+      title="Edit avatar"
+    >
+      <img
+        class="profile-avatar__image"
+        [src]="avatarPreview ?? '/mascots/profile-placeholder.png'"
+        [alt]="avatarLabel"
+        loading="lazy"
+      />
+      <span class="profile-avatar__overlay" aria-hidden="true">
+        <span class="material-symbols-rounded">edit</span>
+        <span>Edit</span>
+      </span>
+    </button>
+
+    <div class="profile-identity">
+      <strong>{{ displayName }}</strong>
+      <span>@{{ profile.username }}</span>
+      <p class="profile-identity__status">{{ profile.status }}</p>
+
+      <div
+        class="profile-telegram-badge"
+        [class.is-warning]="!profile.telegram_connected"
+        [class.is-success]="profile.telegram_connected"
+      >
+        <span class="material-symbols-rounded">
+          {{ profile.telegram_connected ? 'check_circle' : 'warning' }}
+        </span>
+        <span>
+          {{ profile.telegram_connected ? 'Telegram connected' : 'Telegram not connected' }}
+        </span>
+        @if (!profile.telegram_connected) {
+          <button
+            type="button"
+            class="profile-telegram-badge__button"
+            (click)="connectTelegram.emit()"
+            [disabled]="isConnectingTelegram"
+          >
+            {{ isConnectingTelegram ? 'Connecting...' : 'Connect' }}
+          </button>
+        }
+      </div>
+
+      @if (telegramConnectErrorMessage) {
+        <p class="profile-telegram-error" role="alert">
+          {{ telegramConnectErrorMessage }}
+        </p>
+      }
+    </div>
+
+    <div class="profile-mini-stats">
+      @for (stat of stats; track stat.label) {
+        <div class="profile-mini-stats__item">
+          <strong>{{ stat.value }}</strong>
+          <span>{{ stat.label }}</span>
+        </div>
+      }
+    </div>
+
+    <div class="profile-achievements">
+      <div class="profile-achievements__header">
+        <span class="material-symbols-rounded" aria-hidden="true">emoji_events</span>
+        <span>Achievements</span>
+      </div>
+
+      <div class="profile-achievements__scroller" aria-label="Achievements list">
+        @for (slot of achievementPlaceholders; track slot) {
+          <div class="profile-achievements__item profile-achievements__item--placeholder">
+            <span class="material-symbols-rounded" aria-hidden="true">emoji_events</span>
+            <strong>Coming soon</strong>
+            <span>Achievement {{ slot }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+</article>

@@ -1,1 +1,79 @@
-<p>profile works!</p>
+<section class="profile-page">
+  @if (isLoading()) {
+    <div class="profile-page__state">Loading profile...</div>
+  } @else if (profile(); as profileData) {
+    <section class="profile-hero">
+      <form class="profile-page__form" [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+        <div class="profile-main-grid">
+          <app-profile-identity-card
+            [profile]="profileData"
+            [avatarPreview]="avatarPreview()"
+            [avatarLabel]="getAvatarLabel()"
+            [displayName]="getDisplayName(profileData)"
+            [stats]="stats()"
+            [achievementPlaceholders]="achievementPlaceholders()"
+            [isConnectingTelegram]="isConnectingTelegram()"
+            [telegramConnectErrorMessage]="telegramConnectErrorMessage()"
+            (avatarChange)="onAvatarChange($event)"
+            (connectTelegram)="connectTelegram()"
+          />
+
+          <app-profile-edit-card [profileForm]="profileForm" />
+        </div>
+
+        <div class="profile-bottom-grid">
+          <app-profile-security-card
+            [profile]="profileData"
+            [profileForm]="profileForm"
+            [twoFactorChallengeMessage]="twoFactorChallengeMessage()"
+            [showTwoFactorCode]="showTwoFactorCode()"
+            (twoFactorCodeInput)="onTwoFactorCodeInput($event)"
+          />
+
+          <app-profile-danger-card
+            [profile]="profileData"
+            [isDeleteFinalStepVisible]="isDeleteFinalStepVisible()"
+            [deleteErrorMessage]="deleteErrorMessage()"
+            [deleteChallengeMessage]="deleteChallengeMessage()"
+            [deletePassword]="deletePassword()"
+            [deleteConfirm]="deleteConfirm()"
+            [deleteTwoFactorCode]="deleteTwoFactorCode()"
+            [deleteFinalAnswer]="deleteFinalAnswer()"
+            [isDeleting]="isDeleting()"
+            [canPressDeleteButton]="canPressDeleteButton()"
+            (deletePasswordInput)="onDeletePasswordInput($event)"
+            (deleteConfirmInput)="onDeleteConfirmInput($event)"
+            (deleteTwoFactorCodeInput)="onDeleteTwoFactorCodeInput($event)"
+            (deleteFinalAnswerInput)="onDeleteFinalAnswerInput($event)"
+            (deleteRequested)="deleteAccount()"
+          />
+        </div>
+
+        <div class="profile-actions">
+          @if (errorMessage() && !isLoading()) {
+            <div class="profile-feedback profile-feedback--error" role="alert">
+              <span class="material-symbols-rounded">error</span>
+              <span>{{ errorMessage() }}</span>
+            </div>
+          }
+          <button type="button" class="profile-btn profile-btn--ghost" (click)="resetForm()">
+            <span class="material-symbols-rounded">settings_backup_restore</span> Reset
+          </button>
+          <button
+            type="submit"
+            class="profile-btn profile-btn--primary"
+            [disabled]="isSaving() || !hasChanges()"
+          >
+            <span class="material-symbols-rounded">save</span>
+            {{ isSaving() ? 'Saving...' : 'Save profile' }}
+          </button>
+        </div>
+      </form>
+    </section>
+  } @else {
+    <div class="profile-page__state profile-page__state--error">
+      <p>{{ errorMessage() }}</p>
+      <button type="button" (click)="loadProfile()">Try again</button>
+    </div>
+  }
+</section>

@@ -21,44 +21,26 @@
           [attr.aria-expanded]="isMenuOpen"
           (click)="toggleMenu()"
         >
-          @if (user.avatar) {
-            <img
-              class="lp-user-menu__avatar"
-              [src]="user.avatar"
-              alt="User avatar"
-              loading="lazy"
-              (error)="onAvatarError($event)"
-            />
-          } @else {
-            <span
-              class="material-symbols-rounded lp-user-menu__avatar-placeholder"
-              aria-hidden="true"
-            >
-              account_circle
-            </span>
-          }
+          <img
+            class="lp-user-menu__avatar"
+            [src]="user.avatar ?? '/mascots/profile-placeholder.png'"
+            alt="User avatar"
+            loading="lazy"
+            (error)="onAvatarError($event)"
+          />
         </button>
 
         @if (isMenuOpen) {
           <div class="lp-user-menu__panel" role="menu" aria-label="User menu">
             <div class="lp-user-menu__card">
               <div class="lp-user-menu__info">
-                @if (user.avatar) {
-                  <img
-                    class="lp-user-menu__card-avatar"
-                    [src]="user.avatar"
-                    alt="User avatar"
-                    loading="lazy"
-                    (error)="onAvatarError($event)"
-                  />
-                } @else {
-                  <span
-                    class="material-symbols-rounded lp-user-menu__card-avatar-placeholder"
-                    aria-hidden="true"
-                  >
-                    account_circle
-                  </span>
-                }
+                <img
+                  class="lp-user-menu__card-avatar"
+                  [src]="user.avatar ?? '/mascots/profile-placeholder.png'"
+                  alt="User avatar"
+                  loading="lazy"
+                  (error)="onAvatarError($event)"
+                />
 
                 <div class="lp-user-menu__meta">
                   <p class="lp-user-menu__name">{{ getUserDisplayName() }}</p>
@@ -70,7 +52,7 @@
               @if (auth.currentUser() && auth.needsTelegramLink()) {
                 <div class="lp-user-menu__warning">
                   <span class="material-symbols-rounded">warning</span>
-                  Telegram not linked
+                  Telegram not connected
                   <button
                     class="lp-user-menu__warning-btn"
                     type="button"

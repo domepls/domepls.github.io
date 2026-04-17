@@ -22,5 +22,5 @@ RUN python manage.py collectstatic --noinput
 # Expose port
 EXPOSE 8000
 
-# Run migrations and start Gunicorn
-CMD ["sh", "-c", "python manage.py migrate && gunicorn core.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 4 --access-logfile - --error-logfile - --capture-output --log-level info"]
+# Run migrations and start Uvicorn (ASGI)
+CMD ["sh", "-c", "python manage.py migrate && uvicorn core.asgi:application --host 0.0.0.0 --port ${PORT:-8000} --workers 4 --log-level info"]

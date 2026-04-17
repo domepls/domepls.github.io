@@ -29,6 +29,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/profile/pages/profile/profile'),
       },
       {
+        path: 'friends',
+        loadComponent: () => import('./features/profile/pages/profile/profile'),
+      },
+      {
         path: 'profile',
         loadComponent: () => import('./features/profile/pages/profile/profile'),
       },

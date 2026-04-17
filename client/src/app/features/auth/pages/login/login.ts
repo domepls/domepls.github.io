@@ -15,6 +15,7 @@ import { finalize } from 'rxjs';
 export default class LoginPage {
   protected isSubmitting = signal(false);
   protected isConnectingTelegram = signal(false);
+  protected isWaitingForTwoFactor = signal(false);
   protected errorMessage = signal('');
   protected successMessage = signal('');
 
@@ -28,12 +29,20 @@ export default class LoginPage {
     this.form = this.formBuilder.nonNullable.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
+      otpCode: [''],
     });
   }
 
   submit(): void {
     if (this.form.invalid || this.isSubmitting()) {
       this.form.markAllAsTouched();
+      return;
+    }
+
+    const otpCode = this.form.controls.otpCode.value.trim();
+    if (this.isWaitingForTwoFactor() && !otpCode) {
+      this.form.controls.otpCode.markAsTouched();
+      this.errorMessage.set('Enter the code sent your TG.');
       return;
     }
 
@@ -44,14 +53,33 @@ export default class LoginPage {
     const { username, password } = this.form.getRawValue();
 
     this.auth
-      .login(username, password)
+      .login(username, password, this.isWaitingForTwoFactor() ? otpCode : undefined)
       .pipe(
         finalize(() => {
           this.isSubmitting.set(false);
         }),
       )
       .subscribe({
-        next: () => {
+        next: (response) => {
+          if (response.requires_2fa_code) {
+            this.isWaitingForTwoFactor.set(true);
+            this.form.controls.otpCode.setValidators([
+              Validators.required,
+              Validators.minLength(6),
+              Validators.maxLength(6),
+            ]);
+            this.form.controls.otpCode.updateValueAndValidity({ emitEvent: false });
+            this.form.controls.otpCode.setValue('');
+            this.form.controls.otpCode.markAsUntouched();
+            this.successMessage.set(response.detail ?? 'Enter code sent your TG.');
+            return;
+          }
+
+          this.isWaitingForTwoFactor.set(false);
+          this.form.controls.otpCode.clearValidators();
+          this.form.controls.otpCode.setValue('');
+          this.form.controls.otpCode.updateValueAndValidity({ emitEvent: false });
+
           if (this.auth.needsTelegramLink()) {
             this.successMessage.set('Logged in. Connect Telegram to unlock access.');
             return;
@@ -62,7 +90,6 @@ export default class LoginPage {
         },
         error: (error) => {
           this.errorMessage.set(error?.error?.detail ?? 'Unable to log in.');
-          this.isSubmitting.set(false);
         },
       });
   }

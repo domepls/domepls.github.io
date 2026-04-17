@@ -1,0 +1,79 @@
+<article class="profile-card-shell">
+  <p class="profile-card__eyebrow">Security</p>
+
+  <section class="profile-card profile-card--security">
+    <div class="profile-security" [formGroup]="profileForm">
+      @if (profile.telegram_connected) {
+        <label class="profile-toggle">
+          <input type="checkbox" formControlName="two_factor_enabled" />
+          <span class="profile-toggle__control"></span>
+          <span class="profile-toggle__text">
+            <strong>
+              <span class="material-symbols-rounded">encrypted</span>
+              Enable 2FA
+            </strong>
+            <small>Adds an extra layer of security to your account</small>
+          </span>
+        </label>
+
+        @if (showTwoFactorCode) {
+          <label class="profile-security__code">
+            <span>Code</span>
+            <input
+              type="text"
+              formControlName="two_factor_code"
+              (input)="twoFactorCodeInput.emit($event)"
+              inputmode="numeric"
+              autocomplete="one-time-code"
+              maxlength="6"
+              placeholder="6-digit code from your Telegram"
+            />
+          </label>
+        }
+
+        @if (twoFactorChallengeMessage) {
+          <div class="profile-feedback profile-feedback--info" role="status">
+            <span class="material-symbols-rounded">info</span>
+            <span>{{ twoFactorChallengeMessage }}</span>
+          </div>
+        }
+      }
+
+      <div class="profile-security__note">
+        <strong>Change password</strong>
+        <p>Use current password, then set and confirm a new one.</p>
+      </div>
+
+      <div class="profile-password-grid">
+        <label>
+          <span>Current password</span>
+          <input
+            type="password"
+            formControlName="current_password"
+            placeholder="Current password"
+          />
+        </label>
+
+        <label>
+          <span>New password</span>
+          <input
+            type="password"
+            formControlName="password"
+            autocomplete="new-password"
+            placeholder="New password"
+          />
+        </label>
+
+        <label>
+          <span>Confirm password</span>
+          <input
+            type="password"
+            formControlName="password_confirm"
+            autocomplete="new-password"
+            placeholder="Confirm new password"
+          />
+        </label>
+      </div>
+    </div>
+  </section>
+</article>

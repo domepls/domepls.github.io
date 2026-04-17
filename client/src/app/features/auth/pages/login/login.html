@@ -19,6 +19,20 @@
         <input type="password" formControlName="password" autocomplete="current-password" />
       </label>
 
+      @if (isWaitingForTwoFactor()) {
+        <label>
+          <span>Code</span>
+          <input
+            type="text"
+            formControlName="otpCode"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            maxlength="6"
+            placeholder="Enter code sent your TG"
+          />
+        </label>
+      }
+
       @if (successMessage()) {
         <p class="auth-success">{{ successMessage() }}</p>
       }
@@ -39,7 +53,7 @@
       }
 
       <button class="auth-submit" type="submit" [disabled]="isSubmitting()">
-        {{ isSubmitting() ? 'Signing in...' : 'Log In' }}
+        {{ isSubmitting() ? 'Signing in...' : isWaitingForTwoFactor() ? 'Verify code' : 'Log In' }}
       </button>
     </form>
 

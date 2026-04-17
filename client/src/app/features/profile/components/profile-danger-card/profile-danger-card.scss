@@ -1,0 +1,59 @@
+:host {
+  display: block;
+}
+
+.profile-card--danger {
+  height: 100%;
+  padding: 1.1rem;
+  border-color: color-mix(in srgb, var(--error-border) 54%, transparent);
+  background: color-mix(in srgb, var(--error-bg) 38%, var(--surface));
+}
+
+.profile-danger {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.profile-danger__title {
+  margin: 0;
+  color: var(--error-text);
+  font-weight: 800;
+}
+
+.profile-danger__text {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.profile-danger__fields {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.profile-danger__fields label {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.profile-danger__fields span {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+}
+
+.profile-danger__fields input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid color-mix(in srgb, var(--border-default) 70%, transparent);
+  background: color-mix(in srgb, var(--surface) 78%, var(--background));
+  color: var(--text-primary);
+}
+
+:host-context([data-theme='dark']) {
+  .profile-card--danger,
+  .profile-danger__fields input {
+    background: color-mix(in srgb, var(--surface) 84%, #170f22);
+  }
+}

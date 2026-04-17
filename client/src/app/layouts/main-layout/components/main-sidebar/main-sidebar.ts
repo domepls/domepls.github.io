@@ -35,5 +35,10 @@ export class MainSidebar {
       route: '/app/chats',
       icon: 'chat_bubble',
     },
+    {
+      label: 'Friends',
+      route: '/app/friends',
+      icon: 'group',
+    },
   ];
 }

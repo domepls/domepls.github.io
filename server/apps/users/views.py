@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth import authenticate
+from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 from django.db import IntegrityError, transaction
 import logging
@@ -22,6 +23,13 @@ from .serializers import (
     RegisterSerializer,
 )
 from .models import Profile
+from .otp_service import (
+    DELETE_ACCOUNT_SCOPE,
+    LOGIN_SCOPE,
+    issue_otp,
+    send_telegram_code,
+    verify_otp,
+)
 from config.jwt import (
     clear_refresh_cookie,
     get_refresh_token_from_request,
@@ -31,6 +39,7 @@ from config.jwt import (
 
 
 logger = logging.getLogger(__name__)
+User = get_user_model()
 
 
 def _infer_image_extension(photo_url: str, content_type: str) -> str:
@@ -109,6 +118,7 @@ class LoginAPIView(APIView):
 
         username = serializer.validated_data["username"]  # type: ignore
         password = serializer.validated_data["password"]  # type: ignore
+        otp_code = serializer.validated_data.get("otp_code")  # type: ignore
 
         user = authenticate(request, username=username, password=password)
 
@@ -119,6 +129,42 @@ class LoginAPIView(APIView):
             )
 
         profile, _ = Profile.objects.get_or_create(user=user)
+
+        if profile.two_factor_enabled:
+            if not profile.telegram_id:
+                return Response(
+                    {"detail": "2FA is enabled but Telegram is not connected."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            if not otp_code:
+                try:
+                    otp = issue_otp(LOGIN_SCOPE, user.id)
+                    send_telegram_code(
+                        profile,
+                        scope=LOGIN_SCOPE,
+                        code=otp.code,
+                        ttl_seconds=otp.ttl_seconds,
+                    )
+                except Exception as error:
+                    return Response(
+                        {"detail": str(error)},
+                        status=status.HTTP_503_SERVICE_UNAVAILABLE,
+                    )
+
+                return Response(
+                    {
+                        "detail": "Enter code sent your TG",
+                        "requires_2fa_code": True,
+                    },
+                    status=status.HTTP_202_ACCEPTED,
+                )
+
+            if not verify_otp(LOGIN_SCOPE, user.id, str(otp_code), consume=True):
+                return Response(
+                    {"detail": "Invalid or expired verification code."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
         refresh = RefreshToken.for_user(user)
 
@@ -283,6 +329,107 @@ class MeAPIView(APIView):
             partial=True
         )
         serializer.is_valid(raise_exception=True)
+
+        two_factor_enabled = bool(
+            serializer.validated_data.get("two_factor_enabled"))
+        enabling_two_factor = two_factor_enabled and not profile.two_factor_enabled
+        two_factor_code = request.data.get("two_factor_code", "")
+
+        if enabling_two_factor:
+            if not profile.telegram_id:
+                return Response(
+                    {"detail": "Connect Telegram before enabling 2FA."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            if not isinstance(two_factor_code, str) or not two_factor_code.strip():
+                try:
+                    otp = issue_otp(LOGIN_SCOPE, request.user.id)
+                    send_telegram_code(
+                        profile,
+                        scope=LOGIN_SCOPE,
+                        code=otp.code,
+                        ttl_seconds=otp.ttl_seconds,
+                    )
+                except Exception as error:
+                    return Response(
+                        {"detail": str(error)},
+                        status=status.HTTP_503_SERVICE_UNAVAILABLE,
+                    )
+
+                return Response(
+                    {"detail": "Enter code sent your TG",
+                        "requires_2fa_code": True},
+                    status=status.HTTP_202_ACCEPTED,
+                )
+
+            if not verify_otp(LOGIN_SCOPE, request.user.id, str(two_factor_code), consume=True):
+                return Response(
+                    {"detail": "Invalid or expired verification code."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
         serializer.save()
 
         return Response(ProfileSerializer(profile).data, status=status.HTTP_200_OK)
+
+    def delete(self, request):
+        profile, _ = Profile.objects.get_or_create(user=request.user)
+        current_password = request.data.get("current_password", "")
+        if not isinstance(current_password, str) or not current_password:
+            return Response(
+                {"detail": "Current password is required to delete account."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        user = request.user
+        if not user.check_password(current_password):
+            return Response(
+                {"detail": "Current password is incorrect."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if profile.two_factor_enabled:
+            if not profile.telegram_id:
+                return Response(
+                    {"detail": "2FA is enabled but Telegram is not connected."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            otp_code = request.data.get("otp_code", "")
+            if not isinstance(otp_code, str) or not otp_code.strip():
+                try:
+                    otp = issue_otp(DELETE_ACCOUNT_SCOPE, user.id)
+                    send_telegram_code(
+                        profile,
+                        scope=DELETE_ACCOUNT_SCOPE,
+                        code=otp.code,
+                        ttl_seconds=otp.ttl_seconds,
+                    )
+                except Exception as error:
+                    return Response(
+                        {"detail": str(error)},
+                        status=status.HTTP_503_SERVICE_UNAVAILABLE,
+                    )
+
+                return Response(
+                    {
+                        "detail": "Enter code sent your TG",
+                        "requires_2fa_code": True,
+                    },
+                    status=status.HTTP_202_ACCEPTED,
+                )
+
+            if not verify_otp(DELETE_ACCOUNT_SCOPE, user.id, otp_code, consume=True):
+                return Response(
+                    {"detail": "Invalid or expired verification code."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+        user.delete()
+        response = Response(
+            {"message": "Account deleted successfully."},
+            status=status.HTTP_200_OK,
+        )
+        clear_refresh_cookie(response)
+        return response

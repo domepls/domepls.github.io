@@ -12,19 +12,21 @@
   grid-template-areas: 'title search user';
   align-items: center;
   gap: 0.75rem;
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--border-default) 72%, transparent);
-  backdrop-filter: blur(8px);
+  margin: 0.75rem;
+  padding: 0.95rem 1.1rem;
+  border: 1px solid var(--border-light);
+  border-radius: 1.6rem;
+  background: var(--surface);
 }
 
 .ml-header__title {
   grid-area: title;
   margin: 0;
-  font-size: 1rem;
-  text-transform: uppercase;
+  font-size: 1.5rem;
+  text-transform: capitalize;
   font-family: 'Rubik', sans-serif;
-  font-weight: 400;
-  color: var(--text-secondary);
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 .ml-header__search {
@@ -61,6 +63,10 @@
       box-shadow: none;
       outline: none;
     }
+
+    &::-webkit-search-cancel-button {
+      display: none;
+    }
   }
 }
 
@@ -76,9 +82,9 @@
     width: 2.65rem;
     height: 2.65rem;
     padding: 0;
-    border: 1px solid color-mix(in srgb, var(--border-default) 68%, transparent);
+    border: 1px solid var(--border-light);
     border-radius: 999px;
-    background: color-mix(in srgb, var(--header-bg, var(--surface)) 92%, var(--surface));
+    background: var(--surface);
     cursor: pointer;
     transition:
       transform 0.18s ease,
@@ -115,11 +121,8 @@
     min-width: 250px;
     padding: 0.5rem;
     border-radius: 1rem;
-    border: 1px solid color-mix(in srgb, var(--border-default) 68%, transparent);
-    background: color-mix(in srgb, var(--header-bg, var(--surface)) 92%, var(--surface));
-    box-shadow:
-      0 16px 36px color-mix(in srgb, var(--text-primary) 14%, transparent),
-      inset 0 1px 0 color-mix(in srgb, var(--surface) 70%, transparent);
+    border: 1px solid var(--border-light);
+    background: var(--surface);
     animation: ml-user-pop 0.18s ease;
   }
 
@@ -189,7 +192,7 @@
     line-height: 1.3;
     background: color-mix(in srgb, var(--warning-bg) 18%, transparent);
     border-radius: 1rem;
-    border: 1px solid color-mix(in srgb, var(--warning-border) 24%, transparent);
+    border: 1px solid color-mix(in srgb, var(--warning-border) 42%, transparent);
     padding: 0.1rem 0.1rem 0.1rem 0.65rem;
 
     display: grid;
@@ -292,35 +295,27 @@
 :host-context([data-theme='dark']) {
   .ml-user-menu {
     &__trigger {
-      border-color: color-mix(in srgb, var(--border-default) 60%, transparent);
-      background: color-mix(in srgb, var(--header-bg, var(--surface)) 94%, #140f1f);
-
-      &:hover {
-        border-color: color-mix(in srgb, var(--border-strong) 54%, transparent);
-        box-shadow: 0 12px 24px color-mix(in srgb, #06040a 64%, transparent);
-      }
+      border-color: var(--border-default);
+      background: var(--surface);
     }
 
     &__avatar-placeholder,
     &__card-avatar-placeholder {
       color: #cbb8eb;
-      border-color: rgba(219, 205, 251, 0.28);
     }
 
     &__panel {
-      border-color: color-mix(in srgb, var(--border-default) 56%, transparent);
-      background: color-mix(in srgb, var(--header-bg, var(--surface)) 92%, #120d1a);
-      box-shadow:
-        0 16px 34px color-mix(in srgb, #06040a 68%, transparent),
-        inset 0 1px 0 color-mix(in srgb, var(--surface) 18%, transparent);
+      border-color: var(--border-default);
+      background: var(--surface);
+      box-shadow: none;
     }
 
     &__divider {
-      background: color-mix(in srgb, var(--border-default) 46%, transparent);
+      background: color-mix(in srgb, var(--border-default) 60%, transparent);
     }
 
     &__action:hover {
-      background: color-mix(in srgb, var(--sidebar-active-bg, var(--surface-lilac)) 62%, #1b1529);
+      background: color-mix(in srgb, var(--surface-lilac) 70%, var(--surface));
       border-color: color-mix(in srgb, var(--border-default) 54%, transparent);
     }
   }
@@ -328,7 +323,6 @@
 
 @media (max-width: 980px) {
   .ml-header {
-    max-height: none;
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
       'title title'
@@ -345,6 +339,7 @@
 
 @media (max-width: 780px) {
   .ml-header {
-    padding-inline: 1rem;
+    margin-inline: 0.5rem;
+    padding-inline: 0.9rem;
   }
 }

@@ -1,0 +1,94 @@
+<article class="profile-card-shell">
+  <p class="profile-card__eyebrow">Danger zone</p>
+
+  <section class="profile-card profile-card--danger">
+    <div class="profile-danger">
+      <p class="profile-danger__title">Delete account permanently</p>
+      <p class="profile-danger__text">
+        This action cannot be undone. All your profile data will be removed.
+      </p>
+
+      <div class="profile-danger__fields">
+        <label>
+          <span>Current password</span>
+          <input
+            type="password"
+            [value]="deletePassword"
+            (input)="deletePasswordInput.emit($event)"
+            placeholder="Enter current password"
+          />
+        </label>
+
+        <label>
+          <span> Type DELETE to confirm </span>
+          <input
+            type="text"
+            [value]="deleteConfirm"
+            (input)="deleteConfirmInput.emit($event)"
+            placeholder="DELETE"
+          />
+        </label>
+
+        @if (profile.telegram_connected && profile.two_factor_enabled && isDeleteFinalStepVisible) {
+          <label>
+            <span>Code</span>
+            <input
+              type="text"
+              [value]="deleteTwoFactorCode"
+              (input)="deleteTwoFactorCodeInput.emit($event)"
+              placeholder="6-digit code from your Telegram"
+            />
+          </label>
+        }
+
+        @if (deleteChallengeMessage) {
+          <div class="profile-feedback profile-feedback--info" role="status">
+            <span class="material-symbols-rounded">info</span>
+            <span>{{ deleteChallengeMessage }}</span>
+          </div>
+        }
+
+        @if (
+          isDeleteFinalStepVisible && !(profile.telegram_connected && profile.two_factor_enabled)
+        ) {
+          <label>
+            <span>Are you sure, bestie?</span>
+            <input
+              type="text"
+              [value]="deleteFinalAnswer"
+              (input)="deleteFinalAnswerInput.emit($event)"
+              placeholder="Yes / No"
+            />
+          </label>
+        }
+      </div>
+
+      @if (deleteErrorMessage) {
+        <div class="profile-feedback profile-feedback--error" role="alert">
+          <span class="material-symbols-rounded">error</span>
+          <span>{{ deleteErrorMessage }}</span>
+        </div>
+      }
+
+      <button
+        type="button"
+        class="profile-btn profile-btn--danger"
+        [disabled]="!canPressDeleteButton"
+        (click)="deleteRequested.emit()"
+      >
+        <span class="material-symbols-rounded">delete</span>
+        {{
+          isDeleting
+            ? 'Deleting...'
+            : profile.telegram_connected && profile.two_factor_enabled
+              ? isDeleteFinalStepVisible
+                ? 'Confirm delete'
+                : 'Send code'
+              : isDeleteFinalStepVisible
+                ? 'Confirm delete'
+                : 'Delete account'
+        }}
+      </button>
+    </div>
+  </section>
+</article>

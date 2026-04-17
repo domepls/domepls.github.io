@@ -14,6 +14,7 @@ export interface AuthUser {
   streak?: number;
   last_seen?: string | null;
   telegram_id?: number | null;
+  two_factor_enabled?: boolean;
 }
 
 export interface AuthResponse {

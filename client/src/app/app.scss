@@ -1,9 +1,10 @@
 :host {
   display: block;
+  min-height: 100dvh;
 }
 
 .app-loader {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
   place-items: center;
   padding: 1.5rem;

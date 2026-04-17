@@ -93,6 +93,7 @@ TEMPLATES = [
     },
 ]
 
+ASGI_APPLICATION = 'core.asgi.application'
 WSGI_APPLICATION = 'core.wsgi.application'
 
 
@@ -191,6 +192,8 @@ CORS_ALLOWED_ORIGINS = config(
 CORS_ALLOW_CREDENTIALS = True
 
 TELEGRAM_BOT_TOKEN = config('TELEGRAM_BOT_TOKEN', default='')
+REDIS_URL = config('REDIS_URL', default='redis://127.0.0.1:6379/0')
+AUTH_CODE_TTL_SECONDS = config('AUTH_CODE_TTL_SECONDS', default=300, cast=int)
 
 
 # Cloudinary Configuration
@@ -226,6 +229,16 @@ LOGGING = {
             'propagate': False,
         },
         'gunicorn.access': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'uvicorn.error': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'uvicorn.access': {
             'handlers': ['console'],
             'level': 'INFO',
             'propagate': False,

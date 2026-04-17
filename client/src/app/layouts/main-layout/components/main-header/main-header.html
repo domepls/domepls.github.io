@@ -15,44 +15,26 @@
         [attr.aria-expanded]="isMenuOpen"
         (click)="toggleMenu()"
       >
-        @if (user.avatar) {
-          <img
-            class="ml-user-menu__avatar"
-            [src]="user.avatar"
-            alt="User avatar"
-            loading="lazy"
-            (error)="onAvatarError($event)"
-          />
-        } @else {
-          <span
-            class="material-symbols-rounded ml-user-menu__avatar-placeholder"
-            aria-hidden="true"
-          >
-            account_circle
-          </span>
-        }
+        <img
+          class="ml-user-menu__avatar"
+          [src]="user.avatar ?? '/mascots/profile-placeholder.png'"
+          alt="User avatar"
+          loading="lazy"
+          (error)="onAvatarError($event)"
+        />
       </button>
 
       @if (isMenuOpen) {
         <div class="ml-user-menu__panel" role="menu" aria-label="User menu">
           <div class="ml-user-menu__card">
             <div class="ml-user-menu__info">
-              @if (user.avatar) {
-                <img
-                  class="ml-user-menu__card-avatar"
-                  [src]="user.avatar"
-                  alt="User avatar"
-                  loading="lazy"
-                  (error)="onAvatarError($event)"
-                />
-              } @else {
-                <span
-                  class="material-symbols-rounded ml-user-menu__card-avatar-placeholder"
-                  aria-hidden="true"
-                >
-                  account_circle
-                </span>
-              }
+              <img
+                class="ml-user-menu__card-avatar"
+                [src]="user.avatar ?? '/mascots/profile-placeholder.png'"
+                alt="User avatar"
+                loading="lazy"
+                (error)="onAvatarError($event)"
+              />
 
               <div class="ml-user-menu__meta">
                 <p class="ml-user-menu__name">{{ getUserDisplayName() }}</p>
@@ -64,7 +46,7 @@
             @if (auth.currentUser() && auth.needsTelegramLink()) {
               <div class="ml-user-menu__warning">
                 <span class="material-symbols-rounded">warning</span>
-                Telegram not linked
+                Telegram not connected
                 <button
                   class="ml-user-menu__warning-btn"
                   type="button"

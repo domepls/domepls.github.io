@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ViewportScroller } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
-import { finalize, firstValueFrom } from 'rxjs';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { filter, firstValueFrom } from 'rxjs';
 import { AuthService } from './features/auth/services/auth.service';
 import { ThemeService } from './features/theme/services/theme.service';
 
@@ -18,7 +18,19 @@ export class App implements OnInit {
     private readonly theme: ThemeService,
     private readonly auth: AuthService,
     private readonly viewportScroller: ViewportScroller,
+    private readonly router: Router,
   ) {}
+
+  private syncScrollMode(url: string) {
+    if (typeof document === 'undefined') {
+      return;
+    }
+
+    const isMainLayoutRoute = /^\/app(?:\/|$)/.test(url);
+
+    document.body.classList.toggle('route-main-layout', isMainLayoutRoute);
+    document.documentElement.classList.toggle('route-main-layout', isMainLayoutRoute);
+  }
 
   async ngOnInit() {
     this.viewportScroller.setOffset(() => {
@@ -35,25 +47,24 @@ export class App implements OnInit {
 
     this.theme.init();
 
+    this.syncScrollMode(this.router.url);
+
+    this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe((event) => this.syncScrollMode(event.urlAfterRedirects));
+
     let isAuthenticated = false;
 
     try {
       isAuthenticated = await firstValueFrom(this.auth.restoreSession());
 
       if (isAuthenticated) {
-        this.auth
-          .fetchCurrentUser()
-          .pipe(
-            finalize(() => {
-              this.isInitializing.set(false);
-            }),
-          )
-          .subscribe({
-            error: () => {},
-          });
+        this.auth.fetchCurrentUser().subscribe({
+          error: () => {},
+        });
       }
-    } catch {
-      // Ignore errors during session restoration
+    } finally {
+      this.isInitializing.set(false);
     }
   }
 }
