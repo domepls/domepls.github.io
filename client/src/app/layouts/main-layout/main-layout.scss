@@ -1,0 +1,57 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.app-shell {
+  --sidebar-width: 240px;
+  --sidebar-collapsed-width: 72px;
+  --header-height: 64px;
+  --shell-glow-color: color-mix(in srgb, var(--surface-lilac) 76%, white);
+  --shell-main-gradient-start: color-mix(in srgb, var(--background) 82%, white);
+  --sidebar-bg: color-mix(in srgb, var(--surface) 88%, white);
+  --sidebar-hover-bg: color-mix(in srgb, var(--surface-lilac) 74%, white);
+  --sidebar-active-bg: color-mix(in srgb, var(--surface-lilac) 88%, white);
+  --header-bg: color-mix(in srgb, var(--surface) 84%, white);
+
+  height: 100vh;
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  background:
+    radial-gradient(circle at 0% 0%, var(--shell-glow-color), transparent 43%),
+    linear-gradient(145deg, var(--shell-main-gradient-start), var(--background));
+  overflow: hidden;
+}
+
+.app-main {
+  min-width: 0;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.app-main__content {
+  min-height: calc(100dvh - var(--header-height));
+  padding: 1.5rem;
+}
+
+:host-context([data-theme='dark']) {
+  .app-shell {
+    --shell-glow-color: color-mix(in srgb, var(--surface-lilac) 86%, #120d19);
+    --shell-main-gradient-start: color-mix(in srgb, var(--background) 88%, #120d19);
+    --sidebar-bg: color-mix(in srgb, var(--surface) 90%, #161021);
+    --sidebar-hover-bg: color-mix(in srgb, var(--surface-lilac) 72%, #181224);
+    --sidebar-active-bg: color-mix(in srgb, var(--surface-lilac) 86%, #1b1529);
+    --header-bg: color-mix(in srgb, var(--surface) 84%, #140f1f);
+  }
+}
+
+@media (max-width: 780px) {
+  .app-shell {
+    grid-template-columns: var(--sidebar-collapsed-width) minmax(0, 1fr);
+  }
+
+  .app-main__content {
+    padding-inline: 1rem;
+  }
+}

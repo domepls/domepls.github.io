@@ -366,12 +366,7 @@
         box-shadow: 0 12px 24px rgba(8, 5, 14, 0.5);
       }
     }
-
-    &__avatar-placeholder,
-    &__card-avatar-placeholder {
-      color: #cbb8eb;
-    }
-
+    
     &__panel {
       border-color: rgba(210, 194, 255, 0.18);
       background: rgba(31, 23, 44, 0.97);
@@ -386,6 +381,7 @@
 
     &__card-avatar,
     &__card-avatar-placeholder {
+      color: #cbb8eb;
       border-color: rgba(219, 205, 251, 0.28);
     }
 

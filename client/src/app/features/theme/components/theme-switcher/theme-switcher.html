@@ -1,37 +1,37 @@
 <div class="theme-switcher" role="radiogroup" aria-label="Theme switcher">
   <input
     type="radio"
-    id="light-theme"
-    name="themes"
+    [id]="getThemeId('light')"
+    [name]="groupName"
     aria-label="Light theme"
     [checked]="isTheme('light')"
     (change)="setTheme('light')"
   />
-  <label for="light-theme">
+  <label [for]="getThemeId('light')">
     <span class="material-symbols-rounded">light_mode</span>
   </label>
 
   <input
     type="radio"
-    id="dark-theme"
-    name="themes"
+    [id]="getThemeId('dark')"
+    [name]="groupName"
     aria-label="Dark theme"
     [checked]="isTheme('dark')"
     (change)="setTheme('dark')"
   />
-  <label for="dark-theme">
+  <label [for]="getThemeId('dark')">
     <span class="material-symbols-rounded">dark_mode</span>
   </label>
 
   <input
     type="radio"
-    id="system-theme"
-    name="themes"
+    [id]="getThemeId('system')"
+    [name]="groupName"
     aria-label="System theme"
     [checked]="isTheme('system')"
     (change)="setTheme('system')"
   />
-  <label for="system-theme">
+  <label [for]="getThemeId('system')">
     <span class="material-symbols-rounded">desktop_windows</span>
   </label>
 

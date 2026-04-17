@@ -1,0 +1,53 @@
+<aside class="app-sidebar" aria-label="App navigation">
+  <a class="app-sidebar__brand" routerLink="/" aria-label="Open home">
+    <img class="app-sidebar__logo" src="/favicon.ico" alt="DoMePls logo" loading="lazy" />
+    <strong class="app-sidebar__brand-text">DoMePls</strong>
+  </a>
+
+  <section class="app-sidebar__section" aria-label="Main navigation">
+    <p class="app-sidebar__section-title">Main</p>
+    <nav class="app-sidebar__nav">
+      @for (item of mainItems; track item.label) {
+        <a
+          class="app-sidebar__item"
+          [routerLink]="item.route"
+          routerLinkActive="is-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <span class="app-sidebar__icon" aria-hidden="true">
+            <span class="material-symbols-rounded">{{ item.icon }}</span>
+          </span>
+          <span class="app-sidebar__label">{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+  </section>
+
+  <section class="app-sidebar__section" aria-label="Support navigation">
+    <p class="app-sidebar__section-title">Support</p>
+    <nav class="app-sidebar__nav">
+      <a class="app-sidebar__item" href="https://t.me/meowlaim" target="_blank" rel="noopener">
+        <span class="app-sidebar__icon" aria-hidden="true">
+          <span class="material-symbols-rounded">help</span>
+        </span>
+        <span class="app-sidebar__label">Get help</span>
+      </a>
+
+      <a class="app-sidebar__item" routerLink="/" fragment="features">
+        <span class="app-sidebar__icon" aria-hidden="true">
+          <span class="material-symbols-rounded">local_library</span>
+        </span>
+        <span class="app-sidebar__label">About DoMePls</span>
+      </a>
+    </nav>
+  </section>
+
+  <section class="app-sidebar__bug-box" aria-label="Report bug block">
+    <p class="app-sidebar__bug-title">Found a Bug?</p>
+    <p class="app-sidebar__bug-text">Report now to us if you find any bugs</p>
+    <a class="app-sidebar__bug-action" href="https://t.me/meowlaim">
+      <span class="material-symbols-rounded">article</span>
+      Report
+    </a>
+  </section>
+</aside>

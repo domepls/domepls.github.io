@@ -10,6 +10,11 @@ type Theme = 'light' | 'dark' | 'system';
   styleUrl: './theme-switcher.scss',
 })
 export class ThemeSwitcher {
+  private static readonly instancePrefix = 'theme-switcher';
+  private static instanceCount = 0;
+
+  protected readonly groupName = `${ThemeSwitcher.instancePrefix}-${ThemeSwitcher.instanceCount++}`;
+
   constructor(private readonly theme: ThemeService) {}
 
   protected setTheme(theme: Theme): void {
@@ -18,5 +23,9 @@ export class ThemeSwitcher {
 
   protected isTheme(theme: Theme): boolean {
     return this.theme.getTheme() === theme;
+  }
+
+  protected getThemeId(theme: Theme): string {
+    return `${this.groupName}-${theme}`;
   }
 }

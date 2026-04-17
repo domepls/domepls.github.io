@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ViewportScroller } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
+import { finalize, firstValueFrom } from 'rxjs';
 import { AuthService } from './features/auth/services/auth.service';
 import { ThemeService } from './features/theme/services/theme.service';
 
@@ -41,12 +41,19 @@ export class App implements OnInit {
       isAuthenticated = await firstValueFrom(this.auth.restoreSession());
 
       if (isAuthenticated) {
-        this.auth.fetchCurrentUser().subscribe({
-          error: () => {},
-        });
+        this.auth
+          .fetchCurrentUser()
+          .pipe(
+            finalize(() => {
+              this.isInitializing.set(false);
+            }),
+          )
+          .subscribe({
+            error: () => {},
+          });
       }
-    } finally {
-      this.isInitializing.set(false);
+    } catch {
+      // Ignore errors during session restoration
     }
   }
 }

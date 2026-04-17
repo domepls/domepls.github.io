@@ -1,34 +1,57 @@
-import { Component, ElementRef, HostListener, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
-import { finalize } from 'rxjs';
+import {
+  Component,
+  DestroyRef,
+  ElementRef,
+  HostListener,
+  OnInit,
+  inject,
+  signal,
+} from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
+import { finalize, filter, map, startWith } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../../features/auth/services/auth.service';
 import { ThemeSwitcher } from '../../../../features/theme/components/theme-switcher/theme-switcher';
 
 @Component({
-  selector: 'public-header',
-
+  selector: 'main-header',
   imports: [RouterLink, ThemeSwitcher],
-  templateUrl: './public-header.html',
-  styleUrl: './public-header.scss',
+  templateUrl: './main-header.html',
+  styleUrl: './main-header.scss',
 })
-export class PublicHeader {
-  protected isMenuOpen = false;
+export class MainHeader implements OnInit {
+  protected readonly pageTitle = signal('Workspace');
   protected readonly isConnecting = signal(false);
   protected readonly errorMessage = signal('');
   protected readonly isLoggingOut = signal(false);
+  protected isMenuOpen = false;
+
+  private readonly destroyRef = inject(DestroyRef);
 
   constructor(
     public readonly auth: AuthService,
     private readonly host: ElementRef<HTMLElement>,
     private readonly router: Router,
+    private readonly route: ActivatedRoute,
   ) {}
 
-  protected toggleMenu() {
+  ngOnInit(): void {
+    this.router.events
+      .pipe(
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+        startWith(null),
+        map(() => this.resolvePageTitle()),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((title) => this.pageTitle.set(title));
+  }
+
+  protected toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
   @HostListener('document:click', ['$event'])
-  protected onDocumentClick(event: MouseEvent) {
+  protected onDocumentClick(event: MouseEvent): void {
     if (!this.isMenuOpen) {
       return;
     }
@@ -49,16 +72,16 @@ export class PublicHeader {
     return fullName || user.username;
   }
 
-  onAvatarError(event: Event) {
+  protected onAvatarError(event: Event): void {
     const image = event.target as HTMLImageElement;
     image.style.display = 'none';
   }
 
-  protected onActionClick() {
+  protected onActionClick(): void {
     this.isMenuOpen = false;
   }
 
-  protected onLogout() {
+  protected onLogout(): void {
     this.isLoggingOut.set(true);
     this.auth.logout().subscribe({
       next: () => {
@@ -75,7 +98,7 @@ export class PublicHeader {
     });
   }
 
-  onTgConnect() {
+  protected onTgConnect(): void {
     if (this.isConnecting()) {
       return;
     }
@@ -96,5 +119,23 @@ export class PublicHeader {
           );
         },
       });
+  }
+
+  private resolvePageTitle(): string {
+    const routeTitles: Record<string, string> = {
+      dashboard: 'Dashboard',
+      profile: 'Profile',
+      projects: 'Projects',
+      tasks: 'Tasks',
+      chats: 'Chats',
+    };
+
+    let cursor: ActivatedRoute | null = this.route;
+    while (cursor?.firstChild) {
+      cursor = cursor.firstChild;
+    }
+
+    const routePath = cursor?.snapshot.routeConfig?.path ?? '';
+    return routeTitles[routePath] ?? 'Workspace';
   }
 }
