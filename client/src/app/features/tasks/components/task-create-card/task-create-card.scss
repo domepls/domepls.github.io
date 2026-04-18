@@ -1,0 +1,129 @@
+:host {
+  display: block;
+}
+
+.task-card {
+  border-radius: 1.3rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 66%, transparent);
+  background: color-mix(in srgb, var(--surface) 84%, var(--background));
+  padding: 1rem;
+}
+
+.task-create {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.task-create label {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.task-create span {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.task-create input,
+.task-create textarea,
+.task-create select {
+  border: 1px solid color-mix(in srgb, var(--border-default) 70%, transparent);
+  background: color-mix(in srgb, var(--surface) 78%, var(--background));
+  color: var(--text-primary);
+  resize: vertical;
+  max-height: 100px;
+}
+
+.task-create .task-select {
+  --task-select-accent: var(--border-default);
+  --task-select-text: var(--text-primary);
+  border-color: color-mix(in srgb, var(--task-select-accent) 78%, transparent);
+  background: color-mix(in srgb, var(--task-select-accent) 18%, var(--surface));
+  color: var(--task-select-text);
+}
+
+.task-create .task-select--scope-project {
+  --task-select-accent: var(--border-lilac);
+  --task-select-text: var(--text-on-lilac);
+}
+
+.task-create .task-select--scope-personal {
+  --task-select-accent: var(--border-pink);
+  --task-select-text: var(--text-on-pink);
+}
+
+.task-create .task-select--difficulty-peaceful {
+  --task-select-accent: var(--success-border);
+  --task-select-text: var(--success-text);
+}
+
+.task-create .task-select--difficulty-easy {
+  --task-select-accent: var(--status-active-border);
+  --task-select-text: var(--status-active-text);
+}
+
+.task-create .task-select--difficulty-normal {
+  --task-select-accent: var(--info-border);
+  --task-select-text: var(--info-text);
+}
+
+.task-create .task-select--difficulty-hard {
+  --task-select-accent: var(--warning-border);
+  --task-select-text: var(--warning-text);
+}
+
+.task-create .task-select--difficulty-hardcore {
+  --task-select-accent: var(--error-border);
+  --task-select-text: var(--error-text);
+}
+
+.task-create .task-select--urgency-low {
+  --task-select-accent: var(--info-border);
+  --task-select-text: var(--info-text);
+}
+
+.task-create .task-select--urgency-medium {
+  --task-select-accent: var(--status-pending-border);
+  --task-select-text: var(--status-pending-text);
+}
+
+.task-create .task-select--urgency-high {
+  --task-select-accent: var(--warning-border);
+  --task-select-text: var(--warning-text);
+}
+
+.task-create .task-select--urgency-critical {
+  --task-select-accent: var(--error-border);
+  --task-select-text: var(--error-text);
+}
+
+.task-create__row {
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.task-create__error {
+  color: var(--error-text);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.task-btn {
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
+  font-weight: 800;
+}
+
+.task-btn--primary {
+  border: 1px solid color-mix(in srgb, var(--border-strong) 70%, transparent);
+  background: linear-gradient(130deg, var(--btn-secondary-bg), var(--btn-primary-bg));
+  color: var(--text-primary);
+}
+
+@media (max-width: 760px) {
+  .task-create__row {
+    grid-template-columns: 1fr;
+  }
+}

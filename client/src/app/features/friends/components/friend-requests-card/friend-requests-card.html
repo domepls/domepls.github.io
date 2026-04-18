@@ -1,0 +1,84 @@
+<article class="friends-card friend-requests-card">
+  <section class="friend-requests-card__group">
+    <h4>Incoming {{ incomingCount() }}</h4>
+    @if (!incoming().length) {
+      <p class="friends-card__state">No incoming requests.</p>
+    } @else {
+      <ul class="friends-list">
+        @for (req of incoming(); track req.id) {
+          <li class="friend-requests-card__item">
+            <div class="friend-requests-card__identity">
+              <img
+                [src]="req.from_user.avatar || '/mascots/profile-placeholder.png'"
+                alt="Friend avatar"
+                loading="lazy"
+              />
+              <div>
+                <strong>{{
+                  displayName(
+                    req.from_user.username,
+                    req.from_user.first_name,
+                    req.from_user.last_name
+                  )
+                }}</strong>
+                <small>@{{ req.from_user.username }}</small>
+              </div>
+            </div>
+            <div class="friends-list__actions">
+              <button
+                type="button"
+                class="friends-list__icon-btn"
+                (click)="requestAction.emit({ requestId: req.id, action: 'accept' })"
+              >
+                <span class="material-symbols-rounded" aria-hidden="true">check</span>
+              </button>
+              <button
+                type="button"
+                class="friends-list__icon-btn friends-list__icon-btn--danger"
+                (click)="requestAction.emit({ requestId: req.id, action: 'reject' })"
+              >
+                <span class="material-symbols-rounded" aria-hidden="true">close</span>
+              </button>
+            </div>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+
+  <section class="friend-requests-card__group">
+    <h4>Outgoing {{ outgoingCount() }}</h4>
+    @if (!outgoing().length) {
+      <p class="friends-card__state">No outgoing requests.</p>
+    } @else {
+      <ul class="friends-list">
+        @for (req of outgoing(); track req.id) {
+          <li class="friend-requests-card__item">
+            <div class="friend-requests-card__identity">
+              <img
+                [src]="req.to_user.avatar || '/mascots/profile-placeholder.png'"
+                alt="Friend avatar"
+                loading="lazy"
+              />
+              <div>
+                <strong>{{
+                  displayName(req.to_user.username, req.to_user.first_name, req.to_user.last_name)
+                }}</strong>
+                <small>@{{ req.to_user.username }}</small>
+              </div>
+            </div>
+            <div class="friends-list__actions">
+              <button
+                type="button"
+                class="friends-list__icon-btn friends-list__icon-btn--danger"
+                (click)="requestAction.emit({ requestId: req.id, action: 'cancel' })"
+              >
+                <span class="material-symbols-rounded" aria-hidden="true">close</span>
+              </button>
+            </div>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+</article>

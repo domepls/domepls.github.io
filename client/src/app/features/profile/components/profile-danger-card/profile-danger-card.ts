@@ -4,7 +4,7 @@ import { ProfileData } from '../../services/profile.service';
 
 @Component({
   selector: 'app-profile-danger-card',
-  standalone: true,
+
   imports: [CommonModule],
   templateUrl: './profile-danger-card.html',
   styleUrl: './profile-danger-card.scss',

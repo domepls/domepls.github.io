@@ -1,0 +1,58 @@
+<article class="project-card">
+  @if (isLoading) {
+    <p class="project-list__state">Loading projects...</p>
+  } @else if (!projects.length) {
+    <p class="project-list__state">No projects yet. Create your first one.</p>
+  } @else {
+    <div class="project-list__toolbar">
+      <p class="project-list__count">{{ projects.length }} projects</p>
+      <div class="project-list__view-switch" role="tablist" aria-label="Project list view">
+        <button
+          type="button"
+          class="project-list__view-btn"
+          [class.is-active]="viewMode() === 'list'"
+          (click)="setViewMode('list')"
+        >
+          List
+        </button>
+        <button
+          type="button"
+          class="project-list__view-btn"
+          [class.is-active]="viewMode() === 'grid'"
+          (click)="setViewMode('grid')"
+        >
+          Grid
+        </button>
+      </div>
+    </div>
+
+    <div class="project-list" [class.project-list--grid]="viewMode() === 'grid'">
+      @for (project of projects; track project.id) {
+        <button type="button" class="project-list__item" (click)="openRequested.emit(project.id)">
+          <div>
+            <strong class="project-list__title">{{ project.name }}</strong>
+            <p>{{ project.description || 'No description yet.' }}</p>
+            <small class="project-list__members">Members: {{ project.members.length }}</small>
+            <div class="project-list__chips">
+              <span class="project-list__chip project-list__chip--total">
+                All: {{ statsMap[project.id]?.total ?? 0 }}
+              </span>
+              <span class="project-list__chip project-list__chip--todo">
+                To Do: {{ statsMap[project.id]?.todo ?? 0 }}
+              </span>
+              <span class="project-list__chip project-list__chip--doing">
+                In Progress: {{ statsMap[project.id]?.inProgress ?? 0 }}
+              </span>
+              <span class="project-list__chip project-list__chip--done">
+                Done: {{ statsMap[project.id]?.done ?? 0 }}
+              </span>
+              <span class="project-list__chip project-list__chip--approved">
+                Approved: {{ statsMap[project.id]?.approved ?? 0 }}
+              </span>
+            </div>
+          </div>
+        </button>
+      }
+    </div>
+  }
+</article>

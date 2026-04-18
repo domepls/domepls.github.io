@@ -1,0 +1,91 @@
+<article class="task-card">
+  <form class="task-create" [formGroup]="form" (ngSubmit)="submit()">
+    <label>
+      <span>Title</span>
+      <input type="text" formControlName="title" placeholder="Ship onboarding flow" />
+    </label>
+
+    <label>
+      <span>Description</span>
+      <textarea formControlName="description" rows="3" placeholder="Details"></textarea>
+    </label>
+
+    <div class="task-create__row">
+      <label>
+        <span>Type</span>
+        <select
+          formControlName="scope"
+          class="task-select"
+          [ngClass]="selectToneClass('scope', form.controls.scope.value)"
+        >
+          @for (scope of scopeOptions; track scope) {
+            <option [value]="scope">{{ scope }}</option>
+          }
+        </select>
+      </label>
+
+      <label>
+        <span>Difficulty</span>
+        <select
+          formControlName="difficulty"
+          class="task-select"
+          [ngClass]="selectToneClass('difficulty', form.controls.difficulty.value)"
+        >
+          @for (difficulty of difficultyOptions; track difficulty) {
+            <option [value]="difficulty">{{ difficulty }}</option>
+          }
+        </select>
+      </label>
+
+      <label>
+        <span>Urgency</span>
+        <select
+          formControlName="urgency"
+          class="task-select"
+          [ngClass]="selectToneClass('urgency', form.controls.urgency.value)"
+        >
+          @for (urgency of urgencyOptions; track urgency) {
+            <option [value]="urgency">{{ urgency }}</option>
+          }
+        </select>
+      </label>
+    </div>
+
+    <label>
+      <span>Deadline</span>
+      <input type="datetime-local" formControlName="deadline" />
+    </label>
+
+    @if (form.controls.scope.value === 'project') {
+      <div class="task-create__row">
+        <label>
+          <span>Project</span>
+          <select formControlName="project" class="task-select">
+            <option [ngValue]="null">Select project</option>
+            @for (project of projects; track project.id) {
+              <option [ngValue]="project.id">{{ project.name }}</option>
+            }
+          </select>
+        </label>
+
+        <label>
+          <span>Assignee</span>
+          <select formControlName="assigned_to" class="task-select">
+            <option [ngValue]="null">Select assignee</option>
+            @for (member of availableAssignees; track member.id) {
+              <option [ngValue]="member.id">@{{ member.username }}</option>
+            }
+          </select>
+        </label>
+      </div>
+    }
+
+    @if (errorMessage) {
+      <div class="task-create__error" role="alert">{{ errorMessage }}</div>
+    }
+
+    <button type="submit" class="task-btn task-btn--primary" [disabled]="isBusy">
+      {{ isBusy ? 'Creating...' : 'Create task' }}
+    </button>
+  </form>
+</article>

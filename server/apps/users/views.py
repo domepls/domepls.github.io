@@ -13,6 +13,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.db.models import Q
 
 from .serializers import (
     AuthProfileSerializer,
@@ -433,3 +434,35 @@ class MeAPIView(APIView):
         )
         clear_refresh_cookie(response)
         return response
+
+
+class UserSearchAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        query = request.query_params.get("username", "").strip()
+        if len(query) < 2:
+            return Response([])
+
+        profiles = (
+            Profile.objects.select_related("user")
+            .filter(telegram_id__isnull=False)
+            .exclude(user=request.user)
+            .filter(
+                Q(user__username__icontains=query)
+                | Q(user__first_name__icontains=query)
+                | Q(user__last_name__icontains=query)
+            )
+            .order_by("user__username")[:20]
+        )
+
+        payload = [
+            {
+                "id": profile.user_id,
+                "username": profile.user.username,
+                "first_name": profile.user.first_name,
+                "last_name": profile.user.last_name,
+            }
+            for profile in profiles
+        ]
+        return Response(payload)

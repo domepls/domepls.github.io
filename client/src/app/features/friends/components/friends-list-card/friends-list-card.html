@@ -1,0 +1,65 @@
+<article class="friends-card friends-list-card">
+  @if (!friends().length) {
+    <p class="friends-card__state">
+      No friends yet. Send and accept requests to build your circle.
+    </p>
+  } @else {
+    <div class="friends-list__toolbar">
+      <p class="friends-list__count">{{ friends().length }} friends</p>
+      <div class="friends-list__view-switch" role="tablist" aria-label="Friends list view">
+        <button
+          type="button"
+          class="friends-list__view-btn"
+          [class.is-active]="viewMode() === 'list'"
+          (click)="setViewMode('list')"
+        >
+          List
+        </button>
+        <button
+          type="button"
+          class="friends-list__view-btn"
+          [class.is-active]="viewMode() === 'grid'"
+          (click)="setViewMode('grid')"
+        >
+          Grid
+        </button>
+      </div>
+    </div>
+
+    <ul class="friends-list" [class.friends-list--grid]="viewMode() === 'grid'">
+      @for (friend of friends(); track friend.id) {
+        <li class="friends-list__item" (click)="openProfile.emit(friend.username)">
+          <div class="friends-list__identity">
+            <img
+              [src]="friend.avatar || '/mascots/profile-placeholder.png'"
+              alt="Friend avatar"
+              loading="lazy"
+            />
+
+            <div>
+              <strong>{{ displayName(friend) }}</strong>
+              <small>@{{ friend.username }} · {{ friend.status || 'No status yet' }}</small>
+            </div>
+          </div>
+
+          <div class="friends-list__actions">
+            <button
+              type="button"
+              class="friends-list__icon-btn"
+              (click)="$event.stopPropagation(); openChat.emit(friend.username)"
+            >
+              <span class="material-symbols-rounded" aria-hidden="true">chat</span>
+            </button>
+            <button
+              type="button"
+              class="friends-list__icon-btn friends-list__icon-btn--danger"
+              (click)="$event.stopPropagation(); removeFriend.emit(friend.username)"
+            >
+              <span class="material-symbols-rounded" aria-hidden="true">delete</span>
+            </button>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+</article>

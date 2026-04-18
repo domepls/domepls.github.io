@@ -1,0 +1,95 @@
+:host {
+  display: block;
+}
+
+.project-card {
+  border-radius: 1.3rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 66%, transparent);
+  background: color-mix(in srgb, var(--surface) 84%, var(--background));
+  padding: 1rem;
+}
+
+.project-card__eyebrow {
+  margin: 0 0 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.project-invite {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.project-invite h3,
+.project-invite p {
+  margin: 0;
+}
+
+.project-invite__owner {
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+}
+
+.project-invite label {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.project-invite label span {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.project-invite input {
+  border: 1px solid color-mix(in srgb, var(--border-default) 70%, transparent);
+  background: color-mix(in srgb, var(--surface) 78%, var(--background));
+  color: var(--text-primary);
+}
+
+.project-invite__candidates {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.project-invite__candidate {
+  border-radius: 0.8rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 66%, transparent);
+  background: color-mix(in srgb, var(--surface) 78%, var(--background));
+  text-align: left;
+  padding: 0.45rem 0.65rem;
+  display: grid;
+  gap: 0.15rem;
+}
+
+.project-invite__candidate small {
+  color: var(--text-muted);
+}
+
+.project-invite__members {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.project-invite__member {
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 70%, transparent);
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+}
+
+.project-invite__error {
+  margin: 0;
+  color: var(--error-text);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.project-invite__state {
+  margin: 0;
+  color: var(--text-secondary);
+}

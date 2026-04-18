@@ -1,0 +1,50 @@
+<article class="project-card">
+  <p class="project-card__eyebrow">Members</p>
+
+  @if (!selectedProject) {
+    <p class="project-invite__state">Select a project to manage members.</p>
+  } @else {
+    <div class="project-invite">
+      <h3>{{ selectedProject.name }}</h3>
+      <p class="project-invite__owner">Owner: @{{ selectedProject.owner.username }}</p>
+
+      <label>
+        <span>Invite by username (Telegram linked)</span>
+        <input
+          type="text"
+          [ngModel]="inviteQuery"
+          (ngModelChange)="inviteQueryChange.emit($event)"
+          placeholder="search username"
+        />
+      </label>
+
+      @if (isSearching) {
+        <p class="project-invite__state">Searching users...</p>
+      } @else {
+        <div class="project-invite__candidates">
+          @for (candidate of candidates; track candidate.id) {
+            <button
+              type="button"
+              class="project-invite__candidate"
+              (click)="inviteRequested.emit(candidate.username)"
+              [disabled]="isInviting"
+            >
+              <span>@{{ candidate.username }}</span>
+              <small>{{ candidate.first_name }} {{ candidate.last_name }}</small>
+            </button>
+          }
+        </div>
+      }
+
+      @if (errorMessage) {
+        <p class="project-invite__error" role="alert">{{ errorMessage }}</p>
+      }
+
+      <div class="project-invite__members">
+        @for (member of selectedProject.members; track member.id) {
+          <span class="project-invite__member">@{{ member.username }}</span>
+        }
+      </div>
+    </div>
+  }
+</article>

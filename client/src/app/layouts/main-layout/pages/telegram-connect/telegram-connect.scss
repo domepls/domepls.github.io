@@ -1,0 +1,91 @@
+.telegram-connect-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 9.5rem);
+  padding: 1rem;
+  background: color-mix(in srgb, var(--background) 92%, var(--surface));
+}
+
+.telegram-connect-card {
+  display: grid;
+  gap: 0.9rem;
+  background: color-mix(in srgb, var(--surface) 94%, var(--background));
+  border: 1px solid color-mix(in srgb, var(--border-default) 72%, transparent);
+  border-radius: 1rem;
+  padding: 1.2rem;
+  max-width: 360px;
+  width: 100%;
+  box-shadow: var(--shadow-sm);
+}
+
+.telegram-connect-card h1 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.telegram-connect-description {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.telegram-connect-error {
+  padding: 0.8rem;
+  border-radius: 0.8rem;
+  background: color-mix(in srgb, var(--error-bg) 40%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--error-border) 60%, transparent);
+  color: var(--error-text);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.telegram-connect-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.62rem 0.9rem;
+  border-radius: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 72%, transparent);
+  background: color-mix(in srgb, var(--surface) 88%, var(--background));
+  color: var(--text-primary);
+  font-size: 0.87rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.telegram-connect-btn:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--border-strong) 68%, transparent);
+  background: color-mix(in srgb, var(--surface) 94%, var(--background));
+}
+
+.telegram-connect-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.telegram-connect-spinner {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 600px) {
+  .telegram-connect-card {
+    max-width: 100%;
+  }
+}

@@ -7,6 +7,7 @@ from .views import (
     RefreshAPIView,
     RegisterAPIView,
     TelegramAuthAPIView,
+    UserSearchAPIView,
 )
 
 urlpatterns = [
@@ -17,4 +18,5 @@ urlpatterns = [
     path("auth/telegram/", TelegramAuthAPIView.as_view(), name="telegram_auth"),
 
     path("users/me/", MeAPIView.as_view(), name="users_me"),
+    path("users/search/", UserSearchAPIView.as_view(), name="users_search"),
 ]

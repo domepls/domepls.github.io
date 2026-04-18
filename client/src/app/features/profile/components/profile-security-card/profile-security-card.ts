@@ -5,7 +5,7 @@ import { ProfileData } from '../../services/profile.service';
 
 @Component({
   selector: 'app-profile-security-card',
-  standalone: true,
+
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './profile-security-card.html',
   styleUrl: './profile-security-card.scss',

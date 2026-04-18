@@ -1,0 +1,149 @@
+.friends-card {
+  border: 1px solid color-mix(in srgb, var(--border-default) 72%, transparent);
+  border-radius: 1rem;
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--surface) 93%, var(--background)),
+    color-mix(in srgb, var(--surface-lilac) 35%, var(--surface))
+  );
+  padding: 0.85rem;
+  display: grid;
+  gap: 0.62rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.friends-card__head {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.friends-card__head h3 {
+  margin: 0;
+  font-size: 0.97rem;
+}
+
+.friends-card__head p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+}
+
+.friends-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.friends-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 70%, transparent);
+  border-radius: 0.78rem;
+  background: color-mix(in srgb, var(--surface) 94%, var(--background));
+  padding: 0.5rem;
+}
+
+.friends-list strong {
+  display: block;
+  font-size: 0.9rem;
+}
+
+.friends-list small {
+  color: var(--text-muted);
+}
+
+.friends-list__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.friends-list__actions button,
+.friends-list__actions a {
+  height: 1.95rem;
+  padding: 0 0.68rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--border-default) 70%, transparent);
+  background: color-mix(in srgb, var(--surface) 90%, var(--background));
+  color: var(--text-secondary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.friends-card__state {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.friend-requests-card {
+  min-height: 0;
+  height: auto;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.friend-requests-card > .friends-card__head {
+  grid-column: 1 / -1;
+}
+
+.friend-requests-card__group {
+  display: grid;
+  gap: 0.45rem;
+  align-content: start;
+}
+
+.friend-requests-card__group h4 {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.friend-requests-card__item {
+  cursor: default;
+}
+
+.friend-requests-card__identity {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.friend-requests-card__identity img {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--border-default) 68%, transparent);
+  object-fit: cover;
+  display: block;
+}
+
+.friend-requests-card__identity strong,
+.friend-requests-card__identity small {
+  display: block;
+  min-width: 0;
+}
+
+.friend-requests-card__identity small {
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 900px) {
+  .friend-requests-card {
+    grid-template-columns: 1fr;
+  }
+}

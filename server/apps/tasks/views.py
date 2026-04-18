@@ -4,9 +4,17 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.tasks.serializer import CommentCreateSerializer, CommentSerializer, TaskCreateSerializer, TaskDetailSerializer, TaskListSerializer, TaskUpdateSerializer
+from apps.tasks.serializer import (
+    CommentCreateSerializer,
+    CommentSerializer,
+    TaskCreateSerializer,
+    TaskDetailSerializer,
+    TaskListSerializer,
+    TaskUpdateSerializer,
+)
 from apps.common.permissions import IsTelegramLinked
 
+from .gamification import approve_project_task, mark_task_done, refresh_streak_for_user
 from .models import Task, Comment
 
 
@@ -16,13 +24,13 @@ class TaskListCreateAPIView(generics.ListCreateAPIView):
     def get_queryset(self):
         return (
             Task.objects.filter(
-                Q(project__owner=self.request.user) |
-                Q(project__members=self.request.user) |
-                Q(assigned_to=self.request.user) |
-                Q(created_by=self.request.user)
+                Q(project__owner=self.request.user)
+                | Q(project__members=self.request.user)
+                | Q(assigned_to=self.request.user)
+                | Q(created_by=self.request.user)
             )
             .distinct()
-            .select_related("project", "assigned_to", "created_by")
+            .select_related("project", "assigned_to", "created_by", "assigned_by")
             .order_by("-created_at")
         )
 
@@ -42,13 +50,13 @@ class TaskDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return (
             Task.objects.filter(
-                Q(project__owner=self.request.user) |
-                Q(project__members=self.request.user) |
-                Q(assigned_to=self.request.user) |
-                Q(created_by=self.request.user)
+                Q(project__owner=self.request.user)
+                | Q(project__members=self.request.user)
+                | Q(assigned_to=self.request.user)
+                | Q(created_by=self.request.user)
             )
             .distinct()
-            .select_related("project", "assigned_to", "created_by")
+            .select_related("project", "assigned_to", "created_by", "assigned_by")
             .prefetch_related("comments__author")
         )
 
@@ -63,16 +71,20 @@ class TaskDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     def update(self, request, *args, **kwargs):
         task = self.get_object()
 
-        if request.user not in [task.created_by, task.project.owner] and \
-           not task.project.members.filter(id=request.user.id).exists():
-            raise PermissionDenied(
-                "You do not have permission to update this task.")
-
         partial = kwargs.pop("partial", False)
         serializer = self.get_serializer(
             task, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+
+        status_value = serializer.validated_data.get("status")
+        if status_value == Task.Status.DONE:
+            mark_task_done(task)
+        elif task.scope == Task.Scope.PERSONAL and status_value in [Task.Status.TODO, Task.Status.IN_PROGRESS]:
+            task.completed_at = None
+            task.save(update_fields=["completed_at"])
+            if task.assigned_to_id:
+                refresh_streak_for_user(task.assigned_to_id)
 
         return Response(
             TaskDetailSerializer(task, context={"request": request}).data,
@@ -82,12 +94,44 @@ class TaskDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         task = self.get_object()
 
-        if request.user != task.created_by and request.user != task.project.owner:
-            raise PermissionDenied(
-                "Only creator or project owner can delete this task.")
+        if task.scope == Task.Scope.PROJECT:
+            if request.user.id not in [task.created_by_id, task.project.owner_id]:
+                raise PermissionDenied(
+                    "Only creator or project owner can delete this task.")
+        elif request.user.id != task.created_by_id:
+            raise PermissionDenied("Only task owner can delete personal task.")
+
+        assigned_to_id = task.assigned_to_id
 
         task.delete()
+        if assigned_to_id:
+            refresh_streak_for_user(assigned_to_id)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class TaskApproveAPIView(APIView):
+    permission_classes = [IsTelegramLinked]
+
+    def post(self, request, task_id):
+        try:
+            task = Task.objects.select_related(
+                "project", "assigned_to").get(id=task_id)
+        except Task.DoesNotExist:
+            return Response({"detail": "Task not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        if task.scope != Task.Scope.PROJECT:
+            return Response(
+                {"detail": "Only project tasks can be approved."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            approve_project_task(task, request.user.id)
+        except ValueError as error:
+            return Response({"detail": str(error)}, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = TaskDetailSerializer(task, context={"request": request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class TaskCommentsAPIView(APIView):
@@ -100,12 +144,15 @@ class TaskCommentsAPIView(APIView):
         except Task.DoesNotExist:
             return None
 
-        has_access = (
-            task.project.owner == request.user
-            or task.project.members.filter(id=request.user.id).exists()
-            or task.assigned_to == request.user
-            or task.created_by == request.user
-        )
+        if task.scope == Task.Scope.PROJECT and task.project:
+            has_access = (
+                task.project.owner == request.user
+                or task.project.members.filter(id=request.user.id).exists()
+                or task.assigned_to == request.user
+                or task.created_by == request.user
+            )
+        else:
+            has_access = task.created_by == request.user or task.assigned_to == request.user
 
         if not has_access:
             raise PermissionDenied("You do not have access to this task.")

@@ -1,0 +1,31 @@
+<article class="dashboard-card">
+  <div class="dashboard-card__head">
+    <h2>{{ title }}</h2>
+    @if (linkLabel) {
+      <a [routerLink]="linkTo">{{ linkLabel }}</a>
+    }
+  </div>
+
+  @if (!items.length) {
+    <p class="dashboard-card__state">{{ emptyMessage }}</p>
+  } @else {
+    <div class="dashboard-list">
+      @for (item of items; track item.id) {
+        <div class="dashboard-list__item">
+          <div>
+            <strong>{{ item.title }}</strong>
+            <small>{{ item.subtitle }}</small>
+          </div>
+          <div class="dashboard-list__meta">
+            <span class="dashboard-chip" [ngClass]="chipClass(item.status)">
+              {{ statusLabel(item.status) }}
+            </span>
+            @if (item.meta) {
+              <small>{{ item.meta }}</small>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</article>

@@ -1,0 +1,30 @@
+<section class="chats-page">
+  @if (pageError()) {
+    <p class="chats-page__error" role="alert">{{ pageError() }}</p>
+  }
+
+  <section class="chats-layout">
+    <app-chats-sidebar
+      [isLoading]="isLoading()"
+      [chatType]="chatType()"
+      [chats]="filteredChats()"
+      [selectedChatId]="selectedChat()?.id ?? null"
+      [currentUserId]="auth.currentUser()?.id"
+      [chatLabel]="chatLabel.bind(this)"
+      (typeChange)="setChatType($event)"
+      (selectChat)="selectChat($event)"
+    />
+
+    <app-chat-room
+      [selectedChat]="selectedChat()"
+      [messages]="messages()"
+      [currentUserId]="auth.currentUser()?.id"
+      [messageText]="messageText()"
+      [chatLabel]="chatLabel.bind(this)"
+      (messageTextChange)="onMessageInput($event)"
+      (sendMessage)="sendMessage()"
+      (closeChat)="closeSelectedChat()"
+      (openProfile)="openChatProfile($event)"
+    />
+  </section>
+</section>

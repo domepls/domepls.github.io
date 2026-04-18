@@ -1,0 +1,98 @@
+<article class="chat-room">
+  @if (!selectedChat()) {
+    <p class="chat-room__state">Select a chat to start messaging.</p>
+  } @else if (selectedChat(); as chat) {
+    <header class="chat-room__header">
+      <button
+        type="button"
+        class="chat-room__back-btn"
+        aria-label="Close chat"
+        (click)="closeChat.emit()"
+      >
+        <span class="material-symbols-rounded" aria-hidden="true">arrow_back</span>
+      </button>
+
+      <button type="button" class="chat-room__peer" (click)="openPeerProfile(chat)">
+        <span class="chat-room__avatar-wrap">
+          @if (peerAvatar(chat); as avatar) {
+            <img class="chat-room__avatar" [src]="avatar" alt="Chat avatar" loading="lazy" />
+          } @else {
+            <span class="chat-room__avatar-fallback">{{ peerInitials(chat) }}</span>
+          }
+        </span>
+
+        <span class="chat-room__head-meta">
+          <h3>{{ peerName(chat) }}</h3>
+          <p>{{ peerUsername(chat) }}</p>
+        </span>
+      </button>
+
+      <span class="chat-room__header-spacer"></span>
+    </header>
+
+    <div class="chat-room__messages">
+      @for (message of messages(); track message.id) {
+        <article class="chat-message-row" [class.chat-message-row--mine]="isMine(message)">
+          @if (!isMine(message)) {
+            <span class="chat-message-row__avatar-wrap">
+              @if (messageAvatar(message); as avatar) {
+                <img
+                  class="chat-message-row__avatar"
+                  [src]="avatar"
+                  alt="Sender avatar"
+                  loading="lazy"
+                />
+              } @else {
+                <span class="chat-message-row__avatar-fallback">{{
+                  messageInitials(message)
+                }}</span>
+              }
+            </span>
+          }
+
+          <div class="chat-message" [class.chat-message--mine]="isMine(message)">
+            <small class="chat-message__author">@{{ message.sender.username }}</small>
+            <p class="chat-message__text">{{ message.text }}</p>
+            <small class="chat-message__date">{{
+              message.created_at | date: 'MMM d, HH:mm'
+            }}</small>
+          </div>
+
+          @if (isMine(message)) {
+            <span class="chat-message-row__avatar-wrap">
+              @if (messageAvatar(message); as avatar) {
+                <img
+                  class="chat-message-row__avatar"
+                  [src]="avatar"
+                  alt="Sender avatar"
+                  loading="lazy"
+                />
+              } @else {
+                <span class="chat-message-row__avatar-fallback">{{
+                  messageInitials(message)
+                }}</span>
+              }
+            </span>
+          }
+        </article>
+      }
+    </div>
+
+    <footer class="chat-room__composer">
+      <input
+        [ngModel]="messageText()"
+        (ngModelChange)="messageTextChange.emit($event)"
+        placeholder="Write your message"
+        (keyup.enter)="sendMessage.emit()"
+      />
+      <button
+        type="button"
+        class="chat-room__send-btn"
+        aria-label="Send message"
+        (click)="sendMessage.emit()"
+      >
+        <span class="material-symbols-rounded" aria-hidden="true">send</span>
+      </button>
+    </footer>
+  }
+</article>

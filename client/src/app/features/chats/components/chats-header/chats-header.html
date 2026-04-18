@@ -1,0 +1,22 @@
+<header class="chats-page__header">
+  <div>
+    <h2>Chats</h2>
+    <p>Switch between direct and project conversations.</p>
+  </div>
+  <div class="chats-page__tabs" role="tablist" aria-label="Chat type">
+    <button
+      type="button"
+      [class.is-active]="activeType() === 'direct'"
+      (click)="typeChange.emit('direct')"
+    >
+      Direct
+    </button>
+    <button
+      type="button"
+      [class.is-active]="activeType() === 'project'"
+      (click)="typeChange.emit('project')"
+    >
+      Project
+    </button>
+  </div>
+</header>

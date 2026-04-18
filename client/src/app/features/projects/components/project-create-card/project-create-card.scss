@@ -1,0 +1,56 @@
+:host {
+  display: block;
+}
+
+.project-card {
+  border-radius: 1.3rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 66%, transparent);
+  background: color-mix(in srgb, var(--surface) 84%, var(--background));
+  padding: 1rem;
+}
+
+.project-create {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.project-create label {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.project-create span {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.project-create input,
+.project-create textarea {
+  border: 1px solid color-mix(in srgb, var(--border-default) 70%, transparent);
+  background: color-mix(in srgb, var(--surface) 78%, var(--background));
+  color: var(--text-primary);
+  resize: vertical;
+}
+
+.project-create textarea {
+  max-height: 100px;
+}
+
+.project-create__error {
+  color: var(--error-text);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.project-btn {
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
+  font-weight: 800;
+}
+
+.project-btn--primary {
+  border: 1px solid color-mix(in srgb, var(--border-strong) 70%, transparent);
+  background: linear-gradient(130deg, var(--btn-secondary-bg), var(--btn-primary-bg));
+  color: var(--text-primary);
+}

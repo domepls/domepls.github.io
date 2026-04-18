@@ -1,0 +1,137 @@
+<section class="user-profile-page">
+  @if (isLoading()) {
+    <p class="user-profile-page__state">Loading profile...</p>
+  } @else if (error()) {
+    <p class="user-profile-page__error">{{ error() }}</p>
+  } @else if (profile(); as user) {
+    <div class="user-profile-layout">
+      <article class="user-profile-identity">
+        <span class="user-profile-identity__avatar-wrap">
+          <img
+            [src]="user.avatar || '/mascots/profile-placeholder.png'"
+            alt="User avatar"
+            loading="lazy"
+          />
+        </span>
+
+        <strong>{{ displayName(user) }}</strong>
+        <span class="user-profile-identity__username">@{{ user.username }}</span>
+        <p class="user-profile-identity__status">
+          {{ readonlyValue(user.status, 'No status set') }}
+        </p>
+
+        <div
+          class="profile-telegram-badge"
+          [class.is-warning]="!user.telegram_connected"
+          [class.is-success]="user.telegram_connected"
+        >
+          <span class="material-symbols-rounded">
+            {{ user.telegram_connected ? 'check_circle' : 'warning' }}
+          </span>
+          <span>
+            {{ user.telegram_connected ? 'Telegram connected' : 'Telegram not connected' }}
+          </span>
+        </div>
+
+        @if (!user.is_self) {
+          @if (user.is_friend) {
+            <p class="user-profile-identity__friend-state">Already friends</p>
+          } @else if (user.outgoing_request_id) {
+            <p class="user-profile-identity__friend-state">Friend request sent</p>
+          } @else {
+            <button
+              type="button"
+              class="user-profile-identity__friend-button"
+              (click)="sendFriendRequest(user)"
+              [disabled]="isSendingFriendRequest()"
+            >
+              {{ isSendingFriendRequest() ? 'Sending...' : 'Add friend' }}
+            </button>
+          }
+        }
+
+        @if (friendActionError()) {
+          <p class="user-profile-identity__friend-error" role="alert">{{ friendActionError() }}</p>
+        }
+
+        <div class="user-profile-identity__stats">
+          <div>
+            <strong>{{ pointsValue(user) }}</strong>
+            <span>Points</span>
+          </div>
+          <div>
+            <strong>{{ streakValue(user) }}</strong>
+            <span>Streak</span>
+          </div>
+        </div>
+
+        <div class="profile-achievements">
+          <div class="profile-achievements__header">
+            <span class="material-symbols-rounded" aria-hidden="true">emoji_events</span>
+            <span>Achievements</span>
+          </div>
+
+          <div class="profile-achievements__scroller" aria-label="Achievements list">
+            @for (achievement of earnedAchievements(user); track achievement.code) {
+              <article class="profile-achievements__item">
+                <span class="material-symbols-rounded" aria-hidden="true">emoji_events</span>
+                <strong>{{ achievement.title }}</strong>
+                <span>{{ achievement.description }}</span>
+              </article>
+            } @empty {
+              <article class="profile-achievements__item profile-achievements__item--placeholder">
+                <span class="material-symbols-rounded" aria-hidden="true">emoji_events</span>
+                <strong>No achievements yet</strong>
+                <span>They are still on the way.</span>
+              </article>
+            }
+          </div>
+        </div>
+      </article>
+
+      <article class="user-profile-readonly">
+        <div class="user-profile-readonly__grid">
+          <label>
+            <span>First name</span>
+            <input type="text" [value]="readonlyValue(user.first_name)" readonly />
+          </label>
+
+          <label>
+            <span>Last name</span>
+            <input type="text" [value]="readonlyValue(user.last_name)" readonly />
+          </label>
+
+          <label>
+            <span>Username</span>
+            <input type="text" [value]="user.username" readonly />
+          </label>
+
+          <label>
+            <span>Birth date</span>
+            <input type="text" [value]="readonlyValue(user.birth_date, 'Not provided')" readonly />
+          </label>
+
+          <label>
+            <span>Location</span>
+            <input type="text" [value]="readonlyValue(user.location)" readonly />
+          </label>
+
+          <label>
+            <span>Website</span>
+            <input type="text" [value]="readonlyValue(user.website)" readonly />
+          </label>
+        </div>
+
+        <label class="user-profile-readonly__textarea-wrap">
+          <span>Status</span>
+          <textarea rows="4" readonly>{{ readonlyValue(user.status, 'No status set') }}</textarea>
+        </label>
+
+        <label class="user-profile-readonly__textarea-wrap">
+          <span>About</span>
+          <textarea rows="4" readonly>{{ readonlyValue(user.bio) }}</textarea>
+        </label>
+      </article>
+    </div>
+  }
+</section>

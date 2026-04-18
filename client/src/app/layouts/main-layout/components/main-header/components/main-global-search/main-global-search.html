@@ -1,0 +1,40 @@
+<div class="ml-search" [class.is-open]="isOpen()">
+  <label class="ml-search__field" aria-label="Global search">
+    <span class="material-symbols-rounded" aria-hidden="true">search</span>
+    <input
+      type="search"
+      [value]="query()"
+      (input)="queryChange.emit($any($event.target).value)"
+      (focus)="searchFocus.emit()"
+      placeholder="Search projects, tasks, users..."
+    />
+  </label>
+
+  @if (isOpen()) {
+    <div class="ml-search__dropdown" role="listbox" aria-label="Search results">
+      @if (isLoading()) {
+        <p class="ml-search__state">Searching...</p>
+      } @else {
+        @if (!sections().length) {
+          <p class="ml-search__state">No results yet.</p>
+        } @else {
+          @for (section of sections(); track section.key) {
+            <section class="ml-search__section">
+              <h4>{{ section.title }}</h4>
+              <ul>
+                @for (item of section.items; track item.id) {
+                  <li>
+                    <button type="button" (click)="itemSelect.emit(item.route)">
+                      <strong>{{ item.title }}</strong>
+                      <small>{{ item.subtitle }}</small>
+                    </button>
+                  </li>
+                }
+              </ul>
+            </section>
+          }
+        }
+      }
+    </div>
+  }
+</div>

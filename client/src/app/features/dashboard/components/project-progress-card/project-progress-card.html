@@ -1,0 +1,28 @@
+<article class="dashboard-card">
+  <div class="dashboard-card__head">
+    <h2>Project progress</h2>
+    <a routerLink="/app/projects">Manage projects</a>
+  </div>
+
+  @if (!rows.length) {
+    <p class="dashboard-card__state">{{ emptyMessage }}</p>
+  } @else {
+    <div class="dashboard-projects">
+      @for (project of rows; track project.id) {
+        <a class="dashboard-project" [routerLink]="['/app/projects', project.id]">
+          <div class="dashboard-project__head">
+            <strong>{{ project.name }}</strong>
+            <span>{{ project.percent }}%</span>
+          </div>
+          <div class="dashboard-project__track">
+            <div class="dashboard-project__bar" [style.width.%]="project.percent"></div>
+          </div>
+          <div class="dashboard-project__meta">
+            <small>{{ project.completed }}/{{ project.total }} completed</small>
+            <small>{{ project.active }} active</small>
+          </div>
+        </a>
+      }
+    </div>
+  }
+</article>

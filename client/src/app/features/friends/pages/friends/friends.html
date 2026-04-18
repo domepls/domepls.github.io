@@ -1,0 +1,28 @@
+<section class="friends-page">
+  @if (pageError()) {
+    <p class="friends-page__error" role="alert">{{ pageError() }}</p>
+  }
+
+  <section class="friends-layout">
+    <section class="friends-layout__block">
+      <p class="friends-layout__eyebrow">Requests</p>
+      <app-friend-requests-card
+        class="friends-layout__requests"
+        [incoming]="requests().incoming"
+        [outgoing]="requests().outgoing"
+        (requestAction)="handleRequest($event.requestId, $event.action)"
+      />
+    </section>
+
+    <section class="friends-layout__block">
+      <p class="friends-layout__eyebrow">Friends List</p>
+      <app-friends-list-card
+        class="friends-layout__friends"
+        [friends]="friends()"
+        (openProfile)="openProfile($event)"
+        (openChat)="openDirectChat($event)"
+        (removeFriend)="removeFriend($event)"
+      />
+    </section>
+  </section>
+</section>

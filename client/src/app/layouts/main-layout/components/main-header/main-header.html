@@ -1,13 +1,32 @@
 <header class="ml-header">
   <h1 class="ml-header__title">{{ pageTitle() }}</h1>
 
-  <label class="ml-header__search" aria-label="Search">
-    <span class="material-symbols-rounded" aria-hidden="true">search</span>
-    <input type="search" placeholder="Search projects, tasks, chats..." />
-  </label>
+  <app-main-global-search
+    class="ml-header__search"
+    [query]="searchQuery()"
+    [isOpen]="isSearchOpen"
+    [isLoading]="isSearching()"
+    [sections]="searchSections()"
+    (queryChange)="onSearchQueryChange($event)"
+    (searchFocus)="openSearch()"
+    (itemSelect)="selectSearchItem($event)"
+  />
 
   @if (auth.isAuthenticated() && auth.currentUser(); as user) {
     <div class="ml-user-menu">
+      <button
+        class="ml-user-menu__notifications-btn"
+        type="button"
+        aria-label="Open notifications"
+        [attr.aria-expanded]="isNotificationsOpen"
+        (click)="toggleNotifications()"
+      >
+        <span class="material-symbols-rounded" aria-hidden="true">notifications</span>
+        @if (unreadNotifications()) {
+          <span class="ml-user-menu__notifications-badge">{{ unreadNotifications() }}</span>
+        }
+      </button>
+
       <button
         class="ml-user-menu__trigger"
         type="button"
@@ -100,6 +119,36 @@
               </button>
             </div>
           </div>
+        </div>
+      }
+
+      @if (isNotificationsOpen) {
+        <div class="ml-user-menu__notifications" role="menu" aria-label="Notifications">
+          <div class="ml-user-menu__notifications-head">
+            <p>Notifications</p>
+            <button type="button" (click)="markAllNotificationsRead()">Mark all read</button>
+          </div>
+
+          @if (isLoadingNotifications()) {
+            <p class="ml-user-menu__notifications-state">Loading...</p>
+          } @else if (!notifications().length) {
+            <p class="ml-user-menu__notifications-state">No notifications yet.</p>
+          } @else {
+            <div class="ml-user-menu__notifications-list">
+              @for (item of notifications(); track item.id) {
+                <button
+                  type="button"
+                  class="ml-user-menu__notification"
+                  [class.is-unread]="!item.is_read"
+                  (click)="openNotificationLink(item)"
+                >
+                  <strong>{{ item.title }}</strong>
+                  <small>{{ item.body }}</small>
+                  <small>{{ item.created_at | date: 'MMM d, HH:mm' }}</small>
+                </button>
+              }
+            </div>
+          }
         </div>
       }
     </div>

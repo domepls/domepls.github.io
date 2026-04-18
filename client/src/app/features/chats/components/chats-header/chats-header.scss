@@ -1,0 +1,41 @@
+.chats-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.chats-page__header h2 {
+  margin: 0;
+  font-family: 'Rubik', sans-serif;
+  font-size: clamp(1.2rem, 2.2vw, 1.5rem);
+}
+
+.chats-page__header p {
+  margin: 0.2rem 0 0;
+  color: var(--text-secondary);
+}
+
+.chats-page__tabs {
+  display: inline-flex;
+  gap: 0.28rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 72%, transparent);
+  border-radius: 999px;
+  padding: 0.24rem;
+  background: color-mix(in srgb, var(--surface) 74%, var(--background));
+}
+
+.chats-page__tabs button {
+  height: 2rem;
+  min-width: 5.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+
+.chats-page__tabs button.is-active {
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--surface-lilac) 82%, var(--surface));
+}

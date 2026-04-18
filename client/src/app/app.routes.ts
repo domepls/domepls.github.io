@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { telegramLinkGuard } from './core/guards/telegram-link.guard';
 
 export const routes: Routes = [
   {
@@ -8,32 +9,53 @@ export const routes: Routes = [
     loadComponent: () => import('./layouts/main-layout/main-layout'),
     children: [
       {
+        path: 'telegram-connect',
+        loadComponent: () =>
+          import('./layouts/main-layout/pages/telegram-connect/telegram-connect'),
+      },
+      {
         path: '',
         pathMatch: 'full',
         redirectTo: 'dashboard',
       },
       {
         path: 'dashboard',
-        loadComponent: () => import('./features/profile/pages/profile/profile'),
+        canActivate: [telegramLinkGuard],
+        loadComponent: () => import('./features/dashboard/pages/dashboard/dashboard'),
       },
       {
         path: 'projects',
-        loadComponent: () => import('./features/profile/pages/profile/profile'),
+        canActivate: [telegramLinkGuard],
+        loadComponent: () => import('./features/projects/pages/projects/projects'),
+      },
+      {
+        path: 'projects/:projectId',
+        canActivate: [telegramLinkGuard],
+        loadComponent: () => import('./features/projects/pages/project-detail'),
       },
       {
         path: 'tasks',
-        loadComponent: () => import('./features/profile/pages/profile/profile'),
+        canActivate: [telegramLinkGuard],
+        loadComponent: () => import('./features/tasks/pages/tasks/tasks'),
       },
       {
         path: 'chats',
-        loadComponent: () => import('./features/profile/pages/profile/profile'),
+        canActivate: [telegramLinkGuard],
+        loadComponent: () => import('./features/chats/pages/chats/chats'),
       },
       {
         path: 'friends',
-        loadComponent: () => import('./features/profile/pages/profile/profile'),
+        canActivate: [telegramLinkGuard],
+        loadComponent: () => import('./features/friends/pages/friends/friends'),
+      },
+      {
+        path: 'users/:username',
+        canActivate: [telegramLinkGuard],
+        loadComponent: () => import('./features/friends/pages/user-profile/user-profile'),
       },
       {
         path: 'profile',
+        canActivate: [telegramLinkGuard],
         loadComponent: () => import('./features/profile/pages/profile/profile'),
       },
     ],

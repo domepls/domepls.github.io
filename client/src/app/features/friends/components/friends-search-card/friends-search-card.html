@@ -1,0 +1,40 @@
+<article class="friends-card friends-search-card">
+  <header class="friends-card__head">
+    <h3>Search users</h3>
+    <p>Find teammates by username or profile name.</p>
+  </header>
+
+  <label class="friends-search-card__field">
+    <span>Username or full name</span>
+    <input
+      [ngModel]="query()"
+      (ngModelChange)="queryChange.emit($event)"
+      placeholder="Type at least 2 symbols"
+    />
+  </label>
+
+  @if (isSearching()) {
+    <p class="friends-card__state">Searching people...</p>
+  } @else if (users().length) {
+    <ul class="friends-list">
+      @for (user of users(); track user.id) {
+        <li>
+          <div>
+            <strong>@{{ user.username }}</strong>
+            <small>{{ user.first_name }} {{ user.last_name }}</small>
+          </div>
+          <div class="friends-list__actions">
+            <button type="button" type="ghost" (click)="openProfile.emit(user.username)">
+              Profile
+            </button>
+            <button type="button" type="primary" (click)="addFriend.emit(user.username)">
+              Add
+            </button>
+          </div>
+        </li>
+      }
+    </ul>
+  } @else {
+    <p class="friends-card__state">Start typing to see matching users.</p>
+  }
+</article>

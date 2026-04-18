@@ -4,6 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from .achievements import get_user_achievements_payload
 from .models import Profile
 
 User = get_user_model()
@@ -75,6 +76,7 @@ class AuthProfileSerializer(serializers.ModelSerializer):
         source="user.first_name", read_only=True)
     last_name = serializers.CharField(source="user.last_name", read_only=True)
     telegram_connected = serializers.SerializerMethodField()
+    achievements = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
@@ -95,10 +97,14 @@ class AuthProfileSerializer(serializers.ModelSerializer):
             "two_factor_enabled",
             "telegram_id",
             "telegram_connected",
+            "achievements",
         )
 
     def get_telegram_connected(self, instance):
         return bool(instance.telegram_id)
+
+    def get_achievements(self, instance):
+        return get_user_achievements_payload(instance.user)
 
 
 class TelegramAuthSerializer(serializers.Serializer):
@@ -121,6 +127,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         source="user.first_name", read_only=True)
     last_name = serializers.CharField(source="user.last_name", read_only=True)
     telegram_connected = serializers.SerializerMethodField()
+    achievements = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
@@ -140,10 +147,14 @@ class ProfileSerializer(serializers.ModelSerializer):
             "two_factor_enabled",
             "telegram_id",
             "telegram_connected",
+            "achievements",
         )
 
     def get_telegram_connected(self, instance):
         return bool(instance.telegram_id)
+
+    def get_achievements(self, instance):
+        return get_user_achievements_payload(instance.user)
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):

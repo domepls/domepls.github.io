@@ -26,3 +26,40 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"Profile of {self.user.username}"
+
+
+class Achievement(models.Model):
+    code = models.SlugField(max_length=64, unique=True)
+    title = models.CharField(max_length=120)
+    description = models.TextField()
+    points_required = models.PositiveIntegerField(default=0)
+    streak_required = models.PositiveIntegerField(default=0)
+    approved_tasks_required = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ("id",)
+
+    def __str__(self):
+        return self.title
+
+
+class UserAchievement(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="earned_achievements",
+    )
+    achievement = models.ForeignKey(
+        Achievement,
+        on_delete=models.CASCADE,
+        related_name="earned_by",
+    )
+    earned_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "achievement")
+        ordering = ("-earned_at",)
+
+    def __str__(self):
+        return f"{self.user.username}: {self.achievement.title}"

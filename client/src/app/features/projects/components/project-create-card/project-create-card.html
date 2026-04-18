@@ -1,0 +1,25 @@
+<article class="project-card project-card--create">
+  <form class="project-create" [formGroup]="form" (ngSubmit)="submit()">
+    <label>
+      <span>Name</span>
+      <input type="text" formControlName="name" placeholder="Team sprint" />
+    </label>
+
+    <label>
+      <span>Description</span>
+      <textarea
+        formControlName="description"
+        rows="3"
+        placeholder="What is this project about?"
+      ></textarea>
+    </label>
+
+    @if (errorMessage) {
+      <div class="project-create__error" role="alert">{{ errorMessage }}</div>
+    }
+
+    <button type="submit" class="project-btn project-btn--primary" [disabled]="isBusy">
+      {{ isBusy ? 'Creating...' : 'Create project' }}
+    </button>
+  </form>
+</article>

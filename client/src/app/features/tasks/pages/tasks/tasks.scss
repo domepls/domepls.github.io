@@ -1,0 +1,38 @@
+:host {
+  display: block;
+}
+
+.tasks-page {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.tasks-page__error {
+  border-radius: 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--error-border) 70%, transparent);
+  background: color-mix(in srgb, var(--error-bg) 70%, var(--surface));
+  color: var(--error-text);
+  padding: 0.7rem 0.9rem;
+  font-weight: 700;
+}
+
+.tasks-layout {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+.tasks-layout__block {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.tasks-layout__eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}

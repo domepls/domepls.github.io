@@ -3,6 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments';
 
+export interface ProfileAchievement {
+  code: string;
+  title: string;
+  description: string;
+  earned: number;
+  earned_at: string;
+}
+
 export interface ProfileData {
   username: string;
   first_name?: string | null;
@@ -19,6 +27,7 @@ export interface ProfileData {
   telegram_id?: number | null;
   telegram_connected?: boolean;
   two_factor_enabled?: boolean;
+  achievements?: ProfileAchievement[];
 }
 
 export interface ProfileUpdatePayload {

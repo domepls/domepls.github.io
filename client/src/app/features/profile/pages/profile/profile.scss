@@ -31,14 +31,6 @@
 .profile-hero {
   display: grid;
   gap: 1rem;
-  padding: 1.25rem;
-  border-radius: 1.8rem;
-  border: 1px solid color-mix(in srgb, var(--border-default) 58%, transparent);
-  background: linear-gradient(
-    145deg,
-    color-mix(in srgb, var(--surface) 86%, var(--background)),
-    color-mix(in srgb, var(--background) 86%, var(--surface))
-  );
 }
 
 .profile-main-grid {
@@ -344,14 +336,6 @@
 }
 
 :host-context([data-theme='dark']) {
-  .profile-hero {
-    background: linear-gradient(
-      145deg,
-      color-mix(in srgb, var(--surface) 84%, #160f20),
-      color-mix(in srgb, var(--background) 88%, #120d19)
-    );
-  }
-
   .profile-card,
   .profile-page__state,
   .profile-mini-stats__item {
@@ -381,19 +365,10 @@
   .profile-card-shell--identity {
     height: auto;
   }
-
-  .profile-card--identity {
-    justify-items: start;
-  }
-
-  .profile-identity {
-    text-align: left;
-  }
 }
 
 @media (max-width: 720px) {
   .profile-hero {
-    padding: 1rem;
     border-radius: 1.5rem;
   }
 

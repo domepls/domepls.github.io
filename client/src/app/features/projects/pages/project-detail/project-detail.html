@@ -1,0 +1,173 @@
+<section class="project-detail-page">
+  @if (pageError()) {
+    <div class="project-detail-page__error" role="alert">{{ pageError() }}</div>
+  }
+
+  @if (isLoading()) {
+    <div class="project-detail-page__state">Loading project...</div>
+  } @else if (project(); as projectData) {
+    <div class="project-detail-layout">
+      <section class="project-detail-layout__block">
+        <p class="project-detail-layout__eyebrow">Project Settings</p>
+        <article class="project-detail-card">
+          <form class="project-edit-form" [formGroup]="editForm" (ngSubmit)="saveProject()">
+            <label>
+              <span>Name</span>
+              <input type="text" formControlName="name" />
+            </label>
+
+            <label>
+              <span>Description</span>
+              <textarea formControlName="description" rows="4"></textarea>
+            </label>
+
+            @if (editError()) {
+              <p class="project-detail-card__error" role="alert">{{ editError() }}</p>
+            }
+
+            <div class="project-detail-card__actions">
+              <button
+                type="submit"
+                class="project-btn project-btn--primary"
+                [disabled]="isSaving()"
+              >
+                <span class="material-symbols-rounded">save</span>
+                {{ isSaving() ? 'Saving...' : 'Save project' }}
+              </button>
+              <button type="button" class="project-btn" (click)="openProjectChat()">
+                <span class="material-symbols-rounded">chat</span>
+                Chat
+              </button>
+              <button
+                type="button"
+                class="project-btn project-btn--icon project-btn--danger"
+                aria-label="Delete project"
+                title="Delete project"
+                (click)="deleteProject()"
+              >
+                <span class="material-symbols-rounded">delete</span>
+                Delete
+              </button>
+            </div>
+          </form>
+        </article>
+      </section>
+
+      <section class="project-detail-layout__block">
+        <p class="project-detail-layout__eyebrow">Members</p>
+        <article class="project-detail-card">
+          <div class="project-members">
+            <label>
+              <span>Invite by username</span>
+              <input
+                type="text"
+                [ngModel]="inviteQuery()"
+                (ngModelChange)="onInviteQueryChange($event)"
+                placeholder="Search @username"
+              />
+            </label>
+
+            @if (isSearchingUsers()) {
+              <p class="project-members__state">Searching users...</p>
+            } @else {
+              <div class="project-members__candidates">
+                @for (candidate of inviteCandidates(); track candidate.id) {
+                  <button
+                    type="button"
+                    class="project-members__candidate"
+                    [disabled]="isInviting()"
+                    (click)="inviteByUsername(candidate.username)"
+                  >
+                    <span>@{{ candidate.username }}</span>
+                    <small>{{ candidate.first_name }} {{ candidate.last_name }}</small>
+                  </button>
+                }
+              </div>
+            }
+
+            @if (inviteError()) {
+              <p class="project-detail-card__error" role="alert">{{ inviteError() }}</p>
+            }
+
+            <div class="project-members__list">
+              @for (member of projectData.members; track member.id) {
+                <span class="project-members__pill">
+                  <strong>@{{ member.username }}</strong>
+                  @if (member.id === projectData.owner.id) {
+                    <small>Owner</small>
+                  }
+                </span>
+              }
+            </div>
+          </div>
+        </article>
+      </section>
+    </div>
+
+    <section class="project-detail-layout__block project-detail-layout__block--tasks">
+      <p class="project-detail-layout__eyebrow">Project Tasks</p>
+
+      <article class="project-detail-card project-detail-card--filters">
+        <div class="project-task-filters">
+          <label>
+            <span>Search</span>
+            <input
+              type="text"
+              [ngModel]="searchQuery()"
+              (ngModelChange)="searchQuery.set($event)"
+              placeholder="Task title or description"
+            />
+          </label>
+
+          <label>
+            <span>Status</span>
+            <select [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)">
+              <option value="all">all</option>
+              <option value="todo">todo</option>
+              <option value="in_progress">in progress</option>
+              <option value="done">done</option>
+              <option value="approved">approved</option>
+              <option value="cancelled">cancelled</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Urgency</span>
+            <select [ngModel]="urgencyFilter()" (ngModelChange)="urgencyFilter.set($event)">
+              <option value="all">all</option>
+              <option value="low">low</option>
+              <option value="medium">medium</option>
+              <option value="high">high</option>
+              <option value="critical">critical</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Difficulty</span>
+            <select [ngModel]="difficultyFilter()" (ngModelChange)="difficultyFilter.set($event)">
+              <option value="all">all</option>
+              <option value="peaceful">peaceful</option>
+              <option value="easy">easy</option>
+              <option value="normal">normal</option>
+              <option value="hard">hard</option>
+              <option value="hardcore">hardcore</option>
+            </select>
+          </label>
+        </div>
+      </article>
+
+      <app-task-list-card
+        [tasks]="projectTasks()"
+        [isLoading]="false"
+        [currentUserId]="currentUserId()"
+        (updateRequested)="editTask($event)"
+        (markInProgress)="markInProgress($event)"
+        (markDone)="markDone($event)"
+        (approve)="approveTask($event)"
+        (remove)="removeTask($event)"
+      />
+    </section>
+  } @else {
+    <div class="project-detail-page__state">Project not found.</div>
+  }
+</section>

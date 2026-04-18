@@ -1,0 +1,63 @@
+:host {
+  display: flex;
+  min-width: 0;
+}
+
+.dashboard-card {
+  border-radius: 0.95rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 66%, transparent);
+  background: color-mix(in srgb, var(--surface) 84%, var(--background));
+  padding: 0.72rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-stats {
+  align-self: stretch;
+}
+
+.dashboard-card h2 {
+  margin: 0;
+  font-size: 0.92rem;
+  font-family: 'Rubik', sans-serif;
+}
+
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.36rem;
+}
+
+.dashboard-stat {
+  border-radius: 0.62rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 66%, transparent);
+  background: color-mix(in srgb, var(--surface) 88%, var(--background));
+  padding: 0.36rem 0.45rem;
+  display: grid;
+  gap: 0.12rem;
+}
+
+.dashboard-stat small {
+  font-size: 0.58rem;
+  line-height: 1.1;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.dashboard-stat strong {
+  font-size: 0.85rem;
+  line-height: 1.1;
+}
+
+@media (max-width: 760px) {
+  .dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+}

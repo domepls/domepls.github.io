@@ -80,11 +80,17 @@
       </div>
 
       <div class="profile-achievements__scroller" aria-label="Achievements list">
-        @for (slot of achievementPlaceholders; track slot) {
+        @for (achievement of earnedAchievements(); track achievement.code) {
+          <div class="profile-achievements__item">
+            <span class="material-symbols-rounded" aria-hidden="true">emoji_events</span>
+            <strong>{{ achievement.title }}</strong>
+            <span>{{ achievement.description }}</span>
+          </div>
+        } @empty {
           <div class="profile-achievements__item profile-achievements__item--placeholder">
             <span class="material-symbols-rounded" aria-hidden="true">emoji_events</span>
-            <strong>Coming soon</strong>
-            <span>Achievement {{ slot }}</span>
+            <strong>No achievements yet</strong>
+            <span>Complete tasks to unlock rewards.</span>
           </div>
         }
       </div>

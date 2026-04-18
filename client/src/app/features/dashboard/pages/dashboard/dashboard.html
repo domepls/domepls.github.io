@@ -1,0 +1,87 @@
+<section class="dashboard-page">
+  @if (isLoading() || pageError()) {
+    <div class="dashboard-page__state dashboard-page__state--center">
+      <div class="dashboard-loader">
+        <div class="dashboard-loader__spinner"></div>
+        <p>{{ pageError() ? 'Loading...' : 'Loading dashboard...' }}</p>
+      </div>
+    </div>
+  } @else {
+    <header class="dashboard-hero">
+      <div>
+        <p class="dashboard-hero__eyebrow">Overview</p>
+        <h1>Team Pulse</h1>
+        <p>Track workload, deadlines, and momentum across your projects.</p>
+      </div>
+      <div class="dashboard-hero__actions">
+        <a routerLink="/app/tasks" class="dashboard-btn dashboard-btn--primary">Open tasks</a>
+        <a routerLink="/app/projects" class="dashboard-btn dashboard-btn--ghost">Open projects</a>
+      </div>
+    </header>
+
+    <section class="dashboard-kpis">
+      <app-dashboard-kpi-tile
+        label="Total tasks"
+        [value]="totalTasks()"
+        tone="neutral"
+      ></app-dashboard-kpi-tile>
+      <app-dashboard-kpi-tile
+        label="Completed"
+        [value]="doneTasks()"
+        tone="success"
+      ></app-dashboard-kpi-tile>
+      <app-dashboard-kpi-tile
+        label="Pending"
+        [value]="pendingTasks()"
+        tone="warning"
+      ></app-dashboard-kpi-tile>
+      <app-dashboard-kpi-tile
+        label="Overdue"
+        [value]="overdueTasks()"
+        tone="danger"
+      ></app-dashboard-kpi-tile>
+    </section>
+
+    <section class="dashboard-grid dashboard-grid--23">
+      <app-dashboard-gamification-card
+        [points]="points()"
+        [streak]="streak()"
+        [completedLast7Days]="completedLast7Days()"
+        [approvalQueue]="approvalQueue()"
+      ></app-dashboard-gamification-card>
+      <app-dashboard-status-distribution-card
+        [slices]="statusSlices()"
+      ></app-dashboard-status-distribution-card>
+    </section>
+
+    <section class="dashboard-grid dashboard-grid--32">
+      <app-dashboard-task-list-card
+        title="Upcoming deadlines"
+        linkLabel="All tasks"
+        linkTo="/app/tasks"
+        emptyMessage="No upcoming deadlines."
+        [items]="upcomingDeadlineItems()"
+      ></app-dashboard-task-list-card>
+      <app-dashboard-task-list-card
+        title="My active tasks"
+        linkLabel="Open board"
+        linkTo="/app/tasks"
+        emptyMessage="No active tasks right now."
+        [items]="myActiveItems()"
+      ></app-dashboard-task-list-card>
+    </section>
+
+    <section class="dashboard-grid dashboard-grid--wide">
+      <app-dashboard-project-progress-card
+        [rows]="projectProgress()"
+      ></app-dashboard-project-progress-card>
+      <app-dashboard-task-list-card
+        title="Recent activity"
+        linkLabel="Task timeline"
+        linkTo="/app/tasks"
+        emptyMessage="No recent task activity."
+        [items]="recentActivityItems()"
+      ></app-dashboard-task-list-card>
+    </section>
+  }
+</section>

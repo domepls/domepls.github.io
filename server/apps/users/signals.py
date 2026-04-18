@@ -1,7 +1,9 @@
 from django.contrib.auth import get_user_model
+from django.db.models.signals import post_migrate
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from .achievements import ensure_base_achievements
 from .models import Profile
 
 User = get_user_model()
@@ -17,3 +19,11 @@ def create_profile(sender, instance, created, **kwargs):
 def save_profile(sender, instance, **kwargs):
     if hasattr(instance, "profile"):
         instance.profile.save()
+
+
+@receiver(post_migrate)
+def seed_achievements(sender, **kwargs):
+    if sender.name != "apps.users":
+        return
+
+    ensure_base_achievements()

@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-profile-edit-card',
-  standalone: true,
+
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './profile-edit-card.html',
   styleUrl: './profile-edit-card.scss',

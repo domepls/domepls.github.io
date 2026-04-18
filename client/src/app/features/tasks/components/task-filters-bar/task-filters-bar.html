@@ -1,0 +1,75 @@
+<section class="task-filters">
+  <label>
+    <span>Scope</span>
+    <select
+      [ngModel]="filters.scope"
+      (ngModelChange)="update('scope', $event)"
+      class="task-filter-select"
+      [ngClass]="selectToneClass('scope', filters.scope)"
+    >
+      <option value="all">all</option>
+      <option value="project">project</option>
+      <option value="personal">personal</option>
+    </select>
+  </label>
+
+  <label>
+    <span>Status</span>
+    <select
+      [ngModel]="filters.status"
+      (ngModelChange)="update('status', $event)"
+      class="task-filter-select"
+      [ngClass]="selectToneClass('status', filters.status)"
+    >
+      <option value="all">all</option>
+      <option value="todo">todo</option>
+      <option value="in_progress">in progress</option>
+      <option value="done">done</option>
+      <option value="approved">approved</option>
+      <option value="cancelled">cancelled</option>
+    </select>
+  </label>
+
+  <label>
+    <span>Urgency</span>
+    <select
+      [ngModel]="filters.urgency"
+      (ngModelChange)="update('urgency', $event)"
+      class="task-filter-select"
+      [ngClass]="selectToneClass('urgency', filters.urgency)"
+    >
+      <option value="all">all</option>
+      <option value="low">low</option>
+      <option value="medium">medium</option>
+      <option value="high">high</option>
+      <option value="critical">critical</option>
+    </select>
+  </label>
+
+  <label>
+    <span>Difficulty</span>
+    <select
+      [ngModel]="filters.difficulty"
+      (ngModelChange)="update('difficulty', $event)"
+      class="task-filter-select"
+      [ngClass]="selectToneClass('difficulty', filters.difficulty)"
+    >
+      <option value="all">all</option>
+      <option value="peaceful">peaceful</option>
+      <option value="easy">easy</option>
+      <option value="normal">normal</option>
+      <option value="hard">hard</option>
+      <option value="hardcore">hardcore</option>
+    </select>
+  </label>
+
+  <label class="task-filters__toggle">
+    <input
+      type="checkbox"
+      class="task-filters__toggle-input"
+      [ngModel]="filters.mineOnly"
+      (ngModelChange)="update('mineOnly', $event)"
+    />
+    <span class="task-filters__toggle-text">Only my tasks</span>
+  </label>
+</section>

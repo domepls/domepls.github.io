@@ -1,0 +1,16 @@
+@if (profile(); as user) {
+  <article class="friends-profile-card">
+    <header class="friends-profile-card__head">
+      <h3>Profile preview</h3>
+      <a [routerLink]="['/app/users', user.username]">Open full page</a>
+    </header>
+
+    <div class="friends-profile-card__body">
+      <p class="friends-profile-card__username">@{{ user.username }}</p>
+      <p>{{ user.first_name }} {{ user.last_name }}</p>
+      <p>{{ user.status || 'No status set' }}</p>
+      <p>Friend: {{ user.is_friend ? 'yes' : 'no' }}</p>
+      <p>Telegram: {{ user.telegram_connected ? 'connected' : 'not connected' }}</p>
+    </div>
+  </article>
+}

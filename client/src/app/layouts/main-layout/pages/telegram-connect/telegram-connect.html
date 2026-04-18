@@ -1,0 +1,30 @@
+<div class="telegram-connect-page">
+  <div class="telegram-connect-card">
+    <h1>Telegram required</h1>
+    <p class="telegram-connect-description">
+      To access the app, you need to connect your Telegram account. This helps us verify your
+      identity and send you notifications.
+    </p>
+
+    @if (errorMessage()) {
+      <div class="telegram-connect-error" role="alert">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <button
+      type="button"
+      class="telegram-connect-btn"
+      (click)="connectTelegram()"
+      [disabled]="isConnecting()"
+    >
+      @if (isConnecting()) {
+        <span class="material-symbols-rounded telegram-connect-spinner">progress_activity</span>
+        Connecting...
+      } @else {
+        <span class="material-symbols-rounded">add_link</span>
+        Connect Telegram
+      }
+    </button>
+  </div>
+</div>

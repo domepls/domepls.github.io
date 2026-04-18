@@ -1,0 +1,45 @@
+.friends-profile-card {
+  border: 1px solid color-mix(in srgb, var(--border-default) 72%, transparent);
+  border-radius: 1rem;
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--surface) 93%, var(--background)),
+    color-mix(in srgb, var(--surface-lilac) 35%, var(--surface))
+  );
+  padding: 0.85rem;
+  display: grid;
+  gap: 0.62rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.friends-profile-card__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.friends-profile-card__head h3 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.friends-profile-card__head a {
+  color: var(--text-secondary);
+  font-size: 0.86rem;
+  text-decoration: none;
+}
+
+.friends-profile-card__body {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.friends-profile-card__body p {
+  margin: 0;
+}
+
+.friends-profile-card__username {
+  font-weight: 700;
+  font-size: 1.05rem;
+}

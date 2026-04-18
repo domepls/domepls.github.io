@@ -1,0 +1,435 @@
+:host {
+  display: block;
+}
+
+.task-list-card {
+  border-radius: 1.3rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 66%, transparent);
+  background: color-mix(in srgb, var(--surface) 84%, var(--background));
+  padding: 1rem;
+}
+
+.task-list-card__state {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.task-list {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.task-list--grid {
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+}
+
+.task-list-card__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-bottom: 0.7rem;
+}
+
+.task-list-card__count {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.task-list-card__view-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 68%, transparent);
+  border-radius: 999px;
+  padding: 0.2rem;
+  background: color-mix(in srgb, var(--surface) 78%, var(--background));
+}
+
+.task-list-card__view-btn {
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 999px;
+  width: 2.15rem;
+  height: 2.15rem;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.task-list-card__view-btn.is-active {
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--surface-lilac) 68%, var(--surface));
+}
+
+.task-list-card__view-btn .material-symbols-rounded {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.task-item {
+  border-radius: 1rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 66%, transparent);
+  background: color-mix(in srgb, var(--surface) 78%, var(--background));
+  padding: 0.85rem;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.task-item header {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.task-item p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.task-item__title {
+  color: var(--text-primary);
+  font-family: 'Rubik', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.task-item__status {
+  border-radius: 999px;
+  padding: 0.15rem 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 68%, transparent);
+  color: var(--text-secondary);
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.task-item__status--todo {
+  border-color: color-mix(in srgb, var(--info-border) 66%, transparent);
+  background: color-mix(in srgb, var(--info-bg) 58%, var(--surface));
+  color: var(--info-text);
+}
+
+.task-item__status--in_progress {
+  border-color: color-mix(in srgb, var(--warning-border) 66%, transparent);
+  background: color-mix(in srgb, var(--warning-bg) 58%, var(--surface));
+  color: var(--warning-text);
+}
+
+.task-item__status--done {
+  border-color: color-mix(in srgb, var(--success-border) 66%, transparent);
+  background: color-mix(in srgb, var(--success-bg) 58%, var(--surface));
+  color: var(--success-text);
+}
+
+.task-item__status--approved {
+  border-color: color-mix(in srgb, var(--status-active-border) 66%, transparent);
+  background: color-mix(in srgb, var(--status-active-bg) 58%, var(--surface));
+  color: var(--status-active-text);
+}
+
+.task-item__status--cancelled {
+  border-color: color-mix(in srgb, var(--status-disabled-border) 66%, transparent);
+  background: color-mix(in srgb, var(--status-disabled-bg) 58%, var(--surface));
+  color: var(--status-disabled-text);
+}
+
+.task-item__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.task-item__meta span {
+  border-radius: 999px;
+  padding: 0.16rem 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 68%, transparent);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  line-height: 1.2;
+}
+
+.task-item__chip {
+  font-weight: 700;
+}
+
+.task-item__chip--scope-project {
+  border-color: color-mix(in srgb, var(--border-lilac) 70%, transparent) !important;
+  background: color-mix(in srgb, var(--surface-lilac) 68%, var(--surface)) !important;
+  color: var(--text-on-lilac) !important;
+}
+
+.task-item__chip--scope-personal {
+  border-color: color-mix(in srgb, var(--border-pink) 70%, transparent) !important;
+  background: color-mix(in srgb, var(--surface-pink) 68%, var(--surface)) !important;
+  color: var(--text-on-pink) !important;
+}
+
+.task-item__chip--difficulty-peaceful {
+  border-color: color-mix(in srgb, var(--success-border) 70%, transparent) !important;
+  background: color-mix(in srgb, var(--success-bg) 58%, var(--surface)) !important;
+  color: var(--success-text) !important;
+}
+
+.task-item__chip--difficulty-easy {
+  border-color: color-mix(in srgb, var(--status-active-border) 70%, transparent) !important;
+  background: color-mix(in srgb, var(--status-active-bg) 58%, var(--surface)) !important;
+  color: var(--status-active-text) !important;
+}
+
+.task-item__chip--difficulty-normal {
+  border-color: color-mix(in srgb, var(--info-border) 70%, transparent) !important;
+  background: color-mix(in srgb, var(--info-bg) 58%, var(--surface)) !important;
+  color: var(--info-text) !important;
+}
+
+.task-item__chip--difficulty-hard {
+  border-color: color-mix(in srgb, var(--warning-border) 70%, transparent) !important;
+  background: color-mix(in srgb, var(--warning-bg) 58%, var(--surface)) !important;
+  color: var(--warning-text) !important;
+}
+
+.task-item__chip--difficulty-hardcore {
+  border-color: color-mix(in srgb, var(--error-border) 70%, transparent) !important;
+  background: color-mix(in srgb, var(--error-bg) 58%, var(--surface)) !important;
+  color: var(--error-text) !important;
+}
+
+.task-item__chip--urgency-low {
+  border-color: color-mix(in srgb, var(--info-border) 70%, transparent) !important;
+  background: color-mix(in srgb, var(--info-bg) 58%, var(--surface)) !important;
+  color: var(--info-text) !important;
+}
+
+.task-item__chip--urgency-medium {
+  border-color: color-mix(in srgb, var(--status-pending-border) 70%, transparent) !important;
+  background: color-mix(in srgb, var(--status-pending-bg) 58%, var(--surface)) !important;
+  color: var(--status-pending-text) !important;
+}
+
+.task-item__chip--urgency-high {
+  border-color: color-mix(in srgb, var(--warning-border) 70%, transparent) !important;
+  background: color-mix(in srgb, var(--warning-bg) 58%, var(--surface)) !important;
+  color: var(--warning-text) !important;
+}
+
+.task-item__chip--urgency-critical {
+  border-color: color-mix(in srgb, var(--error-border) 70%, transparent) !important;
+  background: color-mix(in srgb, var(--error-bg) 58%, var(--surface)) !important;
+  color: var(--error-text) !important;
+}
+
+.task-item__chip--points,
+.task-item__chip--project,
+.task-item__chip--deadline {
+  color: var(--text-secondary) !important;
+}
+
+.task-item__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.task-item__edit {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.task-item__edit label {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.task-item__edit span {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.task-item__edit-row {
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.task-item__edit input,
+.task-item__edit textarea,
+.task-item__edit select {
+  border: 1px solid color-mix(in srgb, var(--border-default) 70%, transparent);
+  background: color-mix(in srgb, var(--surface) 78%, var(--background));
+  color: var(--text-primary);
+}
+
+.task-item__edit textarea {
+  resize: vertical;
+  max-height: 120px;
+}
+
+.task-item__edit select.task-select--status-todo {
+  border-color: color-mix(in srgb, var(--info-border) 72%, transparent);
+  background: color-mix(in srgb, var(--info-bg) 56%, var(--surface));
+  color: var(--info-text);
+}
+
+.task-item__edit select.task-select--status-in_progress {
+  border-color: color-mix(in srgb, var(--warning-border) 72%, transparent);
+  background: color-mix(in srgb, var(--warning-bg) 56%, var(--surface));
+  color: var(--warning-text);
+}
+
+.task-item__edit select.task-select--status-done {
+  border-color: color-mix(in srgb, var(--success-border) 72%, transparent);
+  background: color-mix(in srgb, var(--success-bg) 56%, var(--surface));
+  color: var(--success-text);
+}
+
+.task-item__edit select.task-select--status-approved {
+  border-color: color-mix(in srgb, var(--status-active-border) 72%, transparent);
+  background: color-mix(in srgb, var(--status-active-bg) 56%, var(--surface));
+  color: var(--status-active-text);
+}
+
+.task-item__edit select.task-select--status-cancelled {
+  border-color: color-mix(in srgb, var(--status-disabled-border) 72%, transparent);
+  background: color-mix(in srgb, var(--status-disabled-bg) 56%, var(--surface));
+  color: var(--status-disabled-text);
+}
+
+.task-item__edit select.task-select--difficulty-peaceful {
+  border-color: color-mix(in srgb, var(--success-border) 72%, transparent);
+  background: color-mix(in srgb, var(--success-bg) 56%, var(--surface));
+  color: var(--success-text);
+}
+
+.task-item__edit select.task-select--difficulty-easy {
+  border-color: color-mix(in srgb, var(--status-active-border) 72%, transparent);
+  background: color-mix(in srgb, var(--status-active-bg) 56%, var(--surface));
+  color: var(--status-active-text);
+}
+
+.task-item__edit select.task-select--difficulty-normal {
+  border-color: color-mix(in srgb, var(--info-border) 72%, transparent);
+  background: color-mix(in srgb, var(--info-bg) 56%, var(--surface));
+  color: var(--info-text);
+}
+
+.task-item__edit select.task-select--difficulty-hard {
+  border-color: color-mix(in srgb, var(--warning-border) 72%, transparent);
+  background: color-mix(in srgb, var(--warning-bg) 56%, var(--surface));
+  color: var(--warning-text);
+}
+
+.task-item__edit select.task-select--difficulty-hardcore {
+  border-color: color-mix(in srgb, var(--error-border) 72%, transparent);
+  background: color-mix(in srgb, var(--error-bg) 56%, var(--surface));
+  color: var(--error-text);
+}
+
+.task-item__edit select.task-select--urgency-low {
+  border-color: color-mix(in srgb, var(--info-border) 72%, transparent);
+  background: color-mix(in srgb, var(--info-bg) 56%, var(--surface));
+  color: var(--info-text);
+}
+
+.task-item__edit select.task-select--urgency-medium {
+  border-color: color-mix(in srgb, var(--status-pending-border) 72%, transparent);
+  background: color-mix(in srgb, var(--status-pending-bg) 56%, var(--surface));
+  color: var(--status-pending-text);
+}
+
+.task-item__edit select.task-select--urgency-high {
+  border-color: color-mix(in srgb, var(--warning-border) 72%, transparent);
+  background: color-mix(in srgb, var(--warning-bg) 56%, var(--surface));
+  color: var(--warning-text);
+}
+
+.task-item__edit select.task-select--urgency-critical {
+  border-color: color-mix(in srgb, var(--error-border) 72%, transparent);
+  background: color-mix(in srgb, var(--error-bg) 56%, var(--surface));
+  color: var(--error-text);
+}
+
+.task-btn--icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: 2.1rem;
+  height: 2.1rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 999px;
+}
+
+.task-btn--icon .material-symbols-rounded {
+  font-size: 1.08rem;
+  line-height: 1;
+}
+
+.task-btn--muted {
+  color: var(--text-muted);
+}
+
+.task-btn--muted:hover {
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--surface-lilac) 58%, transparent);
+}
+
+.task-btn--danger.task-btn--icon {
+  color: var(--error-text);
+}
+
+.task-btn--danger.task-btn--icon:hover {
+  color: color-mix(in srgb, var(--error-text) 80%, var(--error-strong));
+  background: color-mix(in srgb, var(--error-bg) 46%, transparent);
+}
+
+.task-btn--primary {
+  background: color-mix(in srgb, var(--btn-primary-bg) 20%, var(--surface));
+  color: var(--text-primary);
+}
+
+.task-btn--primary:hover {
+  background: color-mix(in srgb, var(--btn-primary-bg) 30%, var(--surface));
+}
+
+.task-btn--icon.task-btn--primary {
+  box-shadow: none;
+}
+
+.task-btn--ghost {
+  color: var(--text-muted);
+}
+
+.task-btn--ghost:hover {
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--surface-lilac) 58%, transparent);
+}
+
+.task-item__edit .task-btn--icon {
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+}
+
+.task-btn--icon:focus-visible,
+.task-list-card__view-btn:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--border-strong) 80%, white);
+  outline-offset: 2px;
+}
+
+@media (max-width: 760px) {
+  .task-item__edit-row {
+    grid-template-columns: 1fr;
+  }
+}

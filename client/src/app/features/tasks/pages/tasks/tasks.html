@@ -1,0 +1,33 @@
+<section class="tasks-page">
+  @if (pageError()) {
+    <div class="tasks-page__error" role="alert">{{ pageError() }}</div>
+  }
+
+  <div class="tasks-layout">
+    <section class="tasks-layout__block">
+      <p class="tasks-layout__eyebrow">Create Task</p>
+      <app-task-create-card
+        [projects]="projects()"
+        [isBusy]="isCreating()"
+        [errorMessage]="createError()"
+        (createRequested)="createTask($event)"
+      />
+    </section>
+
+    <section class="tasks-layout__block">
+      <p class="tasks-layout__eyebrow">Tasks Feed</p>
+      <app-task-filters-bar [filters]="filters()" (filtersChange)="onFiltersChange($event)" />
+
+      <app-task-list-card
+        [tasks]="filteredTasks()"
+        [isLoading]="isLoading()"
+        [currentUserId]="currentUserId()"
+        (updateRequested)="editTask($event)"
+        (markInProgress)="markInProgress($event)"
+        (markDone)="markDone($event)"
+        (approve)="approveTask($event)"
+        (remove)="removeTask($event)"
+      />
+    </section>
+  </div>
+</section>

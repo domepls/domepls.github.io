@@ -1,0 +1,80 @@
+:host {
+  display: flex;
+  min-width: 0;
+}
+
+.dashboard-card {
+  border-radius: 0.95rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 66%, transparent);
+  background: color-mix(in srgb, var(--surface) 84%, var(--background));
+  padding: 0.72rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-status {
+  align-self: stretch;
+}
+
+.dashboard-card h2 {
+  margin: 0;
+  font-size: 0.92rem;
+  font-family: 'Rubik', sans-serif;
+}
+
+.dashboard-status {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.dashboard-status__row {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.dashboard-status__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.dashboard-status__track {
+  width: 100%;
+  height: 0.4rem;
+  border-radius: 999px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--surface) 80%, var(--background));
+}
+
+.dashboard-status__bar {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.dashboard-status__bar--todo {
+  background: color-mix(in srgb, var(--info-bg) 65%, var(--info-border));
+}
+
+.dashboard-status__bar--in_progress {
+  background: color-mix(in srgb, var(--warning-bg) 58%, var(--warning-border));
+}
+
+.dashboard-status__bar--done {
+  background: color-mix(in srgb, var(--success-bg) 62%, var(--success-border));
+}
+
+.dashboard-status__bar--approved {
+  background: color-mix(in srgb, var(--status-active-bg) 62%, var(--status-active-border));
+}
+
+.dashboard-status__bar--cancelled {
+  background: color-mix(in srgb, var(--status-disabled-bg) 62%, var(--status-disabled-border));
+}

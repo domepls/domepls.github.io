@@ -1,0 +1,132 @@
+:host {
+  display: flex;
+  min-width: 0;
+}
+
+.dashboard-card {
+  border-radius: 0.95rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 66%, transparent);
+  background: color-mix(in srgb, var(--surface) 84%, var(--background));
+  padding: 0.72rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-list,
+.dashboard-card__state {
+  align-self: stretch;
+}
+
+.dashboard-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.dashboard-card h2 {
+  margin: 0;
+  font-size: 0.92rem;
+  font-family: 'Rubik', sans-serif;
+}
+
+.dashboard-card__head a {
+  font-size: 0.76rem;
+  text-decoration: none;
+  color: var(--text-secondary);
+}
+
+.dashboard-card__state {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.dashboard-list {
+  display: grid;
+  gap: 0.38rem;
+}
+
+.dashboard-list__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  border-radius: 0.72rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 66%, transparent);
+  background: color-mix(in srgb, var(--surface) 90%, var(--background));
+  padding: 0.45rem 0.5rem;
+  min-width: 0;
+}
+
+.dashboard-list__item > div {
+  min-width: 0;
+}
+
+.dashboard-list__item strong {
+  display: block;
+  font-size: 0.82rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dashboard-list__item small {
+  color: var(--text-muted);
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dashboard-list__meta {
+  display: grid;
+  justify-items: end;
+  gap: 0.1rem;
+}
+
+.dashboard-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.12rem 0.42rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 70%, transparent);
+  font-size: 0.66rem;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.dashboard-chip--status-todo {
+  border-color: color-mix(in srgb, var(--info-border) 70%, transparent);
+  background: color-mix(in srgb, var(--info-bg) 56%, var(--surface));
+  color: var(--info-text);
+}
+
+.dashboard-chip--status-in_progress {
+  border-color: color-mix(in srgb, var(--warning-border) 70%, transparent);
+  background: color-mix(in srgb, var(--warning-bg) 56%, var(--surface));
+  color: var(--warning-text);
+}
+
+.dashboard-chip--status-done {
+  border-color: color-mix(in srgb, var(--success-border) 70%, transparent);
+  background: color-mix(in srgb, var(--success-bg) 56%, var(--surface));
+  color: var(--success-text);
+}
+
+.dashboard-chip--status-approved {
+  border-color: color-mix(in srgb, var(--status-active-border) 70%, transparent);
+  background: color-mix(in srgb, var(--status-active-bg) 56%, var(--surface));
+  color: var(--status-active-text);
+}
+
+.dashboard-chip--status-cancelled {
+  border-color: color-mix(in srgb, var(--status-disabled-border) 70%, transparent);
+  background: color-mix(in srgb, var(--status-disabled-bg) 56%, var(--surface));
+  color: var(--status-disabled-text);
+}

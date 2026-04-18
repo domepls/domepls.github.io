@@ -5,6 +5,7 @@ interface MainNavItem {
   label: string;
   route: string;
   icon: string;
+  exact?: boolean;
 }
 
 @Component({
@@ -19,6 +20,7 @@ export class MainSidebar {
       label: 'Dashboard',
       route: '/app/dashboard',
       icon: 'dashboard',
+      exact: true,
     },
     {
       label: 'Projects',

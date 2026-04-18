@@ -1,0 +1,24 @@
+<section class="projects-page">
+  @if (pageError()) {
+    <div class="projects-page__error" role="alert">{{ pageError() }}</div>
+  }
+
+  <section class="projects-layout__block">
+    <p class="projects-layout__eyebrow">Create Project</p>
+    <app-project-create-card
+      [isBusy]="isCreating()"
+      [errorMessage]="createError()"
+      (createRequested)="createProject($event)"
+    />
+  </section>
+
+  <section class="projects-layout__block">
+    <p class="projects-layout__eyebrow">Project List</p>
+    <app-project-list-card
+      [projects]="projects()"
+      [statsMap]="projectStats()"
+      [isLoading]="isLoading()"
+      (openRequested)="openProject($event)"
+    />
+  </section>
+</section>

@@ -25,12 +25,14 @@ ALLOWED_HOSTS = config(
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
     'cloudinary_storage',
     'cloudinary',
     'rest_framework',
@@ -38,6 +40,8 @@ INSTALLED_APPS = [
     'apps.users',
     'apps.tasks',
     'apps.projects',
+    'apps.social',
+    'apps.chats',
     'apps.common',
     "rest_framework_simplejwt.token_blacklist",
 ]
@@ -194,6 +198,24 @@ CORS_ALLOW_CREDENTIALS = True
 TELEGRAM_BOT_TOKEN = config('TELEGRAM_BOT_TOKEN', default='')
 REDIS_URL = config('REDIS_URL', default='redis://127.0.0.1:6379/0')
 AUTH_CODE_TTL_SECONDS = config('AUTH_CODE_TTL_SECONDS', default=300, cast=int)
+USE_REDIS_CHANNEL_LAYER = config(
+    'USE_REDIS_CHANNEL_LAYER', default=not DEBUG, cast=bool)
+
+if USE_REDIS_CHANNEL_LAYER:
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                'hosts': [REDIS_URL],
+            },
+        }
+    }
+else:
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        }
+    }
 
 
 # Cloudinary Configuration

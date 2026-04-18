@@ -1,0 +1,37 @@
+:host {
+  display: block;
+}
+
+.dashboard-kpi {
+  border: 1px solid color-mix(in srgb, var(--border-default) 66%, transparent);
+  border-radius: 0.95rem;
+  padding: 0.72rem;
+  background: color-mix(in srgb, var(--surface) 86%, var(--background));
+  display: grid;
+  gap: 0.25rem;
+}
+
+.dashboard-kpi span {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dashboard-kpi strong {
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--text-primary);
+}
+
+.dashboard-kpi--success strong {
+  color: var(--success-text);
+}
+
+.dashboard-kpi--warning strong {
+  color: var(--warning-text);
+}
+
+.dashboard-kpi--danger strong {
+  color: var(--error-text);
+}

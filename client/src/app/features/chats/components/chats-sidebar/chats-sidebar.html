@@ -1,0 +1,57 @@
+<aside class="chats-sidebar">
+  <header class="chats-sidebar__head">
+    <div class="chats-sidebar__tabs" role="tablist" aria-label="Chat type">
+      <button
+        type="button"
+        [class.is-active]="chatType() === 'direct'"
+        (click)="typeChange.emit('direct')"
+      >
+        Direct
+      </button>
+      <button
+        type="button"
+        [class.is-active]="chatType() === 'project'"
+        (click)="typeChange.emit('project')"
+      >
+        Project
+      </button>
+    </div>
+  </header>
+
+  @if (isLoading()) {
+    <p class="chats-sidebar__state">Loading chats...</p>
+  } @else if (!chats().length) {
+    <p class="chats-sidebar__state">No chats in this section.</p>
+  } @else {
+    <ul class="chats-list">
+      @for (chat of chats(); track chat.id) {
+        <li>
+          <button
+            type="button"
+            [class.is-selected]="selectedChatId() === chat.id"
+            (click)="selectChat.emit(chat)"
+          >
+            <span class="chats-list__avatar-wrap">
+              @if (peerAvatar(chat); as avatar) {
+                <img class="chats-list__avatar" [src]="avatar" alt="User avatar" loading="lazy" />
+              } @else {
+                <span class="chats-list__avatar-fallback">{{ peerInitials(chat) }}</span>
+              }
+            </span>
+
+            <span class="chats-list__meta">
+              <span class="chats-list__top">
+                <strong>{{ peerName(chat) }}</strong>
+                <small>{{ getLastMessageDate(chat) | date: 'MMM d' }}</small>
+              </span>
+              <span class="chats-list__bottom">
+                <span>{{ peerUsername(chat) }}</span>
+                <small>{{ getLastMessageText(chat) }}</small>
+              </span>
+            </span>
+          </button>
+        </li>
+      }
+    </ul>
+  }
+</aside>

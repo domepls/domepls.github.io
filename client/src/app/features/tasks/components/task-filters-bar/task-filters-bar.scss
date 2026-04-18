@@ -1,0 +1,174 @@
+:host {
+  display: block;
+}
+
+.task-filters {
+  border-radius: 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 66%, transparent);
+  background: color-mix(in srgb, var(--surface) 84%, var(--background));
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.6rem;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.task-filters label {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.task-filters span {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.task-filters select {
+  border: 1px solid color-mix(in srgb, var(--border-default) 70%, transparent);
+  background: color-mix(in srgb, var(--surface) 78%, var(--background));
+  color: var(--text-primary);
+}
+
+.task-filters .task-filter-select {
+  --task-filter-accent: var(--border-default);
+  --task-filter-text: var(--text-primary);
+  border-color: color-mix(in srgb, var(--task-filter-accent) 78%, transparent);
+  background: color-mix(in srgb, var(--task-filter-accent) 18%, var(--surface));
+  color: var(--task-filter-text);
+}
+
+.task-filters .task-filter-select--scope-project {
+  --task-filter-accent: var(--border-lilac);
+  --task-filter-text: var(--text-on-lilac);
+}
+
+.task-filters .task-filter-select--scope-personal {
+  --task-filter-accent: var(--border-pink);
+  --task-filter-text: var(--text-on-pink);
+}
+
+.task-filters .task-filter-select--status-todo {
+  --task-filter-accent: var(--info-border);
+  --task-filter-text: var(--info-text);
+}
+
+.task-filters .task-filter-select--status-in_progress {
+  --task-filter-accent: var(--warning-border);
+  --task-filter-text: var(--warning-text);
+}
+
+.task-filters .task-filter-select--status-done {
+  --task-filter-accent: var(--success-border);
+  --task-filter-text: var(--success-text);
+}
+
+.task-filters .task-filter-select--status-approved {
+  --task-filter-accent: var(--status-active-border);
+  --task-filter-text: var(--status-active-text);
+}
+
+.task-filters .task-filter-select--status-cancelled {
+  --task-filter-accent: var(--status-disabled-border);
+  --task-filter-text: var(--status-disabled-text);
+}
+
+.task-filters .task-filter-select--urgency-low {
+  --task-filter-accent: var(--info-border);
+  --task-filter-text: var(--info-text);
+}
+
+.task-filters .task-filter-select--urgency-medium {
+  --task-filter-accent: var(--status-pending-border);
+  --task-filter-text: var(--status-pending-text);
+}
+
+.task-filters .task-filter-select--urgency-high {
+  --task-filter-accent: var(--warning-border);
+  --task-filter-text: var(--warning-text);
+}
+
+.task-filters .task-filter-select--urgency-critical {
+  --task-filter-accent: var(--error-border);
+  --task-filter-text: var(--error-text);
+}
+
+.task-filters .task-filter-select--difficulty-peaceful {
+  --task-filter-accent: var(--success-border);
+  --task-filter-text: var(--success-text);
+}
+
+.task-filters .task-filter-select--difficulty-easy {
+  --task-filter-accent: var(--status-active-border);
+  --task-filter-text: var(--status-active-text);
+}
+
+.task-filters .task-filter-select--difficulty-normal {
+  --task-filter-accent: var(--info-border);
+  --task-filter-text: var(--info-text);
+}
+
+.task-filters .task-filter-select--difficulty-hard {
+  --task-filter-accent: var(--warning-border);
+  --task-filter-text: var(--warning-text);
+}
+
+.task-filters .task-filter-select--difficulty-hardcore {
+  --task-filter-accent: var(--error-border);
+  --task-filter-text: var(--error-text);
+}
+
+.task-filters__toggle {
+  align-self: end;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 66%, transparent);
+  background: color-mix(in srgb, var(--surface) 78%, var(--background));
+}
+
+.task-filters__toggle-input {
+  appearance: none;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 0.3rem;
+  border: 1px solid color-mix(in srgb, var(--border-strong) 70%, transparent);
+  background: color-mix(in srgb, var(--surface) 72%, var(--background));
+  position: relative;
+  cursor: pointer;
+  padding: 0;
+}
+
+.task-filters__toggle-input:checked {
+  background: color-mix(in srgb, var(--btn-primary-bg) 72%, var(--surface));
+  border-color: color-mix(in srgb, var(--border-strong) 80%, transparent);
+}
+
+.task-filters__toggle-input:checked::after {
+  content: '';
+  position: absolute;
+  left: 0.28rem;
+  top: 0.06rem;
+  width: 0.24rem;
+  height: 0.5rem;
+  border: solid var(--text-primary);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.task-filters__toggle-text {
+  margin: 0;
+  color: var(--text-secondary) !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  font-size: 0.82rem !important;
+  font-weight: 700;
+}
+
+@media (max-width: 980px) {
+  .task-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

@@ -82,10 +82,6 @@ export default class Profile implements OnInit {
     return this.canStartDeleteFlow();
   });
 
-  protected readonly achievementPlaceholders = computed(() => {
-    return Array.from({ length: 3 }, (_, index) => index + 1);
-  });
-
   protected readonly stats = computed(() => {
     const profile = this.profile();
     if (!profile) {

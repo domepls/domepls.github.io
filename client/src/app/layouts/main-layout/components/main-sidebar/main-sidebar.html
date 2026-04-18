@@ -12,7 +12,7 @@
           class="app-sidebar__item"
           [routerLink]="item.route"
           routerLinkActive="is-active"
-          [routerLinkActiveOptions]="{ exact: true }"
+          [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
         >
           <span class="app-sidebar__icon" aria-hidden="true">
             <span class="material-symbols-rounded">{{ item.icon }}</span>

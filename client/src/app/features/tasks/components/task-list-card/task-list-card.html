@@ -1,0 +1,233 @@
+<article class="task-list-card">
+  @if (isLoading) {
+    <p class="task-list-card__state">Loading tasks...</p>
+  } @else if (!tasks.length) {
+    <p class="task-list-card__state">No tasks for this filter.</p>
+  } @else {
+    <div class="task-list-card__toolbar">
+      <p class="task-list-card__count">{{ tasks.length }} tasks</p>
+      <div class="task-list-card__view-switch" role="tablist" aria-label="Task list view">
+        <button
+          type="button"
+          class="task-list-card__view-btn"
+          aria-label="List view"
+          title="List view"
+          [class.is-active]="viewMode() === 'list'"
+          (click)="setViewMode('list')"
+        >
+          <span class="material-symbols-rounded" aria-hidden="true">view_list</span>
+        </button>
+        <button
+          type="button"
+          class="task-list-card__view-btn"
+          aria-label="Grid view"
+          title="Grid view"
+          [class.is-active]="viewMode() === 'grid'"
+          (click)="setViewMode('grid')"
+        >
+          <span class="material-symbols-rounded" aria-hidden="true">grid_view</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="task-list" [class.task-list--grid]="viewMode() === 'grid'">
+      @for (task of tasks; track task.id) {
+        <article class="task-item" [ngClass]="taskItemClass(task.status)">
+          @if (editingTaskId() === task.id && editDraft(); as draft) {
+            <div class="task-item__edit">
+              <label>
+                <span>Title</span>
+                <input
+                  type="text"
+                  [(ngModel)]="draft.title"
+                  [ngModelOptions]="{ standalone: true }"
+                />
+              </label>
+
+              <label>
+                <span>Description</span>
+                <textarea
+                  rows="3"
+                  [(ngModel)]="draft.description"
+                  [ngModelOptions]="{ standalone: true }"
+                ></textarea>
+              </label>
+
+              <div class="task-item__edit-row">
+                <label>
+                  <span>Status</span>
+                  <select
+                    [(ngModel)]="draft.status"
+                    [ngModelOptions]="{ standalone: true }"
+                    [ngClass]="selectToneClass('status', draft.status)"
+                  >
+                    <option value="todo">{{ statusLabel('todo') }}</option>
+                    <option value="in_progress">{{ statusLabel('in_progress') }}</option>
+                    <option value="done">{{ statusLabel('done') }}</option>
+                    <option value="approved">{{ statusLabel('approved') }}</option>
+                    <option value="cancelled">{{ statusLabel('cancelled') }}</option>
+                  </select>
+                </label>
+
+                <label>
+                  <span>Difficulty</span>
+                  <select
+                    [(ngModel)]="draft.difficulty"
+                    [ngModelOptions]="{ standalone: true }"
+                    [ngClass]="selectToneClass('difficulty', draft.difficulty)"
+                  >
+                    <option value="peaceful">{{ difficultyLabel('peaceful') }}</option>
+                    <option value="easy">{{ difficultyLabel('easy') }}</option>
+                    <option value="normal">{{ difficultyLabel('normal') }}</option>
+                    <option value="hard">{{ difficultyLabel('hard') }}</option>
+                    <option value="hardcore">{{ difficultyLabel('hardcore') }}</option>
+                  </select>
+                </label>
+
+                <label>
+                  <span>Urgency</span>
+                  <select
+                    [(ngModel)]="draft.urgency"
+                    [ngModelOptions]="{ standalone: true }"
+                    [ngClass]="selectToneClass('urgency', draft.urgency)"
+                  >
+                    <option value="low">{{ urgencyLabel('low') }}</option>
+                    <option value="medium">{{ urgencyLabel('medium') }}</option>
+                    <option value="high">{{ urgencyLabel('high') }}</option>
+                    <option value="critical">{{ urgencyLabel('critical') }}</option>
+                  </select>
+                </label>
+              </div>
+
+              <label>
+                <span>Deadline</span>
+                <input
+                  type="datetime-local"
+                  [(ngModel)]="draft.deadline"
+                  [ngModelOptions]="{ standalone: true }"
+                />
+              </label>
+
+              <div class="task-item__actions">
+                <button
+                  type="button"
+                  class="task-btn task-btn--icon task-btn--primary"
+                  aria-label="Save task"
+                  title="Save task"
+                  (click)="saveEdit(task.id)"
+                >
+                  <span class="material-symbols-rounded" aria-hidden="true">save</span>
+                </button>
+                <button
+                  type="button"
+                  class="task-btn task-btn--icon task-btn--muted"
+                  aria-label="Cancel editing"
+                  title="Cancel editing"
+                  (click)="cancelEdit()"
+                >
+                  <span class="material-symbols-rounded" aria-hidden="true">close</span>
+                </button>
+              </div>
+            </div>
+          } @else {
+            <header>
+              <strong class="task-item__title">{{ task.title }}</strong>
+              <span class="task-item__status" [ngClass]="statusClass(task.status)">
+                {{ statusLabel(task.status) }}
+              </span>
+            </header>
+
+            <p>{{ task.description || 'No details' }}</p>
+
+            <div class="task-item__meta">
+              <span class="task-item__chip" [ngClass]="scopeClass(task.scope)">
+                Type: {{ scopeLabel(task.scope) }}
+              </span>
+              <span class="task-item__chip" [ngClass]="difficultyClass(task.difficulty)">
+                Difficulty: {{ difficultyLabel(task.difficulty) }}
+              </span>
+              <span class="task-item__chip" [ngClass]="urgencyClass(task.urgency)">
+                Urgency: {{ urgencyLabel(task.urgency) }}
+              </span>
+              <span class="task-item__chip task-item__chip--points"
+                >{{ task.points_awarded }} pts</span
+              >
+              @if (projectLabel(task)) {
+                <span class="task-item__chip task-item__chip--project"
+                  >#{{ projectLabel(task) }}</span
+                >
+              }
+              @if (task.deadline) {
+                <span class="task-item__chip task-item__chip--deadline">
+                  due {{ task.deadline | date: 'y MMM d, HH:mm' }}
+                </span>
+              }
+            </div>
+
+            <div class="task-item__actions">
+              <button
+                type="button"
+                class="task-btn task-btn--icon task-btn--muted"
+                aria-label="Edit task"
+                title="Edit task"
+                (click)="startEdit(task)"
+              >
+                <span class="material-symbols-rounded" aria-hidden="true">edit</span>
+              </button>
+
+              @if (canTakeTask(task)) {
+                <button
+                  type="button"
+                  class="task-btn task-btn--icon task-btn--ghost"
+                  aria-label="Take task"
+                  title="Take task"
+                  (click)="markInProgress.emit(task.id)"
+                >
+                  <span class="material-symbols-rounded" aria-hidden="true">play_arrow</span>
+                </button>
+              }
+
+              @if (canMarkDone(task)) {
+                <button
+                  type="button"
+                  class="task-btn task-btn--icon task-btn--primary"
+                  aria-label="Mark done"
+                  title="Mark done"
+                  (click)="markDone.emit(task.id)"
+                >
+                  <span class="material-symbols-rounded" aria-hidden="true">check_circle</span>
+                </button>
+              }
+
+              @if (
+                task.scope === 'project' &&
+                task.status === 'done' &&
+                task.assigned_by?.id === currentUserId
+              ) {
+                <button
+                  type="button"
+                  class="task-btn task-btn--icon task-btn--primary"
+                  aria-label="Approve task"
+                  title="Approve task"
+                  (click)="approve.emit(task.id)"
+                >
+                  <span class="material-symbols-rounded" aria-hidden="true">done_all</span>
+                </button>
+              }
+
+              <button
+                type="button"
+                class="task-btn task-btn--icon task-btn--danger"
+                aria-label="Delete task"
+                title="Delete task"
+                (click)="confirmRemove(task.id)"
+              >
+                <span class="material-symbols-rounded" aria-hidden="true">delete</span>
+              </button>
+            </div>
+          }
+        </article>
+      }
+    </div>
+  }
+</article>

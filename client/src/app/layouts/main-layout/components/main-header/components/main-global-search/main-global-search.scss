@@ -1,0 +1,125 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.ml-search {
+  position: relative;
+  min-width: 0;
+}
+
+.ml-search__field {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--border-default) 72%, transparent);
+  background: color-mix(in srgb, var(--surface) 75%, transparent);
+  padding: 0.2rem 0.7rem 0.2rem 0.6rem;
+}
+
+.ml-search__field .material-symbols-rounded {
+  font-size: 1.2rem;
+  line-height: 1;
+  color: var(--text-muted);
+}
+
+.ml-search__field input {
+  min-width: 0;
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 0.4rem 0;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.ml-search__field input:focus {
+  box-shadow: none;
+  outline: none;
+}
+
+.ml-search__field input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.ml-search__dropdown {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 0.45rem);
+  left: 0;
+  width: minmax(100%, 480px);
+  max-height: min(70vh, 560px);
+  overflow: auto;
+  border: 1px solid var(--border-light);
+  border-radius: 1rem;
+  padding: 0.55rem;
+  background: color-mix(in srgb, var(--surface) 94%, var(--background));
+  box-shadow: var(--shadow-lg);
+  display: grid;
+  gap: 0.42rem;
+}
+
+.ml-search__state {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+  padding: 0.25rem 0.35rem;
+}
+
+.ml-search__section {
+  padding: 0.45rem;
+  display: grid;
+  gap: 0.28rem;
+}
+
+.ml-search__section h4 {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.ml-search__section ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.ml-search__section button {
+  width: 100%;
+  text-align: left;
+  border: 1px solid color-mix(in srgb, var(--border-default) 66%, transparent);
+  border-radius: 0.7rem;
+  background: color-mix(in srgb, var(--surface) 95%, var(--background));
+  padding: 0.4rem 0.48rem;
+  display: grid;
+  gap: 0.08rem;
+}
+
+.ml-search__section strong {
+  color: var(--text-primary);
+  font-size: 0.84rem;
+  line-height: 1.2;
+}
+
+.ml-search__section small {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 900px) {
+  .ml-search__dropdown {
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(92vw, 640px);
+  }
+}
