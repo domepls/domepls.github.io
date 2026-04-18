@@ -20,15 +20,6 @@ class ApiRootAPIView(APIView):
                 "debug": settings.DEBUG,
                 "django_version": get_version(),
                 "python_version": sys.version.split()[0],
-                "endpoints": {
-                    "health": reverse("health"),
-                    "login": reverse("login"),
-                    "register": reverse("register"),
-                    "refresh": reverse("token_refresh"),
-                    "logout": reverse("logout"),
-                    "telegram": reverse("telegram_auth"),
-                    "me": reverse("users_me"),
-                },
             },
             status=status.HTTP_200_OK,
         )
