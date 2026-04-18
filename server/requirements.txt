@@ -8,6 +8,7 @@ channels-redis==4.2.0
 whitenoise==6.9.0
 python-decouple==3.8
 uvicorn==0.34.2
+websockets==15.0.1
 redis==6.0.0
 psycopg2-binary==2.9.10
 django-cloudinary-storage==0.3.0
