@@ -136,16 +136,19 @@
           } @else {
             <div class="ml-user-menu__notifications-list">
               @for (item of notifications(); track item.id) {
-                <button
-                  type="button"
-                  class="ml-user-menu__notification"
-                  [class.is-unread]="!item.is_read"
-                  (click)="openNotificationLink(item)"
-                >
-                  <strong>{{ item.title }}</strong>
-                  <small>{{ item.body }}</small>
-                  <small>{{ item.created_at | date: 'MMM d, HH:mm' }}</small>
-                </button>
+                <article class="ml-user-menu__notification" [class.is-unread]="!item.is_read">
+                  <button
+                    type="button"
+                    class="ml-user-menu__notification-action"
+                    (click)="openNotificationLink(item)"
+                  >
+                    <strong>{{ item.title }}</strong>
+                  </button>
+                  <small class="ml-user-menu__notification-body" [innerHTML]="item.body"></small>
+                  <small class="ml-user-menu__notification-meta">{{
+                    item.created_at | date: 'MMM d, HH:mm'
+                  }}</small>
+                </article>
               }
             </div>
           }

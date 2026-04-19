@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 
 from .models import FriendRequest, Friendship, Notification
 from .serializers import FriendRequestSerializer, NotificationSerializer, PublicUserSerializer
-from .services import create_notification
+from .services import create_notification, user_link
 
 User = get_user_model()
 
@@ -141,9 +141,15 @@ class SendFriendRequestAPIView(APIView):
             actor=request.user,
             notification_type=Notification.Type.FRIEND_REQUEST,
             title='New friend request',
-            body=f'<i>{request.user.username}</i> sent you a friend request.',
-            data={'request_id': friend_request.id,
-                  'from_username': request.user.username},
+            body=(
+                f"{user_link(request.user.username)} sent you a friend request."
+            ),
+            data={
+                'request_id': friend_request.id,
+                'from_username': request.user.username,
+                'profile_path': f'/app/users/{request.user.username}',
+                'target_path': f'/app/users/{request.user.username}',
+            },
             send_telegram=True,
         )
 
@@ -178,8 +184,14 @@ class FriendRequestActionAPIView(APIView):
                 actor=request.user,
                 notification_type=Notification.Type.FRIEND_ACCEPTED,
                 title='Friend request accepted',
-                body=f'<i>{request.user.username}</i> accepted your friend request.',
-                data={'username': request.user.username},
+                body=(
+                    f"{user_link(request.user.username)} accepted your friend request."
+                ),
+                data={
+                    'username': request.user.username,
+                    'profile_path': f'/app/users/{request.user.username}',
+                    'target_path': f'/app/users/{request.user.username}',
+                },
                 send_telegram=True,
             )
 

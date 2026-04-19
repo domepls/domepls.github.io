@@ -1,12 +1,13 @@
 from django.contrib.auth import get_user_model
 from django.db.models import Q
+from html import escape
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.projects.models import Project
 from apps.social.models import Friendship, Notification
-from apps.social.services import create_notification
+from apps.social.services import create_notification, user_link
 from .models import Chat, ChatMember, ChatMessage
 from .serializers import ChatMessageSerializer, ChatSerializer
 
@@ -127,12 +128,20 @@ def notify_chat_message(chat: Chat, sender, text: str):
         'user__profile').filter(chat=chat).exclude(user=sender)
 
     for membership in memberships:
+        chat_title = chat.name if chat.type == Chat.Type.PROJECT else 'Direct chat'
         create_notification(
             recipient=membership.user,
             actor=sender,
             notification_type=Notification.Type.CHAT_MESSAGE,
             title='New chat message',
-            body=f'@{sender.username}: {text[:120]}',
-            data={'chat_id': chat.id},
+            body=(
+                f"{user_link(sender.username)}: {escape(text[:120])}"
+            ),
+            data={
+                'chat_id': chat.id,
+                'target_path': f'/app/chats?chatId={chat.id}',
+                'chat_name': chat_title,
+                'profile_path': f'/app/users/{sender.username}',
+            },
             send_telegram=True,
         )

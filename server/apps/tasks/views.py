@@ -13,6 +13,8 @@ from apps.tasks.serializer import (
     TaskUpdateSerializer,
 )
 from apps.common.permissions import IsTelegramLinked
+from apps.social.models import Notification
+from apps.social.services import create_notification, task_link, user_link
 
 from .gamification import approve_project_task, mark_task_done, refresh_streak_for_user
 from .models import Task, Comment
@@ -130,6 +132,24 @@ class TaskApproveAPIView(APIView):
         except ValueError as error:
             return Response({"detail": str(error)}, status=status.HTTP_400_BAD_REQUEST)
 
+        if task.assigned_to_id:
+            create_notification(
+                recipient=task.assigned_to,
+                actor=request.user,
+                notification_type=Notification.Type.SYSTEM,
+                title="Task approved",
+                body=(
+                    f"{user_link(request.user.username)} approved task "
+                    f"{task_link(task.title, task.id)}."
+                ),
+                data={
+                    "task_id": task.id,
+                    "target_path": "/app/tasks",
+                    "project_id": task.project_id,
+                },
+                send_telegram=True,
+            )
+
         serializer = TaskDetailSerializer(task, context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -186,6 +206,31 @@ class TaskCommentsAPIView(APIView):
         )
         serializer.is_valid(raise_exception=True)
         comment = serializer.save()
+
+        recipients = []
+        if task.assigned_to_id and task.assigned_to_id != request.user.id:
+            recipients.append(task.assigned_to)
+        if task.created_by_id and task.created_by_id != request.user.id and task.created_by_id != task.assigned_to_id:
+            recipients.append(task.created_by)
+
+        for recipient in recipients:
+            create_notification(
+                recipient=recipient,
+                actor=request.user,
+                notification_type=Notification.Type.SYSTEM,
+                title="New task comment",
+                body=(
+                    f"{user_link(request.user.username)} commented on task "
+                    f"{task_link(task.title, task.id)}."
+                ),
+                data={
+                    "task_id": task.id,
+                    "target_path": "/app/tasks",
+                    "comment_id": comment.id,
+                    "project_id": task.project_id,
+                },
+                send_telegram=True,
+            )
 
         return Response(
             CommentSerializer(comment).data,

@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 from rest_framework import serializers
 
+from apps.social.models import Notification
+from apps.social.services import build_profile_url, create_notification, project_link, user_link
 from apps.users.models import Profile
 from .models import Project
 
@@ -96,9 +98,28 @@ class ProjectInviteSerializer(serializers.Serializer):
 
     def save(self, **kwargs):
         project = self.context["project"]
+        request = self.context["request"]
         username = self.validated_data["username"]
         user = User.objects.get(username=username)
         project.members.add(user)
+
+        create_notification(
+            recipient=user,
+            actor=request.user,
+            notification_type=Notification.Type.SYSTEM,
+            title="Project invitation",
+            body=(
+                f"{user_link(request.user.username)} invited you to "
+                f"project {project_link(project.name, project.id)}."
+            ),
+            data={
+                "project_id": project.id,
+                "target_path": f"/app/projects/{project.id}",
+                "profile_path": f"/app/users/{request.user.username}",
+                "profile_url": build_profile_url(request.user.username),
+            },
+            send_telegram=True,
+        )
         return project
 
 

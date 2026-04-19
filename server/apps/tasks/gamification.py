@@ -2,13 +2,18 @@ from __future__ import annotations
 
 from datetime import date, timedelta
 
+from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.utils import timezone
 
 from apps.users.achievements import assign_achievements_for_user
 from apps.users.models import Profile
+from apps.social.models import Notification
+from apps.social.services import create_notification, task_link, user_link
 
 from .models import Task
+
+User = get_user_model()
 
 DIFFICULTY_POINTS: dict[str, int] = {
     Task.Difficulty.PEACEFUL: 5,
@@ -87,6 +92,26 @@ def approve_project_task(task: Task, approver_id: int) -> Task:
         profile.save(update_fields=["points"])
         refresh_streak_for_user(task.assigned_to_id)
 
+        approver = User.objects.filter(
+            id=approver_id).select_related('profile').first()
+
+        create_notification(
+            recipient=profile.user,
+            actor=approver,
+            notification_type=Notification.Type.SYSTEM,
+            title="Task approved",
+            body=(
+                f"Your task {task_link(task.title, task.id)} was approved and "
+                f"earned {points} points."
+            ),
+            data={
+                "task_id": task.id,
+                "target_path": "/app/tasks",
+                "project_id": task.project_id,
+            },
+            send_telegram=True,
+        )
+
     return task
 
 
@@ -100,5 +125,23 @@ def mark_task_done(task: Task) -> Task:
 
     if task.scope == Task.Scope.PERSONAL and task.assigned_to_id:
         refresh_streak_for_user(task.assigned_to_id)
+
+    if task.scope == Task.Scope.PROJECT and task.created_by_id and task.created_by_id != task.assigned_to_id:
+        create_notification(
+            recipient=task.created_by,
+            actor=task.assigned_to,
+            notification_type=Notification.Type.SYSTEM,
+            title="Task completed",
+            body=(
+                f"{user_link(task.assigned_to.username)} completed task "
+                f"{task_link(task.title, task.id)}."
+            ),
+            data={
+                "task_id": task.id,
+                "target_path": "/app/tasks",
+                "project_id": task.project_id,
+            },
+            send_telegram=True,
+        )
 
     return task

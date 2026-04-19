@@ -191,6 +191,20 @@ export class MainHeader implements OnInit {
   }
 
   protected openNotificationLink(item: NotificationItem): void {
+    const targetPath = item.data?.['target_path'];
+    if (typeof targetPath === 'string' && targetPath.trim()) {
+      this.router.navigateByUrl(targetPath.trim());
+      this.onActionClick();
+      return;
+    }
+
+    const profilePath = item.data?.['profile_path'];
+    if (typeof profilePath === 'string' && profilePath.trim()) {
+      this.router.navigateByUrl(profilePath.trim());
+      this.onActionClick();
+      return;
+    }
+
     const chatIdRaw = item.data?.['chat_id'];
     if (typeof chatIdRaw === 'number' || typeof chatIdRaw === 'string') {
       this.router.navigate(['/app/chats'], { queryParams: { chatId: chatIdRaw } });

@@ -196,6 +196,8 @@ CORS_ALLOWED_ORIGINS = config(
 CORS_ALLOW_CREDENTIALS = True
 
 TELEGRAM_BOT_TOKEN = config('TELEGRAM_BOT_TOKEN', default='')
+FRONTEND_URL = config(
+    'FRONTEND_URL', default='http://localhost:4200', cast=str)
 REDIS_URL = config('REDIS_URL', default='redis://127.0.0.1:6379/0')
 AUTH_CODE_TTL_SECONDS = config('AUTH_CODE_TTL_SECONDS', default=300, cast=int)
 USE_REDIS_CHANNEL_LAYER = config(

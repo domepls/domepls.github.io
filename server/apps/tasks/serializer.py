@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from apps.projects.models import Project
+from apps.social.models import Notification
+from apps.social.services import create_notification, task_link, user_link
 from apps.users.models import Profile
 from .models import Comment, Task
 
@@ -181,11 +183,31 @@ class TaskCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         request = self.context["request"]
-        return Task.objects.create(
+        task = Task.objects.create(
             created_by=request.user,
             assigned_by=request.user,
             **validated_data,
         )
+
+        if task.assigned_to_id and task.assigned_to_id != request.user.id:
+            create_notification(
+                recipient=task.assigned_to,
+                actor=request.user,
+                notification_type=Notification.Type.SYSTEM,
+                title="Task assigned",
+                body=(
+                    f"{user_link(request.user.username)} assigned you task "
+                    f"{task_link(task.title, task.id)}."
+                ),
+                data={
+                    "task_id": task.id,
+                    "target_path": "/app/tasks",
+                    "project_id": task.project_id,
+                },
+                send_telegram=True,
+            )
+
+        return task
 
 
 class TaskUpdateSerializer(serializers.ModelSerializer):
@@ -252,6 +274,31 @@ class TaskUpdateSerializer(serializers.ModelSerializer):
                     {"status": "Personal tasks cannot be approved."})
 
         return attrs
+
+    def update(self, instance, validated_data):
+        request = self.context["request"]
+        previous_assignee = instance.assigned_to
+        task = super().update(instance, validated_data)
+
+        if task.assigned_to_id and task.assigned_to_id != request.user.id and task.assigned_to_id != getattr(previous_assignee, 'id', None):
+            create_notification(
+                recipient=task.assigned_to,
+                actor=request.user,
+                notification_type=Notification.Type.SYSTEM,
+                title="Task reassigned",
+                body=(
+                    f"{user_link(request.user.username)} reassigned you task "
+                    f"{task_link(task.title, task.id)}."
+                ),
+                data={
+                    "task_id": task.id,
+                    "target_path": "/app/tasks",
+                    "project_id": task.project_id,
+                },
+                send_telegram=True,
+            )
+
+        return task
 
 
 class CommentCreateSerializer(serializers.ModelSerializer):
