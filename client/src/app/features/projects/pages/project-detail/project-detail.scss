@@ -274,6 +274,7 @@
 }
 
 .project-members__pill {
+  cursor: pointer;
   border-radius: 0.8rem;
   padding: 0.35rem 0.55rem;
   border: 1px solid color-mix(in srgb, var(--border-default) 70%, transparent);
@@ -284,6 +285,17 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.45rem;
+}
+
+.project-members__pill:hover {
+  border-color: color-mix(in srgb, var(--border-strong) 66%, transparent);
+  background: color-mix(in srgb, var(--surface-lilac) 52%, var(--surface));
+}
+
+.project-members__pill:focus-visible {
+  outline: none;
+  border-color: color-mix(in srgb, var(--border-strong) 64%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--info-bg) 22%, transparent);
 }
 
 .project-members__pill strong {

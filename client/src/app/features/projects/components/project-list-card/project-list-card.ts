@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
-import { ProjectItem } from '../../services/projects.service';
+import { ProjectItem, ProjectUser } from '../../services/projects.service';
 
 interface ProjectTaskStats {
   projectId: number;
@@ -25,10 +25,16 @@ export default class ProjectListCardComponent {
   @Input() isLoading = false;
 
   @Output() openRequested = new EventEmitter<number>();
+  @Output() openUserRequested = new EventEmitter<string>();
 
   protected readonly viewMode = signal<'list' | 'grid'>('list');
 
   protected setViewMode(mode: 'list' | 'grid'): void {
     this.viewMode.set(mode);
+  }
+
+  protected memberLabel(member: ProjectUser): string {
+    const fullName = [member.first_name, member.last_name].filter(Boolean).join(' ').trim();
+    return fullName || `@${member.username}`;
   }
 }

@@ -10,18 +10,22 @@
         <button
           type="button"
           class="friends-list__view-btn"
+          aria-label="List view"
+          title="List view"
           [class.is-active]="viewMode() === 'list'"
           (click)="setViewMode('list')"
         >
-          List
+          <span class="material-symbols-rounded" aria-hidden="true">view_list</span>
         </button>
         <button
           type="button"
           class="friends-list__view-btn"
+          aria-label="Grid view"
+          title="Grid view"
           [class.is-active]="viewMode() === 'grid'"
           (click)="setViewMode('grid')"
         >
-          Grid
+          <span class="material-symbols-rounded" aria-hidden="true">grid_view</span>
         </button>
       </div>
     </div>

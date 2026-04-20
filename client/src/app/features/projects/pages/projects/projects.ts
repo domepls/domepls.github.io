@@ -148,6 +148,14 @@ export default class ProjectsPage implements OnInit {
     this.router.navigate(['/app/projects', projectId]);
   }
 
+  protected openMemberProfile(username: string): void {
+    if (!username) {
+      return;
+    }
+
+    this.router.navigate(['/app/users', username]);
+  }
+
   private loadTasks(): void {
     this.tasksService
       .listTasks()

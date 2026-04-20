@@ -20,7 +20,7 @@
 }
 
 .task-list--grid {
-  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 }
 
 .task-list-card__toolbar {
@@ -78,6 +78,29 @@
   padding: 0.85rem;
   display: grid;
   gap: 0.55rem;
+}
+
+.task-list--grid .task-item {
+  align-content: start;
+  padding: 0.8rem;
+}
+
+.task-list--grid .task-item header {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.task-list--grid .task-item > p {
+  text-align: center;
+}
+
+.task-list--grid .task-item__meta {
+  justify-content: center;
+}
+
+.task-list--grid .task-item__actions {
+  justify-content: center;
 }
 
 .task-item header {
@@ -416,6 +439,16 @@
 .task-btn--ghost:hover {
   color: var(--text-primary);
   background: color-mix(in srgb, var(--surface-lilac) 58%, transparent);
+}
+
+@media (max-width: 560px) {
+  .task-list-card__toolbar {
+    flex-wrap: wrap;
+  }
+
+  .task-list--grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .task-item__edit .task-btn--icon {

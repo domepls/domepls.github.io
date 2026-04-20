@@ -93,12 +93,17 @@
 
             <div class="project-members__list">
               @for (member of projectData.members; track member.id) {
-                <span class="project-members__pill">
+                <button
+                  type="button"
+                  class="project-members__pill"
+                  [title]="'Open @' + member.username"
+                  (click)="openUserProfile(member.username)"
+                >
                   <strong>@{{ member.username }}</strong>
                   @if (member.id === projectData.owner.id) {
                     <small>Owner</small>
                   }
-                </span>
+                </button>
               }
             </div>
           </div>

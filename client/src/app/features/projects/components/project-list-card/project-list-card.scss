@@ -15,7 +15,7 @@
 }
 
 .project-list--grid {
-  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 }
 
 .project-list__toolbar {
@@ -47,15 +47,55 @@
   border: 0;
   background: transparent;
   color: var(--text-muted);
-  font-size: 0.75rem;
-  font-weight: 800;
   border-radius: 999px;
-  padding: 0.25rem 0.65rem;
+  width: 2.15rem;
+  height: 2.15rem;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .project-list__view-btn.is-active {
   color: var(--text-primary);
   background: color-mix(in srgb, var(--surface-lilac) 68%, var(--surface));
+}
+
+.project-list__view-btn .material-symbols-rounded {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.project-list--grid .project-list__item {
+  align-content: start;
+  padding: 0.8rem;
+}
+
+.project-list--grid .project-list__item > div {
+  display: grid;
+  gap: 0.45rem;
+  text-align: center;
+  justify-items: center;
+}
+
+.project-list--grid .project-list__title,
+.project-list--grid .project-list__item p,
+.project-list--grid .project-list__members {
+  text-align: center;
+}
+
+.project-list--grid .project-list__chips {
+  justify-content: center;
+}
+
+@media (max-width: 560px) {
+  .project-list__toolbar {
+    flex-wrap: wrap;
+  }
+
+  .project-list--grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .project-list__state {
@@ -64,14 +104,25 @@
 }
 
 .project-list__item {
-  width: 100%;
   text-align: left;
+  cursor: pointer;
   border-radius: 1rem;
   border: 1px solid color-mix(in srgb, var(--border-default) 66%, transparent);
   background: color-mix(in srgb, var(--surface) 78%, var(--background));
   padding: 0.85rem;
   display: grid;
   gap: 0.4rem;
+}
+
+.project-list__item:hover {
+  border-color: color-mix(in srgb, var(--border-strong) 66%, transparent);
+  background: color-mix(in srgb, var(--surface) 84%, var(--background));
+}
+
+.project-list__item:focus-visible {
+  outline: none;
+  border-color: color-mix(in srgb, var(--border-strong) 64%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--info-bg) 22%, transparent);
 }
 
 .project-list__title {
@@ -98,6 +149,36 @@
   color: var(--text-muted);
   display: inline-block;
   margin-top: 0.15rem;
+}
+
+.project-list__members-list {
+  margin-top: 0.35rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.project-list__member-chip {
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--border-default) 68%, transparent);
+  background: color-mix(in srgb, var(--surface) 92%, var(--background));
+  color: var(--text-secondary);
+  padding: 0.14rem 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.project-list__member-chip:hover {
+  color: var(--text-primary);
+  border-color: color-mix(in srgb, var(--border-strong) 62%, transparent);
+  background: color-mix(in srgb, var(--surface-lilac) 62%, var(--surface));
+}
+
+.project-list__member-chip--more {
+  cursor: default;
+  color: var(--text-muted);
 }
 
 .project-list__chips {
@@ -144,4 +225,8 @@
   background: color-mix(in srgb, var(--status-active-bg) 58%, var(--surface));
   border-color: color-mix(in srgb, var(--status-active-border) 66%, transparent);
   color: var(--status-active-text) !important;
+}
+
+.project-list--grid .project-list__members-list {
+  justify-content: center;
 }

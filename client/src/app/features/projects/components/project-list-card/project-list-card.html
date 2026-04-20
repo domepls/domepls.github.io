@@ -12,29 +12,61 @@
         <button
           type="button"
           class="project-list__view-btn"
+          aria-label="List view"
+          title="List view"
           [class.is-active]="viewMode() === 'list'"
           (click)="setViewMode('list')"
         >
-          List
+          <span class="material-symbols-rounded" aria-hidden="true">view_list</span>
         </button>
         <button
           type="button"
           class="project-list__view-btn"
+          aria-label="Grid view"
+          title="Grid view"
           [class.is-active]="viewMode() === 'grid'"
           (click)="setViewMode('grid')"
         >
-          Grid
+          <span class="material-symbols-rounded" aria-hidden="true">grid_view</span>
         </button>
       </div>
     </div>
 
     <div class="project-list" [class.project-list--grid]="viewMode() === 'grid'">
       @for (project of projects; track project.id) {
-        <button type="button" class="project-list__item" (click)="openRequested.emit(project.id)">
+        <article
+          class="project-list__item"
+          role="button"
+          tabindex="0"
+          (click)="openRequested.emit(project.id)"
+          (keydown.enter)="openRequested.emit(project.id)"
+          (keydown.space)="$event.preventDefault(); openRequested.emit(project.id)"
+        >
           <div>
             <strong class="project-list__title">{{ project.name }}</strong>
             <p>{{ project.description || 'No description yet.' }}</p>
             <small class="project-list__members">Members: {{ project.members.length }}</small>
+
+            @if (project.members.length) {
+              <div class="project-list__members-list">
+                @for (member of project.members.slice(0, 6); track member.id) {
+                  <button
+                    type="button"
+                    class="project-list__member-chip"
+                    [title]="'Open @' + member.username"
+                    (click)="$event.stopPropagation(); openUserRequested.emit(member.username)"
+                  >
+                    {{ memberLabel(member) }}
+                  </button>
+                }
+                @if (project.members.length > 6) {
+                  <span class="project-list__member-chip project-list__member-chip--more"
+                    >+{{ project.members.length - 6 }}</span
+                  >
+                }
+              </div>
+            }
+
             <div class="project-list__chips">
               <span class="project-list__chip project-list__chip--total">
                 All: {{ statsMap[project.id]?.total ?? 0 }}
@@ -53,7 +85,7 @@
               </span>
             </div>
           </div>
-        </button>
+        </article>
       }
     </div>
   }

@@ -206,6 +206,14 @@ export default class ProjectDetailPage implements OnInit {
       });
   }
 
+  protected openUserProfile(username: string): void {
+    if (!username?.trim()) {
+      return;
+    }
+
+    this.router.navigate(['/app/users', username.trim()]);
+  }
+
   protected markDone(taskId: number): void {
     this.updateTask(taskId, { status: 'done' });
   }
