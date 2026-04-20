@@ -22,6 +22,7 @@ export default class ChatsPage implements OnInit, OnDestroy {
   private readonly destroyRef = inject(DestroyRef);
 
   private socket: WebSocket | null = null;
+  private readonly expectedSocketClose = new WeakSet<WebSocket>();
   private unauthorizedRetryChatId: number | null = null;
   private deepLinkApplied = false;
 
@@ -194,10 +195,11 @@ export default class ChatsPage implements OnInit, OnDestroy {
     }
 
     const wsUrl = this.chatsService.websocketUrl(chatId, token);
-    this.socket = new WebSocket(wsUrl);
+    const socket = new WebSocket(wsUrl);
+    this.socket = socket;
     this.pageError.set('');
 
-    this.socket.onmessage = (event) => {
+    socket.onmessage = (event) => {
       try {
         const message = JSON.parse(event.data) as ChatMessage;
         this.messages.set([...this.messages(), message]);
@@ -206,11 +208,19 @@ export default class ChatsPage implements OnInit, OnDestroy {
       }
     };
 
-    this.socket.onerror = () => {
+    socket.onerror = () => {
+      if (this.expectedSocketClose.has(socket)) {
+        return;
+      }
       this.pageError.set('WebSocket connection failed.');
     };
 
-    this.socket.onclose = (event) => {
+    socket.onclose = (event) => {
+      if (this.expectedSocketClose.has(socket)) {
+        this.expectedSocketClose.delete(socket);
+        return;
+      }
+
       if (event.code === 4401 && this.unauthorizedRetryChatId !== chatId) {
         this.unauthorizedRetryChatId = chatId;
         void this.retrySocketAfterRefresh(chatId);
@@ -224,8 +234,10 @@ export default class ChatsPage implements OnInit, OnDestroy {
   }
 
   private closeSocket(): void {
-    if (this.socket) {
-      this.socket.close();
+    const socket = this.socket;
+    if (socket) {
+      this.expectedSocketClose.add(socket);
+      socket.close();
       this.socket = null;
     }
   }
