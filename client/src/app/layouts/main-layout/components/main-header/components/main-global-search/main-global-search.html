@@ -13,7 +13,14 @@
   @if (isOpen()) {
     <div class="ml-search__dropdown" role="listbox" aria-label="Search results">
       @if (isLoading()) {
-        <p class="ml-search__state">Searching...</p>
+        <div
+          class="ui-loader ui-loader--sm"
+          role="status"
+          aria-live="polite"
+          aria-label="Searching"
+        >
+          <span class="ui-loader__spinner" aria-hidden="true"></span>
+        </div>
       } @else {
         @if (!sections().length) {
           <p class="ml-search__state">No results yet.</p>

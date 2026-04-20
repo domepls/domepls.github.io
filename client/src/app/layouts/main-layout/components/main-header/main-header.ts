@@ -156,6 +156,30 @@ export class MainHeader implements OnInit {
       });
   }
 
+  protected onNotificationClick(event: MouseEvent, item: NotificationItem): void {
+    const target = event.target as HTMLElement | null;
+    const clickedLink = target?.closest('a');
+
+    this.markNotificationRead(item);
+
+    if (clickedLink) {
+      this.onActionClick();
+      return;
+    }
+
+    this.openNotificationLink(item);
+  }
+
+  protected onNotificationKeydown(event: KeyboardEvent, item: NotificationItem): void {
+    if (event.key !== 'Enter' && event.key !== ' ') {
+      return;
+    }
+
+    event.preventDefault();
+    this.markNotificationRead(item);
+    this.openNotificationLink(item);
+  }
+
   @HostListener('document:click', ['$event'])
   protected onDocumentClick(event: MouseEvent): void {
     if (!this.isMenuOpen && !this.isNotificationsOpen && !this.isSearchOpen) {
@@ -226,6 +250,28 @@ export class MainHeader implements OnInit {
       return;
     }
     this.onActionClick();
+  }
+
+  private markNotificationRead(item: NotificationItem): void {
+    if (item.is_read) {
+      return;
+    }
+
+    this.notifications.set(
+      this.notifications().map((current) =>
+        current.id === item.id ? { ...current, is_read: true } : current,
+      ),
+    );
+    this.unreadNotifications.set(Math.max(0, this.unreadNotifications() - 1));
+
+    this.friendsService
+      .markNotificationsRead(item.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        error: () => {
+          this.loadNotifications();
+        },
+      });
   }
 
   protected onLogout(): void {

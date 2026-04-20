@@ -4,7 +4,9 @@
   }
 
   @if (isLoading()) {
-    <div class="project-detail-page__state">Loading project...</div>
+    <div class="ui-loader" role="status" aria-live="polite" aria-label="Loading project">
+      <span class="ui-loader__spinner" aria-hidden="true"></span>
+    </div>
   } @else if (project(); as projectData) {
     <div class="project-detail-layout">
       <section class="project-detail-layout__block">

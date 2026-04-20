@@ -1,6 +1,8 @@
 <article class="task-list-card">
   @if (isLoading) {
-    <p class="task-list-card__state">Loading tasks...</p>
+    <div class="ui-loader" role="status" aria-live="polite" aria-label="Loading tasks">
+      <span class="ui-loader__spinner" aria-hidden="true"></span>
+    </div>
   } @else if (!tasks.length) {
     <p class="task-list-card__state">No tasks for this filter.</p>
   } @else {

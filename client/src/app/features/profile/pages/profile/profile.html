@@ -1,6 +1,8 @@
 <section class="profile-page">
   @if (isLoading()) {
-    <div class="profile-page__state">Loading profile...</div>
+    <div class="ui-loader" role="status" aria-live="polite" aria-label="Loading profile">
+      <span class="ui-loader__spinner" aria-hidden="true"></span>
+    </div>
   } @else if (profile(); as profileData) {
     <section class="profile-hero">
       <form class="profile-page__form" [formGroup]="profileForm" (ngSubmit)="saveProfile()">

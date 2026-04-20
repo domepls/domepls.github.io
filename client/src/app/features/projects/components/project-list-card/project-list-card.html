@@ -1,6 +1,8 @@
 <article class="project-card">
   @if (isLoading) {
-    <p class="project-list__state">Loading projects...</p>
+    <div class="ui-loader" role="status" aria-live="polite" aria-label="Loading projects">
+      <span class="ui-loader__spinner" aria-hidden="true"></span>
+    </div>
   } @else if (!projects.length) {
     <p class="project-list__state">No projects yet. Create your first one.</p>
   } @else {

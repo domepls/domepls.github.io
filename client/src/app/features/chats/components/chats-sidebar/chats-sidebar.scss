@@ -1,13 +1,8 @@
 .chats-sidebar {
+  box-sizing: border-box;
   border: 1px solid color-mix(in srgb, var(--border-default) 70%, transparent);
   border-radius: 1.2rem;
-  background:
-    radial-gradient(
-      circle at 12% 10%,
-      color-mix(in srgb, var(--surface-pink) 75%, transparent),
-      transparent 50%
-    ),
-    color-mix(in srgb, var(--surface) 88%, var(--background));
+  background: color-mix(in srgb, var(--surface) 88%, var(--background));
   padding: 0.7rem;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
@@ -15,6 +10,10 @@
   min-height: 0;
   height: 100%;
   overflow: hidden;
+
+  .ui-loader {
+    min-height: unset;
+  }
 }
 
 .chats-sidebar__head {
@@ -27,7 +26,7 @@
 .chats-sidebar__tabs {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.28rem;
   border: 1px solid color-mix(in srgb, var(--border-default) 72%, transparent);
   border-radius: 999px;
@@ -51,8 +50,10 @@
 
 .chats-sidebar__state {
   margin: 0;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   padding: 0 0.3rem;
+  place-self: center;
+  text-align: center;
 }
 
 .chats-list {
@@ -60,6 +61,8 @@
   margin: 0;
   padding: 0.1rem;
   display: grid;
+  align-content: start;
+  grid-auto-rows: max-content;
   gap: 0.24rem;
   min-height: 0;
   overflow: auto;
@@ -158,4 +161,41 @@
 
 .chats-list__bottom small {
   max-width: 56%;
+}
+
+@media (max-width: 980px) {
+  .chats-sidebar {
+    height: auto;
+    min-height: 0;
+    gap: 0.5rem;
+  }
+
+  .chats-sidebar__tabs {
+    border: none;
+    padding: 0.1rem;
+    background: transparent;
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--border-default) 72%, transparent);
+  }
+
+  .chats-sidebar__tabs button {
+    height: 1.5rem;
+    padding: 0.1rem;
+  }
+
+  .chats-list {
+    display: flex;
+    padding: 0;
+    gap: 0.35rem;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    align-items: stretch;
+  }
+
+  .chats-list button {
+    width: 160px;
+    min-width: 160px;
+    padding: 0.2rem;
+  }
 }

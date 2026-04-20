@@ -1,4 +1,5 @@
 .chat-room {
+  box-sizing: border-box;
   border: 1px solid color-mix(in srgb, var(--border-default) 72%, transparent);
   border-radius: 1.2rem;
   background: linear-gradient(
@@ -13,13 +14,16 @@
   min-height: 0;
   height: 100%;
   overflow: hidden;
+
+  &--empty {
+    grid-template-rows: 1fr;
+  }
 }
 
 .chat-room__header {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 0.55rem;
   border: 1px solid color-mix(in srgb, var(--border-default) 66%, transparent);
   background: color-mix(in srgb, var(--surface) 86%, var(--background));
   border-radius: 0.9rem;
@@ -40,7 +44,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   background: color-mix(in srgb, var(--surface) 88%, var(--background));
 }
 
@@ -100,7 +104,7 @@
 
 .chat-room__head-meta h3 {
   margin: 0;
-  font-size: 1.02rem;
+  font-size: 1rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -109,8 +113,8 @@
 
 .chat-room__head-meta p {
   margin: 0.15rem 0 0;
-  color: var(--text-secondary);
-  font-size: 0.83rem;
+  color: var(--text-muted);
+  font-size: 0.75rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -118,38 +122,73 @@
 
 .chat-room__state {
   margin: 0;
-  color: var(--text-secondary);
+  color: var(--text-muted);
+  place-self: center;
+  text-align: center;
 }
 
 .chat-room__messages {
+  flex: 1 1 auto;
   min-height: 0;
-  overflow: auto;
-  display: grid;
-  align-content: start;
-  gap: 0.55rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
   padding-right: 0.15rem;
 }
 
+.chat-room__messages-stack {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding-bottom: 0.1rem;
+}
+
+.chat-date-group {
+  align-self: center;
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--surface) 86%, var(--background));
+  border: 1px solid color-mix(in srgb, var(--border-default) 60%, transparent);
+  box-shadow: var(--shadow-sm);
+  border-radius: 999px;
+  padding: 0.22rem 0.55rem;
+  margin: 0.22rem 0 0.12rem;
+}
+
 .chat-message-row {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  display: flex;
   align-items: end;
   gap: 0.42rem;
-  max-width: min(94%, 700px);
+  width: 100%;
+  min-width: 0;
 }
 
 .chat-message-row--mine {
-  grid-template-columns: minmax(0, 1fr) auto;
-  justify-self: end;
+  justify-content: flex-end;
 }
 
 .chat-message-row__avatar-wrap {
+  flex: 0 0 auto;
   width: 1.8rem;
   height: 1.8rem;
   border-radius: 999px;
   overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--border-default) 68%, transparent);
   background: color-mix(in srgb, var(--surface) 90%, var(--background));
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button.chat-message-row__avatar-wrap {
+  cursor: pointer;
 }
 
 .chat-message-row__avatar,
@@ -178,24 +217,29 @@
 }
 
 .chat-message {
-  border: 1px solid color-mix(in srgb, var(--border-default) 70%, transparent);
-  border-radius: 0.8rem;
+  border: 1px solid color-mix(in srgb, var(--border-default) 58%, transparent);
+  border-radius: 0.95rem 0.95rem 0.95rem 0.35rem;
   background: color-mix(in srgb, var(--surface) 94%, var(--background));
-  padding: 0.5rem 0.65rem 0.42rem;
+  box-shadow: 0 4px 10px color-mix(in srgb, var(--shadow-color) 8%, transparent);
+  padding: 0.56rem 0.72rem 0.46rem;
   display: grid;
-  gap: 0.2rem;
+  width: fit-content;
+  max-width: min(68%, 40rem);
+  min-width: 0;
 }
 
 .chat-message--mine {
-  border-color: color-mix(in srgb, var(--status-active-border) 72%, transparent);
-  background: color-mix(in srgb, var(--status-active-bg) 48%, var(--surface));
-  justify-self: end;
+  border-radius: 0.95rem 0.95rem 0.35rem 0.95rem;
+  border-color: color-mix(in srgb, var(--border-default) 56%, transparent);
+  background: color-mix(in srgb, var(--box-bg-lilac) 88%, var(--status-active-bg));
+  box-shadow: 0 6px 12px color-mix(in srgb, var(--shadow-color) 10%, transparent);
+  margin-left: auto;
 }
 
 .chat-message__author {
   color: var(--text-muted);
   font-size: 0.66rem;
-  line-height: 1;
+  margin-bottom: 0.1rem;
 }
 
 .chat-message--mine .chat-message__author {
@@ -204,18 +248,18 @@
 
 .chat-message__text {
   margin: 0;
-}
-
-.chat-message__text {
+  font-size: 0.84rem;
+  line-height: 1.42;
+  overflow-wrap: anywhere;
   color: var(--text-primary);
-  line-height: 1.45;
 }
 
 .chat-message__date {
   justify-self: end;
   color: var(--text-muted);
-  font-size: 0.68rem;
+  font-size: 0.6rem;
   line-height: 1;
+  margin-top: 0.18rem;
 }
 
 .chat-room__composer {

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { catchError, firstValueFrom, of } from 'rxjs';
+import { catchError, finalize, firstValueFrom, of } from 'rxjs';
 import { AuthService } from '../../../auth/services/auth.service';
 import { ChatsService, ChatItem, ChatMessage } from '../../services/chats.service';
 import { ChatsSidebarComponent } from '../../components/chats-sidebar/chats-sidebar';
@@ -27,14 +27,17 @@ export default class ChatsPage implements OnInit, OnDestroy {
 
   protected readonly pageError = signal('');
   protected readonly isLoading = signal(true);
-  protected readonly chatType = signal<'direct' | 'project'>('direct');
+  protected readonly chatType = signal<'direct' | 'project' | 'all'>('all');
   protected readonly chats = signal<ChatItem[]>([]);
   protected readonly selectedChat = signal<ChatItem | null>(null);
   protected readonly messages = signal<ChatMessage[]>([]);
+  protected readonly isLoadingMessages = signal(false);
   protected readonly messageText = signal('');
 
   protected readonly filteredChats = computed(() =>
-    this.chats().filter((chat) => chat.type === this.chatType()),
+    this.chatType() === 'all'
+      ? this.chats()
+      : this.chats().filter((chat) => chat.type === this.chatType()),
   );
 
   ngOnInit(): void {
@@ -45,7 +48,7 @@ export default class ChatsPage implements OnInit, OnDestroy {
     this.closeSocket();
   }
 
-  protected setChatType(type: 'direct' | 'project'): void {
+  protected setChatType(type: 'direct' | 'project' | 'all'): void {
     this.chatType.set(type);
 
     const selected = this.selectedChat();
@@ -95,7 +98,6 @@ export default class ChatsPage implements OnInit, OnDestroy {
 
   protected selectChat(chat: ChatItem): void {
     this.selectedChat.set(chat);
-    this.chatType.set(chat.type);
     this.messages.set([]);
     this.loadMessages(chat.id);
     void this.openSocket(chat.id);
@@ -130,6 +132,14 @@ export default class ChatsPage implements OnInit, OnDestroy {
     this.router.navigate(['/app/users', username]);
   }
 
+  protected openChatProject(projectId: number): void {
+    if (!projectId) {
+      return;
+    }
+    this.closeSocket();
+    this.router.navigate(['/app/projects', projectId]);
+  }
+
   protected chatLabel(chat: ChatItem): string {
     if (chat.type === 'project') {
       return chat.project_name || chat.name || `Project #${chat.project}`;
@@ -161,9 +171,14 @@ export default class ChatsPage implements OnInit, OnDestroy {
   }
 
   private loadMessages(chatId: number): void {
+    this.isLoadingMessages.set(true);
+    this.pageError.set('');
     this.chatsService
       .listMessages(chatId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.isLoadingMessages.set(false)),
+      )
       .subscribe({
         next: (messages) => this.messages.set(messages),
         error: () => this.pageError.set('Unable to load messages.'),

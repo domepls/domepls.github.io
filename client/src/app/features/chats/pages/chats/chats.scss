@@ -1,13 +1,23 @@
 :host {
   display: block;
   min-width: 0;
+  min-height: 0;
+  height: 100%;
 }
 
 .chats-page {
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: minmax(0, 1fr);
   gap: 0.7rem;
   min-width: 0;
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+
+  &--error {
+    grid-template-rows: auto minmax(0, 1fr);
+  }
 }
 
 .chats-layout {
@@ -16,12 +26,16 @@
   align-items: stretch;
   gap: 0.7rem;
   min-width: 0;
-  min-height: calc(100vh - 8.5rem);
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
 }
 
 .chats-layout > * {
   min-height: 0;
   height: 100%;
+  max-height: 100%;
+  overflow: hidden;
 }
 
 .chats-page__error {
@@ -35,10 +49,22 @@
 
 @media (max-width: 980px) {
   .chats-page {
-    min-height: auto;
+    min-height: 0;
+    height: 100%;
+    max-height: 100%;
+    overflow: hidden;
   }
 
   .chats-layout {
     grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .chats-layout > * {
+    min-height: 0;
+    overflow: hidden;
   }
 }

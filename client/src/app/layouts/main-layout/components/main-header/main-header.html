@@ -130,20 +130,28 @@
           </div>
 
           @if (isLoadingNotifications()) {
-            <p class="ml-user-menu__notifications-state">Loading...</p>
+            <div
+              class="ui-loader ui-loader--sm"
+              role="status"
+              aria-live="polite"
+              aria-label="Loading notifications"
+            >
+              <span class="ui-loader__spinner" aria-hidden="true"></span>
+            </div>
           } @else if (!notifications().length) {
             <p class="ml-user-menu__notifications-state">No notifications yet.</p>
           } @else {
             <div class="ml-user-menu__notifications-list">
               @for (item of notifications(); track item.id) {
-                <article class="ml-user-menu__notification" [class.is-unread]="!item.is_read">
-                  <button
-                    type="button"
-                    class="ml-user-menu__notification-action"
-                    (click)="openNotificationLink(item)"
-                  >
-                    <strong>{{ item.title }}</strong>
-                  </button>
+                <article
+                  class="ml-user-menu__notification"
+                  [class.is-unread]="!item.is_read"
+                  role="button"
+                  tabindex="0"
+                  (click)="onNotificationClick($event, item)"
+                  (keydown)="onNotificationKeydown($event, item)"
+                >
+                  <strong class="ml-user-menu__notification-action">{{ item.title }}</strong>
                   <small class="ml-user-menu__notification-body" [innerHTML]="item.body"></small>
                   <small class="ml-user-menu__notification-meta">{{
                     item.created_at | date: 'MMM d, HH:mm'

@@ -12,7 +12,7 @@
   align-items: center;
   gap: 0.75rem;
   margin: 0.75rem;
-  padding: 0.95rem 1.1rem;
+  padding: 0.7rem;
   border: 1px solid var(--border-light);
   border-radius: 1.6rem;
   background: var(--surface);
@@ -134,15 +134,17 @@
   &__notifications {
     position: absolute;
     top: calc(100% + 0.65rem);
-    right: 3.1rem;
+    right: -0.7rem;
     width: min(360px, 82vw);
     padding: 0.6rem 0.8rem;
     border-radius: 1rem;
     border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-lg);
     background: var(--surface);
     animation: ml-user-pop 0.18s ease;
     display: grid;
     gap: 0.4rem;
+    z-index: 30;
   }
 
   &__notifications-head {
@@ -182,42 +184,101 @@
   }
 
   &__notification {
+    position: relative;
+    cursor: pointer;
     border: 1px solid color-mix(in srgb, var(--border-default) 66%, transparent);
     border-radius: 0.72rem;
     background: color-mix(in srgb, var(--surface) 88%, var(--background));
     padding: 0.42rem 0.48rem;
     display: grid;
-    gap: 0.08rem;
+    transition:
+      transform 0.16s ease,
+      box-shadow 0.16s ease,
+      border-color 0.16s ease,
+      background-color 0.16s ease;
 
     &-action {
+      display: block;
       border: 0;
       background: transparent;
       padding: 0;
       text-align: left;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 0.15rem;
+      cursor: pointer;
     }
 
     strong {
       color: var(--text-primary);
       font-size: 0.8rem;
-      line-height: 1.2;
     }
 
-    &-body,
-    &-meta {
+    &-body {
       color: var(--text-secondary);
-      line-height: 1.25;
+      font-size: 0.8rem;
+    }
+
+    &-meta {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      justify-self: end;
     }
 
     &-body a {
       color: var(--text-primary);
-      font-weight: 700;
+      font-weight: 600;
       text-decoration: underline;
       text-underline-offset: 0.12rem;
     }
 
     &.is-unread {
-      border-color: color-mix(in srgb, var(--info-border) 66%, transparent);
-      background: color-mix(in srgb, var(--info-bg) 38%, var(--surface));
+      border-color: color-mix(in srgb, var(--border-default) 56%, transparent);
+      background: linear-gradient(
+        145deg,
+        color-mix(in srgb, var(--info-bg) 16%, transparent),
+        color-mix(in srgb, var(--box-bg-lilac) 76%, var(--info-bg))
+      );
+      box-shadow:
+        0 8px 16px color-mix(in srgb, var(--shadow-color) 12%, transparent),
+        inset 0 1px 1px rgba(255, 255, 255, 0.42);
+
+      margin-left: 1.75rem;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: -1.25rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0.75rem;
+        height: 0.75rem;
+        border-radius: 999px;
+        border: 1px solid color-mix(in srgb, var(--info-bg) 42%, white);
+        background:
+          radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.9) 0 18%, transparent 19%),
+          linear-gradient(
+            145deg,
+            color-mix(in srgb, var(--info-bg) 96%, white),
+            color-mix(in srgb, var(--box-bg-lilac) 82%, var(--info-bg))
+          );
+        box-shadow:
+          0 0 0 2px color-mix(in srgb, var(--surface) 92%, transparent),
+          0 4px 10px color-mix(in srgb, var(--info-bg) 22%, transparent),
+          inset 0 1px 1px rgba(255, 255, 255, 0.35);
+      }
+    }
+
+    &:hover {
+      transform: translateY(-1px);
+      border-color: color-mix(in srgb, var(--border-default) 48%, transparent);
+      box-shadow: 0 8px 18px color-mix(in srgb, var(--shadow-color) 10%, transparent);
+    }
+
+    &:focus-visible {
+      outline: none;
+      border-color: color-mix(in srgb, var(--border-strong) 58%, transparent);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--info-bg) 24%, transparent);
     }
   }
 
@@ -429,12 +490,5 @@
     max-width: none;
     width: unset;
     justify-self: stretch;
-  }
-}
-
-@media (max-width: 780px) {
-  .ml-header {
-    margin-inline: 0.5rem;
-    padding-inline: 0.9rem;
   }
 }

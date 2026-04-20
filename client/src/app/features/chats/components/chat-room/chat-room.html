@@ -1,4 +1,4 @@
-<article class="chat-room">
+<article [ngClass]="'chat-room' + (selectedChat() ? '' : ' chat-room--empty')">
   @if (!selectedChat()) {
     <p class="chat-room__state">Select a chat to start messaging.</p>
   } @else if (selectedChat(); as chat) {
@@ -30,51 +30,75 @@
       <span class="chat-room__header-spacer"></span>
     </header>
 
-    <div class="chat-room__messages">
-      @for (message of messages(); track message.id) {
-        <article class="chat-message-row" [class.chat-message-row--mine]="isMine(message)">
-          @if (!isMine(message)) {
-            <span class="chat-message-row__avatar-wrap">
-              @if (messageAvatar(message); as avatar) {
-                <img
-                  class="chat-message-row__avatar"
-                  [src]="avatar"
-                  alt="Sender avatar"
-                  loading="lazy"
-                />
-              } @else {
-                <span class="chat-message-row__avatar-fallback">{{
-                  messageInitials(message)
-                }}</span>
-              }
-            </span>
-          }
+    <div #messagesContainer class="chat-room__messages">
+      @if (isLoadingMessages()) {
+        <div class="ui-loader" role="status" aria-live="polite" aria-label="Loading messages">
+          <span class="ui-loader__spinner" aria-hidden="true"></span>
+        </div>
+      } @else if (!messages().length) {
+        <p class="chat-room__state">No messages yet. Say hi!</p>
+      } @else {
+        <div class="chat-room__messages-stack">
+          @for (message of messages(); track message.id; let i = $index) {
+            @if (shouldShowDateGroup(i)) {
+              <div class="chat-date-group">{{ getDateGroupLabel(message.created_at) }}</div>
+            }
 
-          <div class="chat-message" [class.chat-message--mine]="isMine(message)">
-            <small class="chat-message__author">@{{ message.sender.username }}</small>
-            <p class="chat-message__text">{{ message.text }}</p>
-            <small class="chat-message__date">{{
-              message.created_at | date: 'MMM d, HH:mm'
-            }}</small>
-          </div>
-
-          @if (isMine(message)) {
-            <span class="chat-message-row__avatar-wrap">
-              @if (messageAvatar(message); as avatar) {
-                <img
-                  class="chat-message-row__avatar"
-                  [src]="avatar"
-                  alt="Sender avatar"
-                  loading="lazy"
-                />
-              } @else {
-                <span class="chat-message-row__avatar-fallback">{{
-                  messageInitials(message)
-                }}</span>
+            <article class="chat-message-row" [class.chat-message-row--mine]="isMine(message)">
+              @if (!isMine(message)) {
+                <button
+                  type="button"
+                  class="chat-message-row__avatar-wrap"
+                  [attr.aria-label]="'Open @' + message.sender.username + ' profile'"
+                  (click)="openMessageSenderProfile(message)"
+                >
+                  @if (messageAvatar(message); as avatar) {
+                    <img
+                      class="chat-message-row__avatar"
+                      [src]="avatar"
+                      alt="Sender avatar"
+                      loading="lazy"
+                    />
+                  } @else {
+                    <span class="chat-message-row__avatar-fallback">{{
+                      messageInitials(message)
+                    }}</span>
+                  }
+                </button>
               }
-            </span>
+
+              <div class="chat-message" [class.chat-message--mine]="isMine(message)">
+                @if (selectedChat()?.type === 'project' && message.sender.id !== currentUserId()) {
+                  <small class="chat-message__author">@{{ message.sender.username }}</small>
+                }
+                <p class="chat-message__text">{{ message.text }}</p>
+                <small class="chat-message__date">{{ message.created_at | date: 'HH:mm' }}</small>
+              </div>
+
+              @if (isMine(message)) {
+                <button
+                  type="button"
+                  class="chat-message-row__avatar-wrap"
+                  [attr.aria-label]="'Open @' + message.sender.username + ' profile'"
+                  (click)="openMessageSenderProfile(message)"
+                >
+                  @if (messageAvatar(message); as avatar) {
+                    <img
+                      class="chat-message-row__avatar"
+                      [src]="avatar"
+                      alt="Sender avatar"
+                      loading="lazy"
+                    />
+                  } @else {
+                    <span class="chat-message-row__avatar-fallback">{{
+                      messageInitials(message)
+                    }}</span>
+                  }
+                </button>
+              }
+            </article>
           }
-        </article>
+        </div>
       }
     </div>
 

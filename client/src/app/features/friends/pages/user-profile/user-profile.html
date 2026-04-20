@@ -1,6 +1,8 @@
 <section class="user-profile-page">
   @if (isLoading()) {
-    <p class="user-profile-page__state">Loading profile...</p>
+    <div class="ui-loader" role="status" aria-live="polite" aria-label="Loading profile">
+      <span class="ui-loader__spinner" aria-hidden="true"></span>
+    </div>
   } @else if (error()) {
     <p class="user-profile-page__error">{{ error() }}</p>
   } @else if (profile(); as user) {

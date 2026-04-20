@@ -3,6 +3,13 @@
     <div class="chats-sidebar__tabs" role="tablist" aria-label="Chat type">
       <button
         type="button"
+        [class.is-active]="chatType() === 'all'"
+        (click)="typeChange.emit('all')"
+      >
+        All
+      </button>
+      <button
+        type="button"
         [class.is-active]="chatType() === 'direct'"
         (click)="typeChange.emit('direct')"
       >
@@ -19,7 +26,9 @@
   </header>
 
   @if (isLoading()) {
-    <p class="chats-sidebar__state">Loading chats...</p>
+    <div class="ui-loader" role="status" aria-live="polite" aria-label="Loading chats">
+      <span class="ui-loader__spinner" aria-hidden="true"></span>
+    </div>
   } @else if (!chats().length) {
     <p class="chats-sidebar__state">No chats in this section.</p>
   } @else {
@@ -42,10 +51,9 @@
             <span class="chats-list__meta">
               <span class="chats-list__top">
                 <strong>{{ peerName(chat) }}</strong>
-                <small>{{ getLastMessageDate(chat) | date: 'MMM d' }}</small>
+                <small>{{ formatMessageDate(getLastMessageDate(chat)) }}</small>
               </span>
               <span class="chats-list__bottom">
-                <span>{{ peerUsername(chat) }}</span>
                 <small>{{ getLastMessageText(chat) }}</small>
               </span>
             </span>

@@ -9,7 +9,7 @@
 
 .user-profile-layout {
   display: grid;
-  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
   gap: 0.95rem;
   min-width: 0;
 }
@@ -267,7 +267,8 @@
 }
 
 .user-profile-readonly label {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 0.35rem;
 }
 

@@ -1,23 +1,22 @@
 import { CommonModule } from '@angular/common';
-import { DatePipe } from '@angular/common';
 import { Component, input, output } from '@angular/core';
 import { ChatItem, ChatType } from '../../services/chats.service';
 
 @Component({
   selector: 'app-chats-sidebar',
-  imports: [CommonModule, DatePipe],
+  imports: [CommonModule],
   templateUrl: './chats-sidebar.html',
   styleUrl: './chats-sidebar.scss',
 })
 export class ChatsSidebarComponent {
   readonly isLoading = input(false);
-  readonly chatType = input<ChatType>('direct');
+  readonly chatType = input<ChatType | 'all'>('all');
   readonly chats = input<ChatItem[]>([]);
   readonly selectedChatId = input<number | null>(null);
   readonly currentUserId = input<number | undefined>(undefined);
   readonly chatLabel = input<(chat: ChatItem) => string>(() => 'Chat');
 
-  readonly typeChange = output<ChatType>();
+  readonly typeChange = output<ChatType | 'all'>();
   readonly selectChat = output<ChatItem>();
 
   peerAvatar(chat: ChatItem): string | null {
@@ -71,5 +70,61 @@ export class ChatsSidebarComponent {
   getLastMessageDate(chat: ChatItem): string {
     const dateRaw = chat.last_message?.created_at || chat.updated_at;
     return dateRaw;
+  }
+
+  formatMessageDate(dateStr: string): string {
+    try {
+      const messageDate = new Date(dateStr);
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      const weekAgo = new Date(today);
+      weekAgo.setDate(weekAgo.getDate() - 7);
+
+      today.setHours(0, 0, 0, 0);
+      messageDate.setHours(
+        messageDate.getHours(),
+        messageDate.getMinutes(),
+        messageDate.getSeconds(),
+        0,
+      );
+      yesterday.setHours(0, 0, 0, 0);
+      weekAgo.setHours(0, 0, 0, 0);
+      const messageDateOnly = new Date(messageDate);
+      messageDateOnly.setHours(0, 0, 0, 0);
+
+      const now = new Date();
+
+      if (messageDateOnly.getTime() === today.getTime()) {
+        return messageDate.toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        });
+      }
+
+      if (messageDateOnly.getTime() === yesterday.getTime()) {
+        return 'Yesterday';
+      }
+
+      if (
+        messageDateOnly.getTime() > weekAgo.getTime() &&
+        messageDateOnly.getTime() < today.getTime()
+      ) {
+        return messageDate.toLocaleString('en-US', { weekday: 'short' });
+      }
+
+      if (messageDate.getFullYear() === now.getFullYear()) {
+        return messageDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      }
+
+      return messageDate.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      });
+    } catch {
+      return dateStr;
+    }
   }
 }
