@@ -37,7 +37,7 @@
 }
 
 .friends-list--grid {
-  grid-template-columns: repeat(auto-fill, minmax(280px, auto));
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 }
 
 .friends-list li {
@@ -70,18 +70,6 @@
   justify-content: center;
 }
 
-.friends-list li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  border: 1px solid color-mix(in srgb, var(--border-default) 70%, transparent);
-  border-radius: 0.78rem;
-  background: color-mix(in srgb, var(--surface) 94%, var(--background));
-  padding: 0.5rem;
-  min-width: 0;
-}
-
 .friends-list__item {
   cursor: pointer;
 }
@@ -99,7 +87,6 @@
 
 .friends-list small {
   color: var(--text-muted);
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -225,12 +212,28 @@
     flex-wrap: wrap;
   }
 
-  .friends-list li {
+  .friends-list:not(.friends-list--grid) .friends-list__item {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .friends-list__actions {
+  .friends-list:not(.friends-list--grid) .friends-list__actions {
     justify-content: flex-start;
+  }
+
+  .friends-list small {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+}
+
+@media (max-width: 520px) {
+  .friends-list--grid {
+    grid-template-columns: 1fr;
+  }
+
+  .friends-list--grid .friends-list__item {
+    padding: 0.7rem;
   }
 }

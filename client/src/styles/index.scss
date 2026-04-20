@@ -261,6 +261,7 @@ select {
   }
 }
 
+
 select {
   appearance: none;
   cursor: pointer;
@@ -288,12 +289,13 @@ select optgroup {
 input[type='date'],
 input[type='datetime-local'] {
   line-height: 1.2;
-  color-scheme: light;
+  color-scheme: dark;
+  width: calc(100% - 52pxI) !important;
 }
 
 [data-theme='dark'] input[type='date'],
 [data-theme='dark'] input[type='datetime-local'] {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 input[type='date']::-webkit-datetime-edit,
