@@ -1,0 +1,893 @@
+{
+  "info": {
+    "_postman_id": "8c8bfb58-0c8e-4f87-a91b-domepls-api",
+    "name": "DoMePls API",
+    "description": "REST collection for the DoMePls Django API. Import into Postman, run Register or Login first, then protected requests will use {{accessToken}}. Refresh token is stored by the API as an HTTP-only cookie. WebSocket endpoints: {{wsBaseUrl}}/ws/chats/{{chatId}}/ and {{wsBaseUrl}}/ws/notifications/.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "wsBaseUrl",
+      "value": "ws://localhost:8000"
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "username",
+      "value": "demo_user"
+    },
+    {
+      "key": "password",
+      "value": "DemoPass123!"
+    },
+    {
+      "key": "targetUsername",
+      "value": "friend_user"
+    },
+    {
+      "key": "projectId",
+      "value": "1"
+    },
+    {
+      "key": "taskId",
+      "value": "1"
+    },
+    {
+      "key": "requestId",
+      "value": "1"
+    },
+    {
+      "key": "notificationId",
+      "value": "1"
+    },
+    {
+      "key": "chatId",
+      "value": "1"
+    },
+    {
+      "key": "assigneeId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "System",
+      "auth": {
+        "type": "noauth"
+      },
+      "item": [
+        {
+          "name": "API Root",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/"
+          }
+        },
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/health/"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "auth": {
+            "type": "noauth"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.tokens && json.tokens.access) pm.collectionVariables.set('accessToken', json.tokens.access);",
+                  "if (json.user && json.user.username) pm.collectionVariables.set('username', json.user.username);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\",\n  \"password_confirm\": \"{{password}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/register/"
+          }
+        },
+        {
+          "name": "Login",
+          "auth": {
+            "type": "noauth"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.tokens && json.tokens.access) pm.collectionVariables.set('accessToken', json.tokens.access);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/login/"
+          }
+        },
+        {
+          "name": "Login With 2FA Code",
+          "auth": {
+            "type": "noauth"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.tokens && json.tokens.access) pm.collectionVariables.set('accessToken', json.tokens.access);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\",\n  \"otp_code\": \"123456\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/login/"
+          }
+        },
+        {
+          "name": "Refresh Access Token",
+          "auth": {
+            "type": "noauth"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.tokens && json.tokens.access) pm.collectionVariables.set('accessToken', json.tokens.access);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/api/auth/refresh/"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/api/auth/logout/"
+          }
+        },
+        {
+          "name": "Telegram Auth Config",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/auth/telegram/"
+          }
+        },
+        {
+          "name": "Connect Telegram",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 123456789,\n  \"first_name\": \"Demo\",\n  \"last_name\": \"User\",\n  \"username\": \"demo_telegram\",\n  \"photo_url\": \"\",\n  \"auth_date\": 1710000000,\n  \"hash\": \"telegram-login-widget-hash\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/telegram/"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users / Profile",
+      "item": [
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/users/me/"
+          }
+        },
+        {
+          "name": "Update Me",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username}}\",\n  \"first_name\": \"Demo\",\n  \"last_name\": \"User\",\n  \"bio\": \"Working on tiny wins.\",\n  \"birth_date\": \"2000-01-01\",\n  \"location\": \"Almaty\",\n  \"website\": \"https://example.com\",\n  \"status\": \"available\"\n}"
+            },
+            "url": "{{baseUrl}}/api/users/me/"
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"current_password\": \"{{password}}\",\n  \"password\": \"NewDemoPass123!\",\n  \"password_confirm\": \"NewDemoPass123!\"\n}"
+            },
+            "url": "{{baseUrl}}/api/users/me/"
+          }
+        },
+        {
+          "name": "Enable 2FA",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"two_factor_enabled\": true,\n  \"two_factor_code\": \"123456\"\n}"
+            },
+            "url": "{{baseUrl}}/api/users/me/"
+          }
+        },
+        {
+          "name": "Delete Account",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"current_password\": \"{{password}}\",\n  \"otp_code\": \"123456\"\n}"
+            },
+            "url": "{{baseUrl}}/api/users/me/"
+          }
+        },
+        {
+          "name": "Search Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/search/?username={{targetUsername}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "search",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "username",
+                  "value": "{{targetUsername}}"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "item": [
+        {
+          "name": "List Projects",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/projects/"
+          }
+        },
+        {
+          "name": "Create Project",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('projectId', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Demo Project\",\n  \"description\": \"Project created from Postman.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/projects/"
+          }
+        },
+        {
+          "name": "Get Project",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/projects/{{projectId}}/"
+          }
+        },
+        {
+          "name": "Update Project",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Demo Project\",\n  \"description\": \"Updated from Postman.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/projects/{{projectId}}/"
+          }
+        },
+        {
+          "name": "Replace Project",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Replaced Demo Project\",\n  \"description\": \"Fully replaced from Postman.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/projects/{{projectId}}/"
+          }
+        },
+        {
+          "name": "Delete Project",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/projects/{{projectId}}/"
+          }
+        },
+        {
+          "name": "Invite Member",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{targetUsername}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/projects/{{projectId}}/invite/"
+          }
+        },
+        {
+          "name": "Invite Candidates",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/projects/invite-candidates/?username={{targetUsername}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "projects",
+                "invite-candidates",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "username",
+                  "value": "{{targetUsername}}"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tasks",
+      "item": [
+        {
+          "name": "List Tasks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/tasks/"
+          }
+        },
+        {
+          "name": "Create Project Task",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('taskId', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Ship Postman collection\",\n  \"description\": \"Cover every REST endpoint.\",\n  \"scope\": \"project\",\n  \"status\": \"todo\",\n  \"difficulty\": \"normal\",\n  \"urgency\": \"medium\",\n  \"deadline\": \"2026-12-31T18:00:00Z\",\n  \"project\": {{projectId}},\n  \"assigned_to\": {{assigneeId}}\n}"
+            },
+            "url": "{{baseUrl}}/api/tasks/"
+          }
+        },
+        {
+          "name": "Create Personal Task",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('taskId', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Personal demo task\",\n  \"description\": \"Created from Postman.\",\n  \"scope\": \"personal\",\n  \"difficulty\": \"easy\",\n  \"urgency\": \"low\",\n  \"deadline\": null\n}"
+            },
+            "url": "{{baseUrl}}/api/tasks/"
+          }
+        },
+        {
+          "name": "Get Task",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/tasks/{{taskId}}/"
+          }
+        },
+        {
+          "name": "Update Task",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated task title\",\n  \"description\": \"Updated from Postman.\",\n  \"status\": \"in_progress\",\n  \"difficulty\": \"hard\",\n  \"urgency\": \"high\",\n  \"deadline\": \"2026-12-31T18:00:00Z\"\n}"
+            },
+            "url": "{{baseUrl}}/api/tasks/{{taskId}}/"
+          }
+        },
+        {
+          "name": "Replace Task",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Replaced task title\",\n  \"description\": \"Fully replaced from Postman.\",\n  \"status\": \"todo\",\n  \"difficulty\": \"normal\",\n  \"urgency\": \"medium\",\n  \"deadline\": null,\n  \"assigned_to\": {{assigneeId}}\n}"
+            },
+            "url": "{{baseUrl}}/api/tasks/{{taskId}}/"
+          }
+        },
+        {
+          "name": "Delete Task",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/tasks/{{taskId}}/"
+          }
+        },
+        {
+          "name": "Approve Task",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/api/tasks/{{taskId}}/approve/"
+          }
+        },
+        {
+          "name": "List Task Comments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/tasks/{{taskId}}/comments/"
+          }
+        },
+        {
+          "name": "Create Task Comment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Looks good from Postman.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/tasks/{{taskId}}/comments/"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Social / Friends",
+      "item": [
+        {
+          "name": "Directory Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/directory/users/?q={{targetUsername}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "directory",
+                "users",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "{{targetUsername}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Public Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/users/{{targetUsername}}/"
+          }
+        },
+        {
+          "name": "List Friends",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/friends/"
+          }
+        },
+        {
+          "name": "List Friend Requests",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/friends/requests/"
+          }
+        },
+        {
+          "name": "Send Friend Request",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('requestId', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{targetUsername}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/friends/requests/send/"
+          }
+        },
+        {
+          "name": "Accept Friend Request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/api/friends/requests/{{requestId}}/accept/"
+          }
+        },
+        {
+          "name": "Reject Friend Request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/api/friends/requests/{{requestId}}/reject/"
+          }
+        },
+        {
+          "name": "Cancel Friend Request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/api/friends/requests/{{requestId}}/cancel/"
+          }
+        },
+        {
+          "name": "Remove Friend",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/friends/{{targetUsername}}/"
+          }
+        },
+        {
+          "name": "List Notifications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/notifications/"
+          }
+        },
+        {
+          "name": "Mark All Notifications Read",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": "{{baseUrl}}/api/notifications/mark-read/"
+          }
+        },
+        {
+          "name": "Mark One Notification Read",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notification_id\": {{notificationId}}\n}"
+            },
+            "url": "{{baseUrl}}/api/notifications/mark-read/"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Chats",
+      "item": [
+        {
+          "name": "List Chats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/chats/"
+          }
+        },
+        {
+          "name": "Start Direct Chat",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('chatId', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{targetUsername}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/chats/direct/start/"
+          }
+        },
+        {
+          "name": "Open Project Chat",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('chatId', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/api/chats/project/{{projectId}}/open/"
+          }
+        },
+        {
+          "name": "List Chat Messages",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/chats/{{chatId}}/messages/"
+          }
+        }
+      ]
+    }
+  ]
+}
